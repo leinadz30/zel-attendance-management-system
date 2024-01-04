@@ -1,0 +1,67 @@
+
+<h4 mat-dialog-title>{{isNew ? 'New' : 'Update'}} Machine</h4>
+
+<div mat-dialog-content>
+  <div fxFlex="100" class="content-inner" fxLayout="column">
+    <form
+    [formGroup]="machineForm"
+    fxLayout="row wrap"
+    id="machineForm"
+    (ngSubmit)="onSubmit()">
+      <fieldset fxFlex="100" fxLayout="row wrap" style="row-gap: 16px">
+        <div
+          fxFlex="100"
+          fxLayout="column"
+          fxLayout.gt-sm="row"
+          style="gap: 16px"
+        >
+          <mat-form-field
+            appearance="outline"
+            fxFlex="100"
+            class="cell"
+            [ngClass.gt-sm]="{ isLargeScreen: true }"
+          >
+            <mat-label>Description</mat-label>
+            <input
+              matInput
+              placeholder="Description"
+              formControlName="description"
+            />
+            <mat-error
+              *ngIf="getError('description') !== (null || undefined)"
+              >{{
+                (getError("description") &&
+                getError("description")["required"]
+                  ? "Please enter description"
+                  : "") ||
+                  (getError("description") &&
+                  getError("description")["pattern"]
+                    ? "Invalid input"
+                    : "")
+              }}</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <div>
+    <button
+      mat-flat-button
+      cdkFocusInitial
+      (click)="dialogRef.close(false)">
+      Cancel
+    </button>
+    <button
+      mat-flat-button
+      [disabled]="!formIsValid || !formIsReady"
+      color="primary"
+      type="submit"
+      form="machineForm">
+      {{isNew ? 'Save' : 'Update'}}
+    </button>
+  </div>
+</div>

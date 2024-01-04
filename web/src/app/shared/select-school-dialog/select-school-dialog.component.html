@@ -1,0 +1,83 @@
+
+<h4 mat-dialog-title>Search School</h4>
+<div mat-dialog-content>
+  <div class="select-school-content-holder">
+    <div fxFlex="100" fxLayout="column" class="select-school-content">
+      <table class="select-school-table" mat-table matSort [dataSource]="dataSource">
+        <!-- Page Column -->
+        <ng-container matColumnDef="selected">
+          <th mat-header-cell *matHeaderCellDef [ngStyle]="{ 'width': '5%', 'min-width': '0px!important'}"></th>
+          <td mat-cell *matCellDef="let element">
+            <div style="height: 76px!important;
+            display: flex;
+            align-items: center;" >
+              <mat-checkbox #selected [checked]="isSelected(element)" (change)="selectionChange(element, selected.checked)"></mat-checkbox>
+            </div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="schoolCode">
+          <th mat-header-cell *matHeaderCellDef [ngStyle]="{ 'width': '30%', 'min-width': '100px'}">
+            <span mat-sort-header>School Code</span>
+            <mat-form-field floatLabel="never" appearance="outline" >
+                <input matInput placeholder="Search school code" [(ngModel)]="filterSchoolCode" (keyup.enter)="init()" />
+            </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let element">{{ element.schoolCode }}</td>
+        </ng-container>
+        <ng-container matColumnDef="schoolName">
+          <th mat-header-cell *matHeaderCellDef >
+            <span mat-sort-header>School Name</span>
+            <mat-form-field floatLabel="never" appearance="outline" >
+                <input matInput placeholder="Search school name" [(ngModel)]="filterSchoolName" (keyup.enter)="init()" />
+            </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let element">{{ element.schoolName }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+    <div class="select-school-footer">
+      <div fxFlex="100" *ngIf="selected && selected?.schoolCode" class="select-school-selected">
+        <div fxFlex="100" fxLayout="column" class="select-school-selected-cancel">
+          <button mat-icon-button aria-label="Unselect" (click)="selectionChange(selected, false)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        <div fxFlex="100" fxLayout="column" class="select-school-selected-value">
+          <h4>{{selected?.schoolCode}}</h4><br>
+          <h4>{{selected?.schoolName}}</h4>
+        </div>
+      </div>
+      <div fxFlex="100">
+        <mat-paginator
+            [style]="{'display': dataSource.data.length === 0 ? 'none!important' : ''}"
+            #paginator
+            [pageSizeOptions]="[10, 20, 50, 100]"
+            showFirstLastButtons
+            [length]="total">
+        </mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <div>
+    <button
+      mat-flat-button
+      cdkFocusInitial
+      mat-dialog-close>
+      Cancel
+    </button>
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      (click)="doneSelection()"
+      [disabled]="!selected || !selected?.schoolCode || selected?.schoolCode === ''">
+      Select
+    </button>
+  </div>
+</div>

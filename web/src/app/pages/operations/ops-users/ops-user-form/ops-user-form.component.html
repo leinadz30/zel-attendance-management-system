@@ -1,0 +1,217 @@
+
+<h4 mat-dialog-title>{{isNew ? 'New' : 'Update'}} Operator</h4>
+
+<div mat-dialog-content>
+  <div fxFlex="100" class="content-inner" fxLayout="column">
+    <form
+    [formGroup]="operatorForm"
+    fxLayout="row wrap"
+    id="operatorForm"
+    (ngSubmit)="onSubmit()">
+      <fieldset fxFlex="100" fxLayout="row wrap" style="row-gap: 16px">
+        <div
+          fxFlex="100"
+          fxLayout="column"
+          fxLayout.gt-sm="row"
+          style="gap: 16px"
+        >
+          <mat-form-field
+            appearance="outline"
+            fxFlex="100"
+            class="cell"
+            [ngClass.gt-sm]="{ isLargeScreen: true }"
+          >
+            <mat-label>Name</mat-label>
+            <input
+              matInput
+              placeholder="Name"
+              formControlName="name"
+            />
+            <mat-error
+              *ngIf="getError('name') !== (null || undefined)"
+              >{{
+                (getError("name") &&
+                getError("name")["required"]
+                  ? "Please enter name"
+                  : "") ||
+                  (getError("name") &&
+                  getError("name")["pattern"]
+                    ? "Invalid input"
+                    : "")
+              }}</mat-error
+            >
+          </mat-form-field>
+        </div>
+        <div
+          fxFlex="100"
+          fxLayout="column"
+          fxLayout.gt-sm="row"
+          style="gap: 16px"
+        >
+          <mat-form-field
+            appearance="outline"
+            fxFlex="50%"
+            class="cell"
+            [ngClass.gt-sm]="{ isLargeScreen: true }"
+            *ngIf="isNew"
+            class="readonly"
+          >
+            <mat-label>Username</mat-label>
+            <input
+              matInput
+              placeholder="Username"
+              (input)="operatorForm.controls['userName'].setValue(formData.userName.toLowerCase())"
+              formControlName="userName"
+              name="userName"
+              role="presentation"
+              autocomplete="new-userName"
+            />
+            <mat-error
+              *ngIf="getError('userName') !== (null || undefined)"
+              >{{
+                (getError("userName") && getError("userName").required
+                  ? "Please enter your username"
+                  : "") ||
+                  (getError("userName") &&
+                  getError("userName").notAvailable
+                    ? "The username entered is not available. Try another one"
+                    : "") ||
+                  (getError("userName") && getError("userName").pattern
+                    ? "Invalid username, allowed characters: 1. small letters 2. numbers"
+                    : "") ||
+                  (getError("userName") && getError("userName").whitespace
+                    ? "Invalid username, whitespace not allowed"
+                    : "")
+
+              }}</mat-error
+            >
+          </mat-form-field>
+          <div
+            fxFlex="50%"
+            class="cell"
+            [ngClass.gt-sm]="{ isLargeScreen: true }"
+          ></div>
+        </div>
+        <div
+          fxFlex="100"
+          fxLayout="column"
+          fxLayout.gt-sm="row"
+          style="gap: 16px"
+          *ngIf="isNew"
+        >
+          <mat-form-field
+            appearance="outline"
+            fxFlex="50%"
+            class="cell"
+            [ngClass.gt-sm]="{ isLargeScreen: true }"
+          >
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              #password
+              type="password"
+              placeholder="Password"
+              formControlName="password"
+              name="password"
+              role="presentation"
+              autocomplete="new-password"
+            />
+            <mat-icon
+              class="icon-right"
+              (click)="
+                password.type =
+                  password.type === 'password' ? 'text' : 'password'
+              "
+              style="cursor: pointer"
+              matSuffix
+              >{{
+                password.type === "password"
+                  ? "visibility"
+                  : "visibility_off"
+              }}</mat-icon
+            >
+            <mat-error
+              *ngIf="getError('password') !== (null || undefined)"
+              >{{
+                (getError("password") && getError("password").required
+                  ? "Please enter your password"
+                  : "") ||
+                  (getError("password") && getError("password").minlength
+                    ? "Please enter atleast 6 charcters"
+                    : "") ||
+                  (getError("password") && getError("password").maxlength
+                    ? "Only maximum of 16 characters are allowed"
+                    : "")
+              }}</mat-error
+            >
+          </mat-form-field>
+          <mat-form-field
+            appearance="outline"
+            fxFlex="50%"
+            class="cell"
+            [ngClass.gt-sm]="{ isLargeScreen: true }"
+          >
+            <mat-label>Confirm Password</mat-label>
+            <input
+              matInput
+              type="password"
+              #confirmPassword
+              placeholder="Confirm password"
+              formControlName="confirmPassword"
+              name="confirmPassword"
+              [errorStateMatcher]="matcher"
+              role="presentation"
+              autocomplete="new-confirmPassword"
+            />
+            <mat-icon
+              class="icon-right"
+              (click)="
+                confirmPassword.type =
+                  confirmPassword.type === 'password'
+                    ? 'text'
+                    : 'password'
+              "
+              style="cursor: pointer"
+              matSuffix
+            >
+              {{
+                confirmPassword.type === "password"
+                  ? "visibility"
+                  : "visibility_off"
+              }}
+            </mat-icon>
+            <mat-error
+              *ngIf="getError('confirmPassword') !== (null || undefined)"
+            >
+              {{
+                getError("confirmPassword") &&
+                getError("confirmPassword").notMatched
+                  ? "Please confirm your password"
+                  : ""
+              }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <div>
+    <button
+      mat-flat-button
+      cdkFocusInitial
+      (click)="dialogRef.close(false)">
+      Cancel
+    </button>
+    <button
+      mat-flat-button
+      [disabled]="!formIsValid || !formIsReady"
+      color="primary"
+      type="submit"
+      form="operatorForm">
+      {{isNew ? 'Save' : 'Update'}}
+    </button>
+  </div>
+</div>

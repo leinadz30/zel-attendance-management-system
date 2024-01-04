@@ -1,0 +1,67 @@
+
+<h4 mat-dialog-title>{{isNew ? 'New' : 'Update'}} Department</h4>
+
+<div mat-dialog-content>
+  <div fxFlex="100" class="content-inner" fxLayout="column">
+    <form
+    [formGroup]="departmentForm"
+    fxLayout="row wrap"
+    id="departmentForm"
+    (ngSubmit)="onSubmit()">
+      <fieldset fxFlex="100" fxLayout="row wrap" style="row-gap: 16px">
+        <div
+          fxFlex="100"
+          fxLayout="column"
+          fxLayout.gt-sm="row"
+          style="gap: 16px"
+        >
+          <mat-form-field
+            appearance="outline"
+            fxFlex="100"
+            class="cell"
+            [ngClass.gt-sm]="{ isLargeScreen: true }"
+          >
+            <mat-label>Name</mat-label>
+            <input
+              matInput
+              placeholder="Name"
+              formControlName="departmentName"
+            />
+            <mat-error
+              *ngIf="getError('departmentName') !== (null || undefined)"
+              >{{
+                (getError("departmentName") &&
+                getError("departmentName")["required"]
+                  ? "Please enter departmentName"
+                  : "") ||
+                  (getError("departmentName") &&
+                  getError("departmentName")["pattern"]
+                    ? "Invalid input"
+                    : "")
+              }}</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <div>
+    <button
+      mat-flat-button
+      cdkFocusInitial
+      (click)="dialogRef.close(false)">
+      Cancel
+    </button>
+    <button
+      mat-flat-button
+      [disabled]="!formIsValid || !formIsReady"
+      color="primary"
+      type="submit"
+      form="departmentForm">
+      {{isNew ? 'Save' : 'Update'}}
+    </button>
+  </div>
+</div>

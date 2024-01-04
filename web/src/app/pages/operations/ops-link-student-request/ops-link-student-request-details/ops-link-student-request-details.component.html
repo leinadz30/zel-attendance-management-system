@@ -1,0 +1,90 @@
+
+<h4 mat-dialog-title>Request Details</h4>
+<br>
+<div mat-dialog-content>
+  <div fxFlex="100" class="content-inner" fxLayout="column">
+    <div fxLayout="row wrap" class="readonly">
+      <div
+        fxLayout="column"
+        fxFlex="100"
+        style="gap: 16px">
+        <mat-form-field
+          appearance="outline"
+          *ngIf="!isLoading && linkStudentRequest">
+          <mat-label>Status &nbsp;&nbsp;</mat-label>
+          <input
+            matInput
+            placeholder="Status"
+            disabled
+            [(ngModel)]="linkStudentRequest.status">
+        </mat-form-field>
+        <mat-form-field
+          appearance="outline"
+          *ngIf="!isLoading && linkStudentRequest">
+          <mat-label>Birthdate &nbsp;&nbsp;</mat-label>
+          <input
+            matInput
+            placeholder="Birthdate"
+            disabled
+            [value]="linkStudentRequest?.dateRequested | date: 'MMMM dd, yyyy'"/>
+        </mat-form-field>
+        <mat-form-field
+          appearance="outline"
+          *ngIf="!isLoading && linkStudentRequest">
+          <mat-label>Student &nbsp;&nbsp;</mat-label>
+          <input
+            matInput
+            placeholder="Student"
+            disabled
+            [(ngModel)]="linkStudentRequest.student.fullName"/>
+            <mat-icon
+              class="icon-right"
+              (click)="showStudentDetails()"
+              style="cursor: pointer;"
+              matSuffix>
+              info
+            </mat-icon>
+        </mat-form-field>
+        <mat-form-field
+          appearance="outline"
+          *ngIf="!isLoading && linkStudentRequest">
+          <mat-label>Parent &nbsp;&nbsp;</mat-label>
+          <input
+            matInput
+            placeholder="Parent"
+            disabled
+            [(ngModel)]="linkStudentRequest.requestedByParent.fullName"
+          />
+          <mat-icon
+            class="icon-right"
+            (click)="showParentDetails()"
+            style="cursor: pointer;"
+            matSuffix>
+            info
+          </mat-icon>
+        </mat-form-field>
+        <mat-form-field
+          appearance="outline"
+          *ngIf="!isLoading && linkStudentRequest">
+          <mat-label>Notes &nbsp;&nbsp;</mat-label>
+          <textarea
+            matInput
+            placeholder="Notes"
+            disabled
+            [(ngModel)]="linkStudentRequest.notes"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <div>
+    <button
+      mat-flat-button
+      cdkFocusInitial
+      (click)="dialogRef.close(false)">
+      Close
+    </button>
+  </div>
+</div>
