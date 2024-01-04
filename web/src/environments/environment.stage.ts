@@ -1,5 +1,5 @@
 export const environment = {
-  production: false,
+  production: true,
   apiBaseUrl: "https://zams-stage-api.vercel.app/api/v1",
   pusher: {
     key: "1ad4b93854243ae307e6",
