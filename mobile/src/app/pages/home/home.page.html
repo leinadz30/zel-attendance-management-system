@@ -1,0 +1,78 @@
+<ion-content mode="md">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh()" class="refresher-custom">
+    <ion-refresher-content >
+    </ion-refresher-content>
+  </ion-refresher>
+  <div class="content">
+    <div class="col welcome">
+      <div class="label">
+        <div class="row name">
+          <h1 style="opacity: 0.9;">{{ today | date: 'MMM dd'}}</h1>
+          <h1 class="title">Hey, {{ user.fullName }}!</h1>
+        </div>
+        <ion-avatar slot="start" (click)="onShowSettings()" style="width: 70px;height: 70px;">
+          <img alt="Silhouette of a person's head" [src]="currentUser?.userProfilePic" (error)="profilePicErrorHandler($event)" />
+        </ion-avatar>
+      </div>
+      <div class="row description">
+        <h1>Let's track your student's activity today.</h1>
+      </div>
+    </div>
+    <br>
+    <div class="dashboard ion-padding">
+      <div class="content">
+          <div class="title" *ngIf="myStudents.length > 0">
+            <h1>Today's activity</h1>
+          </div>
+          <br>
+        <div class="students">
+          <ng-container *ngIf="!isLoading; else loadingTemplate">
+            <ng-container *ngIf="myStudents.length > 0; else noTapTemplate">
+              <div class="row" *ngFor="let item of myStudents">
+                <ion-card mode="ios" class="student-card">
+                  <ion-card-content>
+                    <ion-item button lines="none" (click)="onShowStudentDetails(item)">
+                      <ion-avatar slot="start" style="width: 70px;height: 70px;">
+                        <img alt="{{item.fullName}}'s profile" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+                      </ion-avatar>
+                      <ion-label>
+                        <h1><strong>{{item.fullName}}</strong></h1>
+                      </ion-label>
+                    </ion-item>
+                    <h2>Arrived: <strong> {{item.arrivedTime}}</strong></h2>
+                    <h2>Status: <strong>{{item.status === 'LOG IN' ? 'TAP IN' : 'TAP OUT'}} - {{item.recentTapTime}}</strong></h2>
+                  </ion-card-content>
+                </ion-card>
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #noTapTemplate>
+    <div class="no-tap-result">
+      <ion-icon name="time-outline"></ion-icon>
+      <h1>No Tap activity for today</h1>
+    </div>
+  </ng-template>
+
+  <ng-template #loadingTemplate>
+    <div class="row">
+      <ion-card mode="ios" class="student-card">
+        <ion-card-content>
+          <ion-item [button]="false" lines="none" [detail]="false" >
+            <ion-avatar slot="start" style="width: 70px;height: 70px;">
+              <img alt="temp profile" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+            </ion-avatar>
+            <ion-label>
+              <h1><strong><ion-skeleton-text style="height: 50px;" [animated]="true"></ion-skeleton-text></strong></h1>
+            </ion-label>
+          </ion-item>
+          <h2><ion-skeleton-text style="height: 30px;" [animated]="true"></ion-skeleton-text></h2>
+          <h2><ion-skeleton-text style="height: 30px;" [animated]="true"></ion-skeleton-text></h2>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </ng-template>
+</ion-content>

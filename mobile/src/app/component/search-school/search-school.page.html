@@ -1,0 +1,70 @@
+<!-- <ion-header no-border no-shadow mode="md">
+  <ion-toolbar mode="md">
+    <ion-buttons slot="start">
+      <ion-button (click)="close()" >
+        <ion-icon name="chevron-back" style="font-size: 2em!important;" color="primary"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header> -->
+
+<div class="loader-cover" *ngIf="isSelectionLoading"></div>
+<ion-content class="ion-padding" mode="md">
+  <div style="display: flex;flex-direction:column;">
+    <div class="search-header">
+      <ion-buttons slot="start">
+        <ion-button (click)="close()" >
+          <ion-icon name="chevron-back" style="font-size: 2em!important;" color="primary"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <mat-form-field appearance="outline">
+        <input
+          matInput
+          type="search"
+          placeholder="Search School"
+          (keyup.enter)="loadSchools()"
+          [formControl]="searchKey"
+        />
+        <mat-icon
+          (click)="searchKey.setValue('')"
+          *ngIf="searchKey.value && searchKey.value !== ''"
+          matSuffix>
+          close
+        </mat-icon>
+      </mat-form-field>
+    </div>
+    <div class="search-result" >
+      <ion-radio-group [formControl]="selectedSchoolId">
+        <ion-item fill="outline" lines="none" *ngFor="let item of schools">
+          <ion-label>
+            <h2  class="title"><strong>{{item.schoolName}}</strong></h2>
+            <h2 class="desc">{{item.schoolAddress}}</h2>
+          </ion-label>
+          <ion-radio slot="end" [value]="item.schoolId"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+      <ion-item lines="none" class="load-more" *ngIf="schools.length < total" (click)="loadMore()">
+        <ion-label>
+          <h2>Load More</h2>
+        </ion-label>
+      </ion-item>
+    </div>
+  </div>
+</ion-content>
+<ion-footer
+*ngIf="selectedSchoolId.valid">
+  <ion-toolbar
+  mode="md">
+    <ion-button
+      mode="md"
+      type="submit"
+      expand="full"
+      shape="round"
+      size="large"
+      color="primary"
+      (click)="select()"
+      >
+      Select
+  </ion-button>
+  </ion-toolbar>
+</ion-footer>

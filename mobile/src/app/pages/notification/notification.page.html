@@ -1,0 +1,142 @@
+
+<ion-header no-border no-shadow mode="md">
+  <ion-toolbar mode="md">
+    <ion-title class="ion-text-center"><h1 style="margin: 0!important;">Notifications</h1></ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content mode="md">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh()" class="refresher-custom">
+    <ion-refresher-content >
+    </ion-refresher-content>
+  </ion-refresher>
+  <div *ngIf="!isLoading; else elseLoading">
+    <ion-list *ngIf="data.length > 0; else elseNoData" class="notifications" >
+      <ion-item [color]="item.isRead ? '':'light'" *ngFor="let item of data"  button [ngClass]="{'un-read': item.isRead}" (click)="onNotificationClick(item)">
+        <ion-icon name="{{item.icon}}-outline" color="{{item.iconColor}}" slot="start"></ion-icon>
+        <ion-label>
+          <div *ngIf="item.isRead; else elseUnRead">
+            <h1 class="title">{{item.title}}</h1>
+            <h2 class="desc">{{item.description}}</h2>
+            <h2 class="desc">{{item.dateTime| timeAgo}}</h2>
+          </div>
+          <ng-template #elseUnRead >
+            <div>
+              <h1 class="title"><strong>{{item.title}}</strong></h1>
+              <h2 class="desc"><strong>{{item.description}}</strong></h2>
+              <h2 style="color:#4DB6AC" class="desc"><strong>{{item.dateTime | timeAgo}}</strong></h2>
+            </div>
+          </ng-template>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+    <ion-button *ngIf="data && data.length >= limit && data.length < totalItems" fill="clear" size="small" expand="full" (click)="loadMore()">
+      <h2>Load more...</h2>
+    </ion-button>
+  </div>
+  <ng-template #elseLoading >
+    <ion-list>
+      <ion-item >
+        <ion-label>
+          <div>
+            <h1 style="width: 50%;" class="title"><ion-skeleton-text [animated]="true"></ion-skeleton-text></h1>
+            <h1><ion-skeleton-text [animated]="true"></ion-skeleton-text></h1>
+            <h1 style="width: 40%;"><ion-skeleton-text [animated]="true"></ion-skeleton-text></h1>
+          </div>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </ng-template>
+  <ng-template #elseNoData >
+    <div class="no-records">
+      <ion-icon name="notifications-off-outline" style="font-size: 3rem!important;"></ion-icon>
+      <h1 class="text">No notifications to show</h1>
+    </div>
+  </ng-template>
+
+  <ion-modal #requestInfoModal class="request-info-modal" [initialBreakpoint]="0.8" [breakpoints]="[0, 0.8, 1]">
+    <ng-template>
+      <ion-header no-border no-shadow>
+        <ion-toolbar mode="md">
+          <div slot="start" style="width: 48px"></div>
+          <ion-title class="ion-text-center"></ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="requestInfoModal.dismiss()" >
+              <ion-icon name="close-sharp" style="font-size: 2em!important;" color="primary"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content mode="md">
+        <div class="ion-padding">
+          <h2>{{request?.dateRequested | date: 'MMM dd, yyyy'}}</h2>
+          <ion-item lines="none" detail="false">
+            <ion-icon aria-hidden="true" color="primary" name="checkmark-circle" slot="start" *ngIf="request?.status === 'APPROVED'; else currentNotApproved"></ion-icon>
+            <ng-template #currentNotApproved>
+              <ion-icon aria-hidden="true" color="warning" name="time" slot="start" *ngIf="request?.status === 'PENDING'; else currentClosed"></ion-icon>
+            </ng-template>
+            <ng-template #currentClosed>
+              <ion-icon aria-hidden="true" color="danger" name="close-circle" slot="start"></ion-icon>
+            </ng-template>
+            <ion-label>
+              <h2 style="opacity: 0.7;"><strong>Status</strong></h2>
+              <h1>{{request?.status}}</h1>
+            </ion-label>
+          </ion-item>
+          <ion-item [button]="request?.status === 'APPROVED'" lines="none" detail="false">
+            <ion-icon aria-hidden="true" color="primary" name="person" slot="start"></ion-icon>
+            <ion-label>
+              <h2 style="opacity: 0.7;"><strong>Student</strong></h2>
+              <h2><strong>123445</strong></h2>
+              <h1>{{request?.student?.fullName}}</h1>
+            </ion-label>
+          </ion-item>
+          <ion-item [button]="request?.status === 'APPROVED'" lines="none" detail="false">
+            <ion-icon aria-hidden="true" color="primary" name="business" slot="start"></ion-icon>
+            <ion-label>
+              <h2 style="opacity: 0.7;"><strong>School</strong></h2>
+              <h1>{{request?.school?.schoolName}}</h1>
+              <h2>{{request?.school?.schoolAddress}}</h2>
+            </ion-label>
+          </ion-item>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal #studentTimeInfoModal class="student-time-info-modal" [initialBreakpoint]="0.8" [breakpoints]="[0, 0.8, 1]">
+    <ng-template>
+      <ion-header no-border no-shadow>
+        <ion-toolbar mode="md" color="primary">
+          <div slot="start" style="width: 48px"></div>
+          <ion-title class="ion-text-center"></ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="studentTimeInfoModal.dismiss()" >
+              <ion-icon name="close-sharp" style="font-size: 2em!important;"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content mode="md">
+        <div class="header">
+          <h1 class="name">{{tapLog?.student.fullName}}</h1>
+          <h1>{{tapLog?.status}}</h1>
+          <div class="time">
+            <ion-icon name="time-outline"></ion-icon>
+            <h1>{{tapLog?.time}}</h1>
+          </div>
+          <h1>{{tapLog?.date | date: 'MMM dd, yyyy'}}</h1>
+        </div>
+        <div class="content">
+          <ion-item button lines="none" detail="false">
+            <ion-icon aria-hidden="true" color="primary" name="business" slot="start"></ion-icon>
+            <ion-label>
+              <h1>{{tapLog?.student?.school?.schoolName}}</h1>
+              <h2 style="opacity: 0.8;">{{tapLog?.student?.school?.schoolAddress}}</h2>
+            </ion-label>
+          </ion-item>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

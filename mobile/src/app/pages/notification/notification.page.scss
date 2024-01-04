@@ -1,0 +1,120 @@
+ion-header::after {
+  background-image: none;
+}
+
+
+ ion-content {
+  ion-item {
+    background: #cccc!important;
+    button {
+      background: #cccc!important;
+    }
+  }
+
+  .notifications {
+    ion-item {
+      ion-icon {
+        font-size: 3rem;
+        margin-right: 10px!important;
+      }
+    }
+  }
+
+  ::ng-deep ion-item {
+   .un-read {
+     .title {
+       font-weight: 800!important;
+     }
+    }
+  }
+  ion-label {
+    text-overflow: unset;
+    white-space: unset;
+    overflow: unset;
+    .title {
+      -webkit-line-clamp: 2;
+    }
+    .desc {
+      -webkit-line-clamp: 4;
+    }
+    h1, h3, p {
+      margin: 0 !important;
+      display: -webkit-box;
+      max-width: 100%;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  }
+  div {
+    height: 100%!important;
+    .no-records {
+      ion-icon {
+        font-size: 2rem;
+      }
+     }
+  }
+ }
+ .request-info-modal {
+   --width: 100%;
+   ion-item {
+     ion-icon {
+       font-size: 2rem!important;
+     }
+     ion-label {
+       white-space: normal!important;
+       overflow: visible;
+     }
+   }
+ }
+
+ .student-time-info-modal {
+  --width: 100%;
+  ion-content {
+    display: flex;
+    width: auto;
+    align-items: center;
+    flex-direction: column;
+    .header {
+      display: flex;
+      width: auto;
+      align-items: center;
+      flex-direction: column;
+      background: var(--ion-color-primary);
+      height: auto!important;
+      color: #fff;
+      .name {
+        font-size: 2rem;
+      }
+      .time {
+        display: flex;
+        width: auto;
+        align-items: center;
+        flex-direction: column;
+        h1 {
+          margin: 0!important;
+        }
+        ion-icon {
+          font-size: 8rem!important;
+         }
+      }
+    }
+    .content {
+      padding: 16px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      height: auto!important;
+      ion-item {
+        ion-icon {
+          font-size: 2rem!important;
+        }
+        ion-label {
+
+        }
+      }
+      h1,h2,h3 {
+        margin: 0!important;
+      }
+    }
+  }
+ }

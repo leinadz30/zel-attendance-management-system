@@ -1,0 +1,78 @@
+{
+    "reservationConfig": {
+
+    },
+    "auth": {
+        "requireOTP": "false"
+    },
+    "sessionConfig": {
+      "sessionTimeout": "1800"
+    },
+    "heartRate": {
+        "captureInterval": 1000
+    },
+    "lookup": {
+    },
+    "apiEndPoints": {
+      "auth": {
+        "login": "/auth/login/parent",
+        "logout": "/auth/logout",
+        "register":"/auth/register/parent",
+        "findByUsername": "/auth/findByUsername/",
+        "verifyOtp": "/auth/verifyOtp"
+      },
+      "parents": {
+        "getByCode": "/parents/",
+        "update": "/parents/",
+        "resetPassword": "/parents/resetPassword/",
+        "updateProfile": "/parents/updateProfile/",
+        "updateProfilePicture": "/parents/updateProfilePicture/"
+      },
+      "schools": {
+        "getByAdvanceSearch": "/schools/page/",
+        "getByCode": "/schools/",
+        "getByOrgCode": "/schools/getByOrgCode/",
+        "create": "/schools/",
+        "update": "/schools/",
+        "delete": "/schools/"
+      },
+      "students": {
+        "getByAdvanceSearch": "/students/page/",
+        "getByCode": "/students/",
+        "getByOrgStudentId": "/students/getByOrgStudentId/",
+        "create": "/students/",
+        "update": "/students/",
+        "delete": "/students/"
+      },
+      "userFirebaseToken": {
+        "getByDevice": "/user-firebase-token/getByDevice",
+        "create": "/user-firebase-token/"
+      },
+      "linkStudentRequest": {
+        "getByAdvanceSearch": "/link-student-request/page/",
+        "getByCode": "/link-student-request/",
+        "create": "/link-student-request/",
+        "approve": "/link-student-request/approve/",
+        "reject": "/link-student-request/reject/",
+        "cancel": "/link-student-request/cancel/"
+      },
+      "dashboard": {
+        "getDashboard": "dashboard/getDashboard"
+      },
+      "notifications": {
+        "getByAdvanceSearch": "/notifications/page/",
+        "getUnreadByUser": "/notifications/getUnreadByUser/",
+        "marAsRead": "/notifications/marAsRead/"
+      },
+      "tapLogs": {
+        "getByAdvanceSearch": "/tapLogs/page/",
+        "getStudentsTapsByParentCode": "/tapLogs/getStudentsTapsByParentCode/",
+        "getStudentsTapsByStudentCode": "/tapLogs/getStudentsTapsByStudentCode/",
+        "getById": "/tapLogs/"
+      },
+      "userOneSignalSubscription": {
+        "getByDevice": "/user-one-signal-subscription/getBySubscriptionId/",
+        "create": "/user-one-signal-subscription/"
+      }
+    }
+}

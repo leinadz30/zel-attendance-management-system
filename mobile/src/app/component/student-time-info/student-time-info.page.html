@@ -1,0 +1,32 @@
+
+<ion-header no-border no-shadow>
+  <ion-toolbar mode="md" color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="close()" >
+        <ion-icon name="arrow-back-sharp" style="font-size: 2em!important;"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center"></ion-title>
+    <div slot="end" style="width: 48px"></div>
+  </ion-toolbar>
+</ion-header>
+<ion-content mode="md">
+  <div class="header">
+    <h1 class="name">{{tapLog?.student.fullName}}</h1>
+    <h1>{{tapLog?.status}}</h1>
+    <div class="time">
+      <ion-icon name="time-outline"></ion-icon>
+      <h1>{{tapLog?.time}}</h1>
+    </div>
+    <h1>{{tapLog?.date | date: 'MMM dd, yyyy'}}</h1>
+  </div>
+  <div class="content">
+    <ion-item button lines="none" detail="false">
+      <ion-icon aria-hidden="true" color="primary" name="business" slot="start"></ion-icon>
+      <ion-label>
+        <h1>{{tapLog?.student?.school?.schoolName}}</h1>
+        <h2 style="opacity: 0.8;">{{tapLog?.student?.school?.schoolAddress}}</h2>
+      </ion-label>
+    </ion-item>
+  </div>
+</ion-content>

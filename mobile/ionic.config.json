@@ -1,0 +1,7 @@
+{
+  "name": "ZAMS PORTAL",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

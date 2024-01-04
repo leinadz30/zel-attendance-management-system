@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "370396280939",
+    "project_id": "zams-portal",
+    "storage_bucket": "zams-portal.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:370396280939:android:20f7c84c51c8bcde8a992e",
+        "android_client_info": {
+          "package_name": "com.zams.mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAew26SjfFE94fHArs2-VuCqjP9oISx-w0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
