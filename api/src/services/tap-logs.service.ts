@@ -290,13 +290,26 @@ export class TapLogsService {
             desc = `Your child, ${student?.fullName} has left the school premises on ${longDate} at ${dto.time}`;
           }
 
-          await this.oneSignalNotificationService.sendToSubscriber(
-            subscriptions,
-            NOTIF_TYPE.STUDENT_LOG.toString(),
-            tapLog.tapLogId,
-            title,
-            desc
-          );
+          const massRequest = [];
+          for (const subscription of subscriptions) {
+            massRequest.push(
+              await this.oneSignalNotificationService.sendToSubscriber(
+                [subscription],
+                NOTIF_TYPE.STUDENT_LOG.toString(),
+                tapLog.tapLogId,
+                title,
+                desc
+              )
+            );
+          }
+          await Promise.all(massRequest);
+          // await this.oneSignalNotificationService.sendToSubscriber(
+          //   subscriptions,
+          //   NOTIF_TYPE.STUDENT_LOG.toString(),
+          //   tapLog.tapLogId,
+          //   title,
+          //   desc
+          // );
           await this.logNotification(
             parentStudents.map((x) => x.parent.user),
             tapLog.tapLogId,
@@ -447,13 +460,27 @@ export class TapLogsService {
                 desc = `Your child, ${student?.fullName} has left the school premises on ${longDate} at ${dto.time}`;
               }
 
-              await this.oneSignalNotificationService.sendToSubscriber(
-                subscriptions,
-                NOTIF_TYPE.STUDENT_LOG.toString(),
-                tapLog.tapLogId,
-                title,
-                desc
-              );
+              // await this.oneSignalNotificationService.sendToSubscriber(
+              //   subscriptions,
+              //   NOTIF_TYPE.STUDENT_LOG.toString(),
+              //   tapLog.tapLogId,
+              //   title,
+              //   desc
+              // );
+
+              const massRequest = [];
+              for (const subscription of subscriptions) {
+                massRequest.push(
+                  await this.oneSignalNotificationService.sendToSubscriber(
+                    [subscription],
+                    NOTIF_TYPE.STUDENT_LOG.toString(),
+                    tapLog.tapLogId,
+                    title,
+                    desc
+                  )
+                );
+              }
+              await Promise.all(massRequest);
               await this.logNotification(
                 parentStudents.map((x) => x.parent.user),
                 tapLog.tapLogId,

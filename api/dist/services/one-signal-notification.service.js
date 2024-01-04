@@ -22,36 +22,40 @@ let OneSignalNotificationService = class OneSignalNotificationService {
     async sendToSubscriber(subscriptionIds, type, referenceId, title, description) {
         const url = this.config.get("ONE_SIGNAL_NOTIF_URL");
         const apiKey = this.config.get("ONE_SIGNAL_API_KEY");
-        const result = await (0, rxjs_1.firstValueFrom)(this.httpService
-            .post(url, {
-            app_id: this.config.get("ONE_SIGNAL_APP_ID"),
-            include_subscription_ids: subscriptionIds,
-            data: {
-                type,
-                referenceId,
-            },
-            big_picture: this.config.get("ONE_SIGNAL_NOTIF_IMAGE"),
-            headings: {
-                en: title,
-            },
-            contents: {
-                en: description,
-            },
-            android_sound: this.config.get("ONE_SIGNAL_NOTIF_A_SOUND"),
-            android_channel_id: this.config.get("ONE_SIGNAL_NOTIF_A_CHANNEL_ID"),
-            existing_android_channel_id: this.config.get("ONE_SIGNAL_NOTIF_A_EXISTING_CHANNEL_ID"),
-        }, {
-            responseType: "json",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Basic " + apiKey,
-            },
-        })
-            .pipe((0, rxjs_1.catchError)((error) => {
-            throw new common_1.HttpException(error.response, common_1.HttpStatus.BAD_REQUEST);
-        })));
-        console.log(result.data);
-        return result.data;
+        let result;
+        try {
+            result = await (0, rxjs_1.firstValueFrom)(this.httpService
+                .post(url, {
+                app_id: this.config.get("ONE_SIGNAL_APP_ID"),
+                include_subscription_ids: subscriptionIds,
+                data: {
+                    type,
+                    referenceId,
+                },
+                big_picture: this.config.get("ONE_SIGNAL_NOTIF_IMAGE"),
+                headings: {
+                    en: title,
+                },
+                contents: {
+                    en: description,
+                },
+                android_sound: this.config.get("ONE_SIGNAL_NOTIF_A_SOUND"),
+                android_channel_id: this.config.get("ONE_SIGNAL_NOTIF_A_CHANNEL_ID"),
+                existing_android_channel_id: this.config.get("ONE_SIGNAL_NOTIF_A_EXISTING_CHANNEL_ID"),
+            }, {
+                responseType: "json",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Basic " + apiKey,
+                },
+            })
+                .pipe((0, rxjs_1.catchError)((error) => {
+                throw new common_1.HttpException(error.response, common_1.HttpStatus.BAD_REQUEST);
+            })));
+        }
+        catch (ex) { }
+        console.log(result === null || result === void 0 ? void 0 : result.data);
+        return result === null || result === void 0 ? void 0 : result.data;
     }
 };
 OneSignalNotificationService = __decorate([

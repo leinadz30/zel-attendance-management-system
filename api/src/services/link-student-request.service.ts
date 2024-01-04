@@ -329,13 +329,19 @@ export class LinkStudentRequestService {
           }
         );
         if (subscriptions.length > 0) {
-          await this.oneSignalNotificationService.sendToSubscriber(
-            subscriptions.map((x) => x.subscriptionId),
-            NOTIF_TYPE.LINK_REQUEST.toString(),
-            linkStudentRequest.linkStudentRequestCode,
-            notifTitle,
-            notifDesc
-          );
+          const massRequest = [];
+          for (const subscription of subscriptions) {
+            massRequest.push(
+              await this.oneSignalNotificationService.sendToSubscriber(
+                [subscription.subscriptionId],
+                NOTIF_TYPE.LINK_REQUEST.toString(),
+                linkStudentRequest.linkStudentRequestCode,
+                notifTitle,
+                notifDesc
+              )
+            );
+          }
+          await Promise.all(massRequest);
         }
 
         delete linkStudentRequest.requestedByParent.user.password;
@@ -449,13 +455,19 @@ export class LinkStudentRequestService {
           }
         );
         if (subscriptions.length > 0) {
-          await this.oneSignalNotificationService.sendToSubscriber(
-            subscriptions.map((x) => x.subscriptionId),
-            NOTIF_TYPE.LINK_REQUEST.toString(),
-            linkStudentRequest.linkStudentRequestCode,
-            notifTitle,
-            notifDesc
-          );
+          const massRequest = [];
+          for (const subscription of subscriptions) {
+            massRequest.push(
+              await this.oneSignalNotificationService.sendToSubscriber(
+                [subscription.subscriptionId],
+                NOTIF_TYPE.LINK_REQUEST.toString(),
+                linkStudentRequest.linkStudentRequestCode,
+                notifTitle,
+                notifDesc
+              )
+            );
+          }
+          await Promise.all(massRequest);
         }
         delete linkStudentRequest.requestedByParent.user.password;
         delete linkStudentRequest.updatedByUser.password;
