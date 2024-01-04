@@ -1,0 +1,26 @@
+
+::ng-deep .form-dialog {
+  .mat-mdc-dialog-content {
+    overflow: auto!important;
+  }
+  mat-list {
+    flex-direction: column;
+    mat-list-item {
+      .list-item {
+        display: flex;
+        flex-grow: 1;
+        width: 100%;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+      &:nth-child(odd) {
+        background-color: #0000000f;
+      }
+      border-bottom: 1px solid rgba($color: (#000000), $alpha: 0.13);
+      &:last-child {
+        border: none!important;
+      }
+    }
+  }
+}

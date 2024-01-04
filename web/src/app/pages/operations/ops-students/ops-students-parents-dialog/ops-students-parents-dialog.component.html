@@ -1,0 +1,42 @@
+
+<h4 mat-dialog-title>Student Parents</h4>
+
+<div mat-dialog-content>
+  <div fxFlex="100" class="content-inner" fxLayout="column">
+    <mat-list *ngIf="parentStudent.length > 0; else noData">
+      <mat-list-item *ngFor="let parent of parentStudent" [ngClass]="{ 'show-border': parentStudent.length > 1}">
+        <div class="list-item">
+          <h4 mat-line> {{ parent.fullName }} </h4>
+          <button mat-icon-button (click)="showParentDetails(parent)">
+            <mat-icon class="mat-24">info</mat-icon>
+          </button>
+        </div>
+      </mat-list-item>
+  </mat-list>
+  <ng-template #noData>
+    <mat-list>
+      <mat-list-item>
+        <div style="
+        display: flex;
+        width: 100%;
+        padding: 10px;
+        align-items: center;
+        text-align: center;">
+          No data to show
+        </div>
+      </mat-list-item>
+    </mat-list>
+  </ng-template>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <div>
+    <button
+      mat-flat-button
+      cdkFocusInitial
+      (click)="dialogRef.close(false)">
+      Close
+    </button>
+  </div>
+</div>

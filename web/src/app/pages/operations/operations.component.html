@@ -1,0 +1,102 @@
+
+<mat-toolbar color="primary" [ngClass]="{ 'side-bar-open' : drawerDefaultOpened}">
+    <button mat-icon-button (click)="sidenav.toggle()" matTooltip="Menu" *ngIf="!drawerDefaultOpened">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <img id="banner" src="../assets/img/banner.png">
+    <span id="title">Operations - {{title}}</span>
+    <span class="toolbar-item-spacer"></span>
+    <button mat-icon-button matTooltip="Notifications">
+        <mat-icon>notifications</mat-icon>
+    </button>
+    <button mat-icon-button matTooltip="My Account" [matMenuTriggerFor]="userAccountMenu">
+        <mat-icon>account_circle</mat-icon>
+    </button>
+    <mat-menu #userAccountMenu [overlapTrigger]="false" yPosition="below">
+        <button mat-menu-item routerLink="/">
+            <mat-icon>person</mat-icon><span>My Account</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="signOut()">
+            <mat-icon>exit_to_app</mat-icon>Logout
+        </button>
+    </mat-menu>
+</mat-toolbar>
+
+<mat-sidenav-container class="app-container" >
+    <mat-sidenav #sidenav mode="side" className="mat-elevation-z4" [opened]="drawerDefaultOpened" [mode]="!drawerDefaultOpened ? 'over': 'side'" style="position: fixed;">
+        <mat-nav-list>
+            <mat-list-item routerLink="dashboard" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+                <mat-icon>dashboard</mat-icon><span>Dashboard</span>
+            </mat-list-item>
+            <mat-expansion-panel
+              [@.disabled]="disableGroupAnimation"
+              (afterExpand)="disableGroupAnimation = false"
+              [expanded]="expand('School Management')"
+              [ngClass]="{'mat-expansion-active':expand('School Management') }" [class.mat-elevation-z0]="true" >
+              <mat-expansion-panel-header>
+                  <mat-icon>library_books</mat-icon><span>School Management</span>
+              </mat-expansion-panel-header>
+              <mat-nav-list>
+                <mat-list-item routerLink="school-management" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+                    <mat-icon>apartment</mat-icon><span>Schools</span>
+                </mat-list-item>
+                <mat-list-item routerLink="departments" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+                    <mat-icon>account_tree</mat-icon><span>Departments</span>
+                </mat-list-item>
+                <mat-list-item routerLink="employee-titles" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+                    <mat-icon>group</mat-icon><span>Employee Titles</span>
+                </mat-list-item>
+                <mat-list-item routerLink="courses" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+                    <mat-icon>history_edu</mat-icon><span>Courses</span>
+                </mat-list-item>
+                <mat-list-item routerLink="strands" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+                    <mat-icon>checklist</mat-icon><span>Strands</span>
+                </mat-list-item>
+                <mat-list-item routerLink="school-year-levels" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+                    <mat-icon>insert_chart</mat-icon><span>School year levels</span>
+                </mat-list-item>
+                <mat-list-item routerLink="sections" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+                    <mat-icon>room_preferences</mat-icon><span>Sections</span>
+                </mat-list-item>
+                <mat-list-item routerLink="employees" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+                    <mat-icon>groups</mat-icon><span>Employees</span>
+                </mat-list-item>
+                <mat-list-item routerLink="students" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+                    <mat-icon>school</mat-icon><span>Students</span>
+                </mat-list-item>
+                <mat-list-item routerLink="link-student-request" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+                    <mat-icon>pending_actions</mat-icon><span>Link Student Request</span>
+                </mat-list-item>
+                <mat-list-item routerLink="machines" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+                    <mat-icon>point_of_sale</mat-icon><span>Machines</span>
+                </mat-list-item>
+              </mat-nav-list>
+            </mat-expansion-panel>
+            <mat-list-item routerLink="parents" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+                <mat-icon>supervised_user_circle</mat-icon><span>Parents</span>
+            </mat-list-item>
+            <mat-list-item routerLink="users" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+                <mat-icon>account_circle</mat-icon><span>Operator Users</span>
+            </mat-list-item>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <div class="page-wrapper">
+            <div class="page-container" [ngClass]="{ 'details-container': details }">
+                <router-outlet (activate)="onActivate($event)">
+                </router-outlet>
+            </div>
+          </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>
+
+
+<ng-http-loader
+    [backdrop]="true"
+    [backgroundColor]="'#177bee'"
+    [debounceDelay]="100"
+    [extraDuration]="300"
+    [minDuration]="300"
+    [spinner]="spinkit.skThreeBounce">
+</ng-http-loader>

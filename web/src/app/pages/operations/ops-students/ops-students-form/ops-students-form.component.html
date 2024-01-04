@@ -1,0 +1,321 @@
+
+<h4 mat-dialog-title>{{title}}</h4>
+
+<div mat-dialog-content>
+  <div fxFlex="100" class="content-inner" fxLayout="column">
+    <form
+    [formGroup]="studentForm"
+    fxLayout="row wrap"
+    id="studentForm"
+    [ngClass]="{ 'readonly': studentForm.disabled }"
+    (ngSubmit)="onSubmit()">
+      <fieldset fxFlex="100" fxLayout="column">
+        <div
+          fxLayout="column"
+          fxFlex="100"
+          style="gap: 16px">
+          <div
+          fxLayout="column"
+          fxFlex="100">
+            <mat-form-field
+              appearance="outline">
+              <mat-label>Department </mat-label>
+              <input
+                matInput
+                readonly
+                [value]="department?.departmentName"
+                placeholder="Department"/>
+                <mat-icon
+                  class="icon-right"
+                  style="cursor: pointer;"
+                  matSuffix
+                  matTooltip="Department"
+                  *ngIf="studentForm.enabled"
+                  (click)="showSelectDepartmentDialog()">
+                  search
+                </mat-icon>
+            </mat-form-field>
+            <span
+              style="color: #f44336;font-size: 14px!important;"
+              *ngIf="f['departmentId'].touched && f['departmentId'].dirty && f['departmentId'].errors">Please select Department</span>
+          </div>
+          <div
+          fxLayout="column"
+          fxFlex="100">
+            <mat-form-field
+              appearance="outline">
+              <mat-label>School year level </mat-label>
+              <input
+                matInput
+                readonly
+                [value]="schoolYearLevel?.name"
+                placeholder="School year level"/>
+                <mat-icon
+                  class="icon-right"
+                  style="cursor: pointer;"
+                  matSuffix
+                  matTooltip="School year level"
+                  *ngIf="studentForm.enabled"
+                  (click)="showSelectSchoolYearLevelDialog()">
+                  search
+                </mat-icon>
+            </mat-form-field>
+            <span
+              style="color: #f44336;font-size: 14px!important;"
+              *ngIf="f['schoolYearLevelId'].touched && f['schoolYearLevelId'].dirty && f['schoolYearLevelId'].errors">Please select School year level</span>
+          </div>
+          <div
+          fxLayout="column"
+          fxFlex="100"
+          *ngIf="schoolYearLevel && schoolYearLevel?.educationalStage === 'COLLEGE'">
+            <mat-form-field
+              appearance="outline">
+              <mat-label>Course </mat-label>
+              <input
+                matInput
+                readonly
+                [value]="course?.name"
+                placeholder="Course"/>
+                <mat-icon
+                  class="icon-right"
+                  style="cursor: pointer;"
+                  matSuffix
+                  matTooltip="Course"
+                  *ngIf="studentForm.enabled"
+                  (click)="showSelectCourseDialog()">
+                  search
+                </mat-icon>
+            </mat-form-field>
+            <span
+              style="color: #f44336;font-size: 14px!important;"
+              *ngIf="f['courseId'].touched && f['courseId'].dirty && f['courseId'].errors">Please select Course</span>
+          </div>
+          <div
+          fxLayout="column"
+          fxFlex="100"
+          *ngIf="schoolYearLevel && schoolYearLevel?.educationalStage === 'SENIOR'">
+            <mat-form-field
+              appearance="outline">
+              <mat-label>Strand </mat-label>
+              <input
+                matInput
+                readonly
+                [value]="strand?.name"
+                placeholder="Strand"/>
+                <mat-icon
+                  class="icon-right"
+                  style="cursor: pointer;"
+                  matSuffix
+                  matTooltip="Strand"
+                  *ngIf="studentForm.enabled"
+                  (click)="showSelectStrandDialog()">
+                  search
+                </mat-icon>
+            </mat-form-field>
+            <span
+              style="color: #f44336;font-size: 14px!important;"
+              *ngIf="f['strandId'].touched && f['strandId'].dirty && f['strandId'].errors">Please select Strand</span>
+          </div>
+          <div
+            fxLayout="column"
+            fxFlex="100">
+            <mat-form-field
+              appearance="outline">
+              <mat-label>Section </mat-label>
+              <input
+                matInput
+                readonly
+                [value]="section?.sectionName"
+                placeholder="Section"/>
+                <mat-icon
+                  class="icon-right"
+                  style="cursor: pointer;"
+                  matSuffix
+                  matTooltip="Section"
+                  *ngIf="studentForm.enabled"
+                  (click)="showSelectSectionDialog()">
+                  search
+                </mat-icon>
+            </mat-form-field>
+            <span
+              style="color: #f44336;font-size: 14px!important;"
+              *ngIf="f['sectionId'].touched && f['sectionId'].dirty && f['sectionId'].errors">Please select Section</span>
+          </div>
+          <mat-form-field
+            appearance="outline"
+            [ngClass.gt-sm]="{ isLargeScreen: true }">
+            <mat-label>{{schoolYearLevel?.educationalStage !== 'COLLEGE' ? 'Student Id or LRN' : 'Student Id'}}</mat-label>
+            <input
+              matInput
+              placeholder="{{schoolYearLevel?.educationalStage !== 'COLLEGE' ? 'Student Id or LRN' : 'Student Id'}}"
+              formControlName="orgStudentId"
+            />
+            <mat-error
+              *ngIf="getError('orgStudentId') !== (null || undefined)"
+              >{{
+                (getError("orgStudentId") &&
+                getError("orgStudentId")["required"]
+                  ? "Please enter " + (schoolYearLevel?.educationalStage !== "COLLEGE" ? "Student Id or LRN" : "Student Id")
+                  : "")
+              }}</mat-error
+            >
+          </mat-form-field>
+          <mat-form-field
+            appearance="outline"
+            [ngClass.gt-sm]="{ isLargeScreen: true }">
+            <mat-label>First Name</mat-label>
+            <input
+              matInput
+              placeholder="First Name"
+              formControlName="firstName"
+            />
+            <mat-error
+              *ngIf="getError('firstName') !== (null || undefined)"
+              >{{
+                (getError("firstName") &&
+                getError("firstName")["required"]
+                  ? "Please enter First Name"
+                  : "") ||
+                  (getError("firstName") &&
+                  getError("firstName")["pattern"]
+                    ? "Invalid input"
+                    : "")
+              }}</mat-error
+            >
+          </mat-form-field>
+          <mat-form-field
+            appearance="outline"
+            [ngClass.gt-sm]="{ isLargeScreen: true }">
+            <mat-label>Middle Initial</mat-label>
+            <input
+              matInput
+              placeholder="Middle Initial"
+              formControlName="middleInitial"
+            />
+            <mat-error
+              *ngIf="getError('middleInitial') !== (null || undefined)"
+              >{{
+                (getError("middleInitial") &&
+                getError("middleInitial")["required"]
+                  ? "Please enter Middle Initial"
+                  : "") ||
+                  (getError("middleInitial") &&
+                  getError("middleInitial")["pattern"]
+                    ? "Invalid input"
+                    : "")
+              }}</mat-error
+            >
+          </mat-form-field>
+          <mat-form-field
+            appearance="outline"
+            [ngClass.gt-sm]="{ isLargeScreen: true }">
+            <mat-label>Last Name </mat-label>
+            <input
+              matInput
+              placeholder="Last Name"
+              formControlName="lastName"
+            />
+            <mat-error
+              *ngIf="getError('lastName') !== (null || undefined)"
+              >{{
+                (getError("lastName") &&
+                getError("lastName")["required"]
+                  ? "Please enter Last Name"
+                  : "") ||
+                  (getError("lastName") &&
+                  getError("lastName")["pattern"]
+                    ? "Invalid input"
+                    : "")
+              }}</mat-error
+            >
+          </mat-form-field>
+          <mat-form-field
+            appearance="outline"
+            [ngClass.gt-sm]="{ isLargeScreen: true }">
+            <mat-label>Mobile number </mat-label>
+            <input
+              matInput
+              placeholder="Mobile number"
+              formControlName="mobileNumber"
+            />
+            <mat-error
+              *ngIf="getError('mobileNumber') !== (null || undefined)"
+              >{{
+                (getError("mobileNumber") &&
+                getError("mobileNumber")["required"]
+                  ? "Please enter Mobile number"
+                  : "") ||
+                  (getError("mobileNumber") &&
+                  getError("mobileNumber")["pattern"]
+                    ? "Invalid input"
+                    : "")
+              }}</mat-error
+            >
+          </mat-form-field>
+          <mat-form-field
+            appearance="outline"
+            [ngClass.gt-sm]="{ isLargeScreen: true }">
+            <mat-label>Card number </mat-label>
+            <input
+              matInput
+              placeholder="Card number"
+              formControlName="cardNumber"
+            />
+            <mat-error
+              *ngIf="getError('cardNumber') !== (null || undefined)"
+              >{{
+                (getError("cardNumber") &&
+                getError("cardNumber")["required"]
+                  ? "Please enter Card number"
+                  : "") ||
+                  (getError("cardNumber") &&
+                  getError("cardNumber")["pattern"]
+                    ? "Invalid input"
+                    : "")
+              }}</mat-error
+            >
+          </mat-form-field>
+          <mat-form-field
+            appearance="outline"
+            fxFlex="50%"
+            class="cell"
+            [ngClass.gt-sm]="{ isLargeScreen: true }"
+            class="readonly">
+            <mat-label>Address </mat-label>
+            <textarea
+              matInput
+              placeholder="Address"
+              formControlName="address">
+            </textarea>
+            <mat-error
+              *ngIf="getError('address') !== (null || undefined)">{{
+                (getError("address") && getError("address").required
+                  ? "Please enter address"
+                  : "")}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <div>
+    <button
+      mat-flat-button
+      cdkFocusInitial
+      (click)="dialogRef.close(false)">
+      {{studentForm.enabled ? 'Cancel': 'Close'}}
+    </button>
+    <button
+      *ngIf="studentForm.enabled"
+      mat-flat-button
+      [disabled]="!formIsValid || !formIsReady"
+      color="primary"
+      type="submit"
+      form="studentForm">
+      {{isNew ? 'Save' : 'Update'}}
+    </button>
+  </div>
+</div>

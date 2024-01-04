@@ -1,0 +1,134 @@
+
+<h4 mat-dialog-title>{{isNew ? 'New' : 'Update'}} Section</h4>
+
+<div mat-dialog-content>
+  <div fxFlex="100" class="content-inner" fxLayout="column">
+    <form
+    [formGroup]="sectionForm"
+    fxLayout="row wrap"
+    id="sectionForm"
+    (ngSubmit)="onSubmit()">
+      <fieldset fxFlex="100" fxLayout="column">
+        <div
+          fxLayout="column"
+          fxFlex="100"
+          style="gap: 16px">
+          <div
+          fxLayout="column"
+          fxFlex="100">
+            <mat-form-field
+              appearance="outline">
+              <mat-label>Department &nbsp;</mat-label>
+              <input
+                matInput
+                readonly
+                [value]="department?.departmentName"
+                placeholder="Department"/>
+                <mat-icon
+                  class="icon-right"
+                  style="cursor: pointer;"
+                  matSuffix
+                  matTooltip="Department"
+                  (click)="showSelectDepartmentDialog()">
+                  search
+                </mat-icon>
+            </mat-form-field>
+            <span
+              style="color: #f44336;font-size: 14px!important;"
+              *ngIf="f['departmentId'].touched && f['departmentId'].dirty && f['departmentId'].errors">Please select Department</span>
+          </div>
+          <div
+          fxLayout="column"
+          fxFlex="100">
+            <mat-form-field
+              appearance="outline">
+              <mat-label>School Year Level &nbsp;&nbsp;</mat-label>
+              <input
+                readonly
+                matInput
+                [value]="schoolYearLevel?.name"
+                placeholder="School Year Level"/>
+                <mat-icon
+                  class="icon-right"
+                  style="cursor: pointer;"
+                  matSuffix
+                  matTooltip="Search School Year Level"
+                  (click)="showSelectSchoolYearLevelDialog()">
+                  search
+                </mat-icon>
+            </mat-form-field>
+            <span
+              style="color: #f44336;font-size: 14px!important;"
+              *ngIf="f['schoolYearLevelId'].touched && f['schoolYearLevelId'].dirty && f['schoolYearLevelId'].errors">Please select School Year Level</span>
+          </div>
+          <div
+          fxLayout="column"
+          fxFlex="100">
+            <mat-form-field
+              appearance="outline">
+              <mat-label>Adviser &nbsp;</mat-label>
+              <input
+                matInput
+                readonly
+                [value]="adviserEmployee?.fullName"
+                placeholder="Adviser"/>
+                <mat-icon
+                  class="icon-right"
+                  style="cursor: pointer;"
+                  matSuffix
+                  matTooltip="Adviser"
+                  (click)="showSelectAdviserDialog()">
+                  search
+                </mat-icon>
+            </mat-form-field>
+            <span
+              style="color: #f44336;font-size: 14px!important;"
+              *ngIf="f['adviserEmployeeId'].touched && f['adviserEmployeeId'].dirty && f['adviserEmployeeId'].errors">Please select Adviser</span>
+          </div>
+          <mat-form-field
+            appearance="outline"
+            [ngClass.gt-sm]="{ isLargeScreen: true }">
+            <mat-label>Name</mat-label>
+            <input
+              matInput
+              placeholder="Name"
+              formControlName="sectionName"
+            />
+            <mat-error
+              *ngIf="getError('sectionName') !== (null || undefined)"
+              >{{
+                (getError("sectionName") &&
+                getError("sectionName")["required"]
+                  ? "Please enter Name"
+                  : "") ||
+                  (getError("sectionName") &&
+                  getError("sectionName")["pattern"]
+                    ? "Invalid input"
+                    : "")
+              }}</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <div>
+    <button
+      mat-flat-button
+      cdkFocusInitial
+      (click)="dialogRef.close(false)">
+      Cancel
+    </button>
+    <button
+      mat-flat-button
+      [disabled]="!formIsValid || !formIsReady"
+      color="primary"
+      type="submit"
+      form="sectionForm">
+      {{isNew ? 'Save' : 'Update'}}
+    </button>
+  </div>
+</div>
