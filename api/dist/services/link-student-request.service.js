@@ -270,7 +270,9 @@ let LinkStudentRequestService = class LinkStudentRequestService {
                     },
                 },
             });
-            await this.oneSignalNotificationService.sendToSubscriber(subscriptions.map((x) => x.subscriptionId), notifications_constant_1.NOTIF_TYPE.LINK_REQUEST.toString(), linkStudentRequest.linkStudentRequestCode, notifTitle, notifDesc);
+            if (subscriptions.length > 0) {
+                await this.oneSignalNotificationService.sendToSubscriber(subscriptions.map((x) => x.subscriptionId), notifications_constant_1.NOTIF_TYPE.LINK_REQUEST.toString(), linkStudentRequest.linkStudentRequestCode, notifTitle, notifDesc);
+            }
             delete linkStudentRequest.requestedByParent.user.password;
             delete linkStudentRequest.updatedByUser.password;
             await this.logNotification(linkStudentRequest.requestedByParent.user, linkStudentRequest.linkStudentRequestCode, entityManager, notifTitle, notifDesc);
@@ -342,7 +344,9 @@ let LinkStudentRequestService = class LinkStudentRequestService {
                     },
                 },
             });
-            await this.oneSignalNotificationService.sendToSubscriber(subscriptions, notifications_constant_1.NOTIF_TYPE.LINK_REQUEST.toString(), linkStudentRequest.linkStudentRequestCode, notifTitle, notifDesc);
+            if (subscriptions.length > 0) {
+                await this.oneSignalNotificationService.sendToSubscriber(subscriptions.map((x) => x.subscriptionId), notifications_constant_1.NOTIF_TYPE.LINK_REQUEST.toString(), linkStudentRequest.linkStudentRequestCode, notifTitle, notifDesc);
+            }
             delete linkStudentRequest.requestedByParent.user.password;
             delete linkStudentRequest.updatedByUser.password;
             await this.logNotification(linkStudentRequest.requestedByParent.user, linkStudentRequest.linkStudentRequestCode, entityManager, notifTitle, notifDesc);

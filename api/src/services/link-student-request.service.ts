@@ -328,13 +328,16 @@ export class LinkStudentRequestService {
             },
           }
         );
-        await this.oneSignalNotificationService.sendToSubscriber(
-          subscriptions.map((x) => x.subscriptionId),
-          NOTIF_TYPE.LINK_REQUEST.toString(),
-          linkStudentRequest.linkStudentRequestCode,
-          notifTitle,
-          notifDesc
-        );
+        if (subscriptions.length > 0) {
+          await this.oneSignalNotificationService.sendToSubscriber(
+            subscriptions.map((x) => x.subscriptionId),
+            NOTIF_TYPE.LINK_REQUEST.toString(),
+            linkStudentRequest.linkStudentRequestCode,
+            notifTitle,
+            notifDesc
+          );
+        }
+
         delete linkStudentRequest.requestedByParent.user.password;
         delete linkStudentRequest.updatedByUser.password;
         await this.logNotification(
@@ -445,13 +448,15 @@ export class LinkStudentRequestService {
             },
           }
         );
-        await this.oneSignalNotificationService.sendToSubscriber(
-          subscriptions,
-          NOTIF_TYPE.LINK_REQUEST.toString(),
-          linkStudentRequest.linkStudentRequestCode,
-          notifTitle,
-          notifDesc
-        );
+        if (subscriptions.length > 0) {
+          await this.oneSignalNotificationService.sendToSubscriber(
+            subscriptions.map((x) => x.subscriptionId),
+            NOTIF_TYPE.LINK_REQUEST.toString(),
+            linkStudentRequest.linkStudentRequestCode,
+            notifTitle,
+            notifDesc
+          );
+        }
         delete linkStudentRequest.requestedByParent.user.password;
         delete linkStudentRequest.updatedByUser.password;
         await this.logNotification(

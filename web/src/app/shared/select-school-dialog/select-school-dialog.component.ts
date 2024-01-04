@@ -19,15 +19,15 @@ export class SelectSchoolDialogTableColumn extends OpsSchoolsTableColumn {
   styleUrls: ['./select-school-dialog.component.scss']
 })
 export class SelectSchoolDialogComponent {
-  displayedColumns = ["selected", "schoolCode", "schoolName" ]
+  displayedColumns = ["selected", "orgSchoolCode", "schoolName" ]
   dataSource = new MatTableDataSource<SelectSchoolDialogTableColumn>();
   selected: SelectSchoolDialogTableColumn;
   doneSelect = new EventEmitter();
   total = 0;
   pageIndex = 0;
   pageSize = 10
-  order = { schoolCode: "ASC" } as any;
-  filterSchoolCode = "";
+  order = { orgSchoolCode: "ASC" } as any;
+  filterOrgSchoolCode = "";
   filterSchoolName = "";
   @ViewChild('paginator', {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -52,8 +52,8 @@ export class SelectSchoolDialogComponent {
     });
     this.dataSource.sort.sortChange.subscribe((event: MatSort)=> {
       const { active, direction } = event;
-      if(active === "schoolCode") {
-        this.order = { schoolCode: direction.toUpperCase()}
+      if(active === "orgSchoolCode") {
+        this.order = { orgSchoolCode: direction.toUpperCase()}
       } else if(active === "schoolName") {
         this.order = { schoolName: direction.toUpperCase()}
       }
@@ -64,8 +64,8 @@ export class SelectSchoolDialogComponent {
   init() {
     const filter: any[] = [
       {
-        apiNotation: "schoolCode",
-        filter: this.filterSchoolCode,
+        apiNotation: "orgSchoolCode",
+        filter: this.filterOrgSchoolCode,
       },
     ];
     try {
@@ -78,6 +78,7 @@ export class SelectSchoolDialogComponent {
         this.dataSource = new MatTableDataSource(res.data.results.map(x=> {
           return {
             schoolCode: x.schoolCode,
+            orgSchoolCode: x.orgSchoolCode,
             schoolName:  x.schoolName,
             schoolAddress:  x.schoolAddress,
             schoolEmail:  x.schoolEmail,
