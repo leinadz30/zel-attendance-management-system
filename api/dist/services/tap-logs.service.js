@@ -90,8 +90,8 @@ let TapLogsService = class TapLogsService {
       ) t 
       LEFT JOIN dbo."TapLogs" tl ON t."tapLogId" = tl."TapLogId"
       LEFT JOIN dbo."Students" s ON tl."CardNumber" = s."CardNumber"
-      LEFT JOIN dbo."ParentStudent" ps ON ps."StudentId" = s."StudentId"
-      LEFT JOIN dbo."Parents" p ON ps."ParentId" = ps."ParentId"
+      LEFT JOIN dbo."ParentStudent" ps ON s."StudentId" = ps."StudentId"
+      LEFT JOIN dbo."Parents" p ON ps."ParentId" = p."ParentId"
       WHERE tl."Date" = '${date}'
       AND p."ParentCode" = '${parentCode}'
       GROUP BY s."StudentId"
