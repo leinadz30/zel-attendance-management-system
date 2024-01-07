@@ -34,6 +34,8 @@ export class PusherService {
   async sendNotif(
     userIds: string[],
     notificationIds: string[],
+    referenceId,
+    type: "LINK_STUDENT" | "STUDENT_LOGIN_LOGOUT" | "ANNOUNCEMENT",
     title: string,
     description
   ) {
@@ -42,6 +44,8 @@ export class PusherService {
         for (const userId of userIds) {
           this.pusher.trigger(userId, "notifAdded", {
             notificationIds,
+            referenceId,
+            type,
             title,
             description,
           });

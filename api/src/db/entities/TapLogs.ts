@@ -29,6 +29,9 @@ export class TapLogs {
   @Column("character varying", { name: "CardNumber" })
   cardNumber: string;
 
+  @Column("character varying", { name: "Type", default: () => "''" })
+  type: string;
+
   @ManyToOne(() => Machines, (machines) => machines.tapLogs)
   @JoinColumn([{ name: "MachineId", referencedColumnName: "machineId" }])
   machine: Machines;

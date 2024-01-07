@@ -573,6 +573,8 @@ export class LinkStudentRequestService {
     await this.pusherService.sendNotif(
       [user.userId],
       notifcationIds,
+      referenceId,
+      NOTIF_TYPE.LINK_REQUEST.toString() as any,
       title,
       description
     );

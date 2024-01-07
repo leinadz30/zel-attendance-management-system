@@ -172,6 +172,43 @@ export class StudentsService {
     return res;
   }
 
+  async getByCardNumber(cardNumber) {
+    const res = await this.studentRepo.findOne({
+      where: {
+        cardNumber,
+        active: true,
+      },
+      relations: {
+        parentStudents: {
+          parent: true,
+        },
+        studentCourse: {
+          course: true,
+        },
+        studentStrand: {
+          strand: true,
+        },
+        department: true,
+        registeredByUser: true,
+        updatedByUser: true,
+        school: true,
+        schoolYearLevel: true,
+        studentSection: {
+          section: true,
+        },
+      },
+    });
+
+    if (!res) {
+      throw Error(USER_ERROR_USER_NOT_FOUND);
+    }
+    delete res.registeredByUser.password;
+    if (res?.updatedByUser?.password) {
+      delete res.updatedByUser.password;
+    }
+    return res;
+  }
+
   async create(dto: CreateStudentDto) {
     try {
       return await this.studentRepo.manager.transaction(

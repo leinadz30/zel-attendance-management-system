@@ -82,6 +82,10 @@ __decorate([
     __metadata("design:type", Boolean)
 ], Students.prototype, "active", void 0);
 __decorate([
+    (0, typeorm_1.Column)("bigint", { name: "SchoolId" }),
+    __metadata("design:type", String)
+], Students.prototype, "schoolId", void 0);
+__decorate([
     (0, typeorm_1.Column)("character varying", { name: "FullName", default: () => "''" }),
     __metadata("design:type", String)
 ], Students.prototype, "fullName", void 0);
@@ -140,6 +144,9 @@ Students = __decorate([
     (0, typeorm_1.Index)("u_students_number", ["active", "mobileNumber"], { unique: true }),
     (0, typeorm_1.Index)("u_students_email", ["active", "email"], { unique: true }),
     (0, typeorm_1.Index)("u_students_card", ["active", "cardNumber"], { unique: true }),
+    (0, typeorm_1.Index)("u_student_orgstudentid", ["active", "orgStudentId", "schoolId"], {
+        unique: true,
+    }),
     (0, typeorm_1.Index)("Students_pkey", ["studentId"], { unique: true }),
     (0, typeorm_1.Entity)("Students", { schema: "dbo" })
 ], Students);

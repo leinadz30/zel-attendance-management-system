@@ -72,7 +72,7 @@ let TapLogsService = class TapLogsService {
         date = (0, moment_1.default)(date).format("YYYY-MM-DD");
         const res = await this.tapLogsRepo.manager.query(`
       Select 
-      tl."StudentId" AS "studentId",  
+      s."StudentId" AS "studentId",  
       MAX(s."StudentCode") AS "studentCode",
       MAX(s."FirstName") AS "firstName",
       MAX(s."MiddleInitial") AS "middleInitial",
@@ -89,13 +89,13 @@ let TapLogsService = class TapLogsService {
         from dbo."TapLogs"
       ) t 
       LEFT JOIN dbo."TapLogs" tl ON t."tapLogId" = tl."TapLogId"
-      LEFT JOIN dbo."ParentStudent" ps ON tl."StudentId" = ps."StudentId"
-      LEFT JOIN dbo."Students" s ON ps."StudentId" = s."StudentId"
+      LEFT JOIN dbo."Students" s ON tl."CardNumber" = s."CardNumber"
+      LEFT JOIN dbo."ParentStudent" ps ON ps."StudentId" = s."StudentId"
       LEFT JOIN dbo."Parents" p ON ps."ParentId" = ps."ParentId"
       WHERE tl."Date" = '${date}'
       AND p."ParentCode" = '${parentCode}'
-      GROUP BY tl."StudentId"
-      ORDER BY tl."StudentId"
+      GROUP BY s."StudentId"
+      ORDER BY s."StudentId"
     `);
         return res.map((x) => {
             x.logs.sort((a, b) => {
@@ -122,7 +122,7 @@ let TapLogsService = class TapLogsService {
       from dbo."TapLogs"
       ) t 
       LEFT JOIN dbo."TapLogs" tl ON t."tapLogId" = tl."TapLogId"
-      LEFT JOIN dbo."Students" s ON tl."StudentId" = s."StudentId"
+      LEFT JOIN dbo."Students" s ON tl."CardNumber" = s."CardNumber"
       WHERE s."StudentCode" = '${studentCode}'
       AND tl."Date" = '${date}'
       ORDER BY t."DateTime" ASC
@@ -141,12 +141,56 @@ let TapLogsService = class TapLogsService {
         if (!result) {
             throw Error(top_logs_constant_1.TAPLOGS_ERROR_NOT_FOUND);
         }
-        return result;
+        else {
+            if (result.type === "STUDENT") {
+                return Object.assign(Object.assign({}, result), { student: await this.tapLogsRepo.manager.findOne(Students_1.Students, {
+                        where: { cardNumber: result.cardNumber },
+                        relations: {
+                            school: true,
+                            department: true,
+                            parentStudents: {
+                                parent: true,
+                            },
+                            studentStrand: {
+                                strand: true,
+                            },
+                            studentSection: {
+                                section: true,
+                            },
+                            studentCourse: {
+                                course: true,
+                            },
+                            schoolYearLevel: {
+                                school: true,
+                            },
+                        },
+                    }) });
+            }
+            else {
+                return Object.assign(Object.assign({}, result), { employee: this.tapLogsRepo.manager.findOne(Employees_1.Employees, {
+                        where: {
+                            cardNumber: result.cardNumber,
+                            active: true,
+                        },
+                        relations: {
+                            department: true,
+                            createdByUser: true,
+                            updatedByUser: true,
+                            school: true,
+                            employeePosition: true,
+                            employeeUser: {
+                                user: true,
+                                employeeRole: true,
+                            },
+                        },
+                    }) });
+            }
+        }
     }
     async create(dto) {
         return await this.tapLogsRepo.manager.transaction(async (entityManager) => {
-            const date = (0, moment_1.default)(dto.date, date_constant_1.DateConstant.DATE_LANGUAGE).format("YYYY-MM-DD");
-            const longDate = (0, moment_1.default)(dto.date, date_constant_1.DateConstant.DATE_LANGUAGE).format("MMM DD, YYYY");
+            const date = (0, moment_1.default)(new Date(dto.date), date_constant_1.DateConstant.DATE_LANGUAGE).format("YYYY-MM-DD");
+            const longDate = (0, moment_1.default)(new Date(dto.date), date_constant_1.DateConstant.DATE_LANGUAGE).format("MMM DD, YYYY");
             const { cardNumber, status, time, sender } = dto;
             let tapLog;
             tapLog = await entityManager.findOne(TapLogs_1.TapLogs, {
@@ -163,6 +207,7 @@ let TapLogsService = class TapLogsService {
                 tapLog.cardNumber = cardNumber;
                 tapLog.time = dto.time;
                 tapLog.status = dto.status;
+                tapLog.type = dto.userType;
                 const machine = await entityManager.findOne(Machines_1.Machines, {
                     where: {
                         description: sender,
@@ -293,7 +338,7 @@ let TapLogsService = class TapLogsService {
         });
         const res = await entityManager.save(Notifications_1.Notifications, notifcations);
         const notificationsIds = res.map((x) => x.notificationId);
-        await this.pusherService.sendNotif(users.map((x) => x.userId), notificationsIds, title, description);
+        await this.pusherService.sendNotif(users.map((x) => x.userId), notificationsIds, referenceId, notifications_constant_1.NOTIF_TYPE.STUDENT_LOG.toString(), title, description);
         return notificationsIds;
     }
 };

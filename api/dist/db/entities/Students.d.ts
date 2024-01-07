@@ -21,6 +21,7 @@ export declare class Students {
     registrationDate: Date;
     updatedDate: Date | null;
     active: boolean;
+    schoolId: string;
     fullName: string;
     orgStudentId: string;
     linkStudentRequests: LinkStudentRequest[];

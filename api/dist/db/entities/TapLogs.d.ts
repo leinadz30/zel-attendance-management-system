@@ -5,5 +5,6 @@ export declare class TapLogs {
     date: string;
     time: string;
     cardNumber: string;
+    type: string;
     machine: Machines;
 }

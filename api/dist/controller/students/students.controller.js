@@ -51,6 +51,19 @@ let StudentsController = class StudentsController {
             return res;
         }
     }
+    async getByCardNumber(cardNumber) {
+        const res = {};
+        try {
+            res.data = await this.studentsService.getByCardNumber(cardNumber);
+            res.success = true;
+            return res;
+        }
+        catch (e) {
+            res.success = false;
+            res.message = e.message !== undefined ? e.message : e;
+            return res;
+        }
+    }
     async getPaginated(params) {
         const res = {};
         try {
@@ -149,6 +162,13 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], StudentsController.prototype, "getByOrgStudentId", null);
+__decorate([
+    (0, common_1.Get)("getByCardNumber/:cardNumber"),
+    __param(0, (0, common_1.Param)("cardNumber")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], StudentsController.prototype, "getByCardNumber", null);
 __decorate([
     (0, common_1.Post)("/page"),
     __param(0, (0, common_1.Body)()),

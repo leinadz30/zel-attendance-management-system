@@ -12,6 +12,7 @@ export declare class Employees {
     lastName: string;
     createdDate: Date;
     updatedDate: Date | null;
+    schoolId: string;
     active: boolean;
     accessGranted: boolean;
     mobileNumber: string;

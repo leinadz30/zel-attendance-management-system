@@ -10,6 +10,7 @@ export declare class StudentsController {
     constructor(studentsService: StudentsService);
     getDetails(studentCode: string): Promise<ApiResponseModel<Students>>;
     getByOrgStudentId(orgStudentId: string): Promise<ApiResponseModel<Students>>;
+    getByCardNumber(cardNumber: string): Promise<ApiResponseModel<Students>>;
     getPaginated(params: PaginationParamsDto): Promise<ApiResponseModel<{
         results: Students[];
         total: number;

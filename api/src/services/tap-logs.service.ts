@@ -79,7 +79,7 @@ export class TapLogsService {
     date = moment(date).format("YYYY-MM-DD");
     const res: any[] = await this.tapLogsRepo.manager.query(`
       Select 
-      tl."StudentId" AS "studentId",  
+      s."StudentId" AS "studentId",  
       MAX(s."StudentCode") AS "studentCode",
       MAX(s."FirstName") AS "firstName",
       MAX(s."MiddleInitial") AS "middleInitial",
@@ -96,13 +96,13 @@ export class TapLogsService {
         from dbo."TapLogs"
       ) t 
       LEFT JOIN dbo."TapLogs" tl ON t."tapLogId" = tl."TapLogId"
-      LEFT JOIN dbo."ParentStudent" ps ON tl."StudentId" = ps."StudentId"
-      LEFT JOIN dbo."Students" s ON ps."StudentId" = s."StudentId"
+      LEFT JOIN dbo."Students" s ON tl."CardNumber" = s."CardNumber"
+      LEFT JOIN dbo."ParentStudent" ps ON ps."StudentId" = s."StudentId"
       LEFT JOIN dbo."Parents" p ON ps."ParentId" = ps."ParentId"
       WHERE tl."Date" = '${date}'
       AND p."ParentCode" = '${parentCode}'
-      GROUP BY tl."StudentId"
-      ORDER BY tl."StudentId"
+      GROUP BY s."StudentId"
+      ORDER BY s."StudentId"
     `);
     return res.map((x) => {
       x.logs.sort((a, b) => {
@@ -130,7 +130,7 @@ export class TapLogsService {
       from dbo."TapLogs"
       ) t 
       LEFT JOIN dbo."TapLogs" tl ON t."tapLogId" = tl."TapLogId"
-      LEFT JOIN dbo."Students" s ON tl."StudentId" = s."StudentId"
+      LEFT JOIN dbo."Students" s ON tl."CardNumber" = s."CardNumber"
       WHERE s."StudentCode" = '${studentCode}'
       AND tl."Date" = '${date}'
       ORDER BY t."DateTime" ASC
@@ -149,18 +149,68 @@ export class TapLogsService {
     });
     if (!result) {
       throw Error(TAPLOGS_ERROR_NOT_FOUND);
+    } else {
+      if (result.type === "STUDENT") {
+        return {
+          ...result,
+          student: await this.tapLogsRepo.manager.findOne(Students, {
+            where: { cardNumber: result.cardNumber },
+            relations: {
+              school: true,
+              department: true,
+              parentStudents: {
+                parent: true,
+              },
+              studentStrand: {
+                strand: true,
+              },
+              studentSection: {
+                section: true,
+              },
+              studentCourse: {
+                course: true,
+              },
+              schoolYearLevel: {
+                school: true,
+              },
+            },
+          }),
+        };
+      } else {
+        return {
+          ...result,
+          employee: this.tapLogsRepo.manager.findOne(Employees, {
+            where: {
+              cardNumber: result.cardNumber,
+              active: true,
+            },
+            relations: {
+              department: true,
+              createdByUser: true,
+              updatedByUser: true,
+              school: true,
+              employeePosition: true,
+              employeeUser: {
+                user: true,
+                employeeRole: true,
+              },
+            },
+          }),
+        };
+      }
     }
-    return result;
   }
 
   async create(dto: CreateTapLogDto) {
     return await this.tapLogsRepo.manager.transaction(async (entityManager) => {
-      const date = moment(dto.date, DateConstant.DATE_LANGUAGE).format(
-        "YYYY-MM-DD"
-      );
-      const longDate = moment(dto.date, DateConstant.DATE_LANGUAGE).format(
-        "MMM DD, YYYY"
-      );
+      const date = moment(
+        new Date(dto.date),
+        DateConstant.DATE_LANGUAGE
+      ).format("YYYY-MM-DD");
+      const longDate = moment(
+        new Date(dto.date),
+        DateConstant.DATE_LANGUAGE
+      ).format("MMM DD, YYYY");
       const { cardNumber, status, time, sender } = dto;
       let tapLog: TapLogs;
       tapLog = await entityManager.findOne(TapLogs, {
@@ -177,6 +227,7 @@ export class TapLogsService {
         tapLog.cardNumber = cardNumber;
         tapLog.time = dto.time;
         tapLog.status = dto.status;
+        tapLog.type = dto.userType;
         const machine = await entityManager.findOne(Machines, {
           where: {
             description: sender,
@@ -474,6 +525,8 @@ export class TapLogsService {
     await this.pusherService.sendNotif(
       users.map((x) => x.userId),
       notificationsIds,
+      referenceId,
+      NOTIF_TYPE.STUDENT_LOG.toString() as any,
       title,
       description
     );

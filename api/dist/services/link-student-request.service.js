@@ -427,7 +427,7 @@ let LinkStudentRequestService = class LinkStudentRequestService {
         };
         const res = await entityManager.save(Notifications_1.Notifications, notifcation);
         const notifcationIds = [res.notificationId];
-        await this.pusherService.sendNotif([user.userId], notifcationIds, title, description);
+        await this.pusherService.sendNotif([user.userId], notifcationIds, referenceId, notifications_constant_1.NOTIF_TYPE.LINK_REQUEST.toString(), title, description);
         return notifcationIds;
     }
 };

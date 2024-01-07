@@ -51,6 +51,10 @@ __decorate([
     __metadata("design:type", Date)
 ], Employees.prototype, "updatedDate", void 0);
 __decorate([
+    (0, typeorm_1.Column)("bigint", { name: "SchoolId" }),
+    __metadata("design:type", String)
+], Employees.prototype, "schoolId", void 0);
+__decorate([
     (0, typeorm_1.Column)("boolean", { name: "Active", default: () => "true" }),
     __metadata("design:type", Boolean)
 ], Employees.prototype, "active", void 0);
@@ -110,8 +114,11 @@ __decorate([
     __metadata("design:type", Array)
 ], Employees.prototype, "sections", void 0);
 Employees = __decorate([
-    (0, typeorm_1.Index)("u_employees_number", ["active", "mobileNumber"], { unique: true }),
     (0, typeorm_1.Index)("u_employees_card", ["active", "cardNumber"], { unique: true }),
+    (0, typeorm_1.Index)("u_employees_orgEmployeeId", ["active", "orgEmployeeId", "schoolId"], {
+        unique: true,
+    }),
+    (0, typeorm_1.Index)("u_employees_number", ["active", "mobileNumber"], { unique: true }),
     (0, typeorm_1.Index)("Employees_pkey", ["employeeId"], { unique: true }),
     (0, typeorm_1.Entity)("Employees", { schema: "dbo" })
 ], Employees);

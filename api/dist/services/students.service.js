@@ -158,6 +158,42 @@ let StudentsService = class StudentsService {
         }
         return res;
     }
+    async getByCardNumber(cardNumber) {
+        var _a;
+        const res = await this.studentRepo.findOne({
+            where: {
+                cardNumber,
+                active: true,
+            },
+            relations: {
+                parentStudents: {
+                    parent: true,
+                },
+                studentCourse: {
+                    course: true,
+                },
+                studentStrand: {
+                    strand: true,
+                },
+                department: true,
+                registeredByUser: true,
+                updatedByUser: true,
+                school: true,
+                schoolYearLevel: true,
+                studentSection: {
+                    section: true,
+                },
+            },
+        });
+        if (!res) {
+            throw Error(user_error_constant_1.USER_ERROR_USER_NOT_FOUND);
+        }
+        delete res.registeredByUser.password;
+        if ((_a = res === null || res === void 0 ? void 0 : res.updatedByUser) === null || _a === void 0 ? void 0 : _a.password) {
+            delete res.updatedByUser.password;
+        }
+        return res;
+    }
     async create(dto) {
         try {
             return await this.studentRepo.manager.transaction(async (entityManager) => {

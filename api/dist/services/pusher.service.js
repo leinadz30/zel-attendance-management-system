@@ -38,12 +38,14 @@ let PusherService = class PusherService {
             throw ex;
         }
     }
-    async sendNotif(userIds, notificationIds, title, description) {
+    async sendNotif(userIds, notificationIds, referenceId, type, title, description) {
         try {
             if (userIds && userIds.length > 0) {
                 for (const userId of userIds) {
                     this.pusher.trigger(userId, "notifAdded", {
                         notificationIds,
+                        referenceId,
+                        type,
                         title,
                         description,
                     });

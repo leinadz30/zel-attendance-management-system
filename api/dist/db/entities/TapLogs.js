@@ -38,6 +38,10 @@ __decorate([
     __metadata("design:type", String)
 ], TapLogs.prototype, "cardNumber", void 0);
 __decorate([
+    (0, typeorm_1.Column)("character varying", { name: "Type", default: () => "''" }),
+    __metadata("design:type", String)
+], TapLogs.prototype, "type", void 0);
+__decorate([
     (0, typeorm_1.ManyToOne)(() => Machines_1.Machines, (machines) => machines.tapLogs),
     (0, typeorm_1.JoinColumn)([{ name: "MachineId", referencedColumnName: "machineId" }]),
     __metadata("design:type", Machines_1.Machines)

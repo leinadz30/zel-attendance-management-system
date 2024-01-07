@@ -17,6 +17,7 @@ export declare class StudentsService {
     }>;
     getByCode(studentCode: any): Promise<Students>;
     getByOrgStudentId(orgStudentId: any): Promise<Students>;
+    getByCardNumber(cardNumber: any): Promise<Students>;
     create(dto: CreateStudentDto): Promise<Students>;
     createBatch(dtos: BatchCreateStudentDto[]): Promise<{
         success: any[];
