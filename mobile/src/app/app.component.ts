@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-shadow */
+/* eslint-disable prefer-arrow/prefer-arrow-functions */
+/* eslint-disable space-before-function-paren */
 
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable max-len */
@@ -11,7 +14,6 @@ import { Capacitor } from '@capacitor/core';
 import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
 import { Style } from '@capacitor/status-bar';
 import { environment } from 'src/environments/environment';
-import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 
 import { Device } from '@capacitor/device';
@@ -19,6 +21,7 @@ import { FcmService } from './core/services/fcm.service';
 import { App } from '@capacitor/app';
 import { UserFirebaseTokenService } from './core/services/user-firebase-token.service';
 import { OneSignalNotificationService } from './core/services/one-signal-notification.service';
+import { LocalNotificationsService } from './core/services/local-notifications.service';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -39,6 +42,7 @@ export class AppComponent implements OnInit {
     private fcmService: FcmService,
     private oneSignalNotificationService: OneSignalNotificationService,
     private androidPermissions: AndroidPermissions,
+    private localNotificationsService: LocalNotificationsService,
     @Optional() private routerOutlet?: IonRouterOutlet
   ) {
 
@@ -104,14 +108,20 @@ export class AppComponent implements OnInit {
   }
 
   async ngOnInit() {
+    // const channelAll = this.pusherService.init('all');
+    // channelAll.bind('mobileOneSignalScanner', async (res: any) => {
+    //   console.log('OneSignal scanning....');
+    //   if (Capacitor.platform !== 'web') {
+    //     // await this.oneSignalNotificationService.registerOneSignal();
+    //   }
+    // });
     this.platform.ready().then(async () => {
       if (Capacitor.platform !== 'web') {
+        await this.localNotificationsService.init();
         await this.oneSignalNotificationService.registerOneSignal();
       }
     });
   }
-
-
   async presentAlert(options: any) {
     const alert = await this.alertController.create(options);
     await alert.present();

@@ -83,7 +83,7 @@ let StudentsController = class StudentsController {
         try {
             res.data = await this.studentsService.createBatch(studentDtos);
             res.success = true;
-            res.message = `Student ${api_response_constant_1.SAVING_SUCCESS}`;
+            res.message = `Employee Batch Complete`;
             return res;
         }
         catch (e) {

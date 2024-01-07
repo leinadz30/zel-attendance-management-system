@@ -1,3 +1,4 @@
+import { BatchCreateEmployeeDto } from "src/core/dto/employees/employees.batch-create.dto";
 import { CreateEmployeeDto, CreateEmployeeUserDto } from "src/core/dto/employees/employees.create.dto";
 import { UpdateEmployeeDto, UpdateEmployeeUserDto } from "src/core/dto/employees/employees.update.dto";
 import { PaginationParamsDto } from "src/core/dto/pagination-params.dto";
@@ -14,6 +15,11 @@ export declare class EmployeesController {
     }>>;
     create(employeesDto: CreateEmployeeDto): Promise<ApiResponseModel<Employees>>;
     createEmployeeUser(employeesDto: CreateEmployeeUserDto): Promise<ApiResponseModel<Employees>>;
+    createBatch(employeeDtos: BatchCreateEmployeeDto[]): Promise<ApiResponseModel<{
+        success: any[];
+        failed: any[];
+        duplicates: any[];
+    }>>;
     update(employeeCode: string, dto: UpdateEmployeeDto): Promise<ApiResponseModel<Employees>>;
     updateEmployeeUser(employeeCode: string, dto: UpdateEmployeeUserDto): Promise<ApiResponseModel<Employees>>;
     updateProfile(employeeCode: string, dto: UpdateEmployeeDto): Promise<ApiResponseModel<Employees>>;

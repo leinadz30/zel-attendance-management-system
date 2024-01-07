@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/member-ordering */
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, Platform } from '@ionic/angular';
 import { Capacitor } from '@capacitor/core';
 import { StorageService } from '../core/storage/storage.service';
+import { OneSignalNotificationService } from '../core/services/one-signal-notification.service';
 
 
 @Component({
@@ -17,6 +18,8 @@ export class NavigationPage implements OnInit, OnDestroy {
   // totalUnreadNotification = 0;
   constructor(
     private storageService: StorageService,
+    private platform: Platform,
+    private oneSignalNotificationService: OneSignalNotificationService,
     private alertController: AlertController) {
       this.currentUser = this.storageService.getLoginUser();
     }
@@ -31,6 +34,11 @@ export class NavigationPage implements OnInit, OnDestroy {
     //start session
     // this.sessionActivityService.stop();
     // this.sessionActivityService.start();
+    this.platform.ready().then(async () => {
+      if (Capacitor.platform !== 'web') {
+        await this.oneSignalNotificationService.registerOneSignal();
+      }
+    });
   }
   ngOnDestroy() {
     //stop session

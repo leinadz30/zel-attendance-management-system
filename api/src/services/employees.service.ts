@@ -259,7 +259,7 @@ export class EmployeesService {
             try {
               const school = await entityManager.findOne(Schools, {
                 where: {
-                  orgSchoolCode: dto.orgSchoolId,
+                  orgSchoolCode: dto.orgSchoolCode,
                   active: true,
                 },
               });
@@ -270,7 +270,7 @@ export class EmployeesService {
                 where: {
                   orgEmployeeId: dto.orgEmployeeId,
                   school: {
-                    orgSchoolCode: dto.orgSchoolId,
+                    orgSchoolCode: dto.orgSchoolCode,
                   },
                   active: true,
                 },
@@ -308,7 +308,7 @@ export class EmployeesService {
                   where: {
                     departmentName: dto.departmentName,
                     school: {
-                      schoolId: dto.orgSchoolId,
+                      orgSchoolCode: dto.orgSchoolCode,
                     },
                     active: true,
                   },
@@ -324,7 +324,7 @@ export class EmployeesService {
                     where: {
                       name: dto.employeeTitleName,
                       school: {
-                        schoolId: dto.orgSchoolId,
+                        orgSchoolCode: dto.orgSchoolCode,
                       },
                       active: true,
                     },
@@ -378,6 +378,11 @@ export class EmployeesService {
               });
             }
           }
+          return {
+            success,
+            duplicates,
+            failed,
+          };
         }
       );
     } catch (ex) {
@@ -414,6 +419,7 @@ export class EmployeesService {
           employee.fullName = `${dto.firstName} ${dto.lastName}`;
           employee.mobileNumber = dto.mobileNumber;
           employee.cardNumber = dto.cardNumber;
+          employee.orgEmployeeId = dto.orgEmployeeId;
           const timestamp = await entityManager
             .query(CONST_QUERYCURRENT_TIMESTAMP)
             .then((res) => {
@@ -565,6 +571,7 @@ export class EmployeesService {
           employee.lastName = dto.lastName;
           employee.fullName = `${dto.firstName} ${dto.lastName}`;
           employee.mobileNumber = dto.mobileNumber;
+          employee.orgEmployeeId = dto.orgEmployeeId;
           const timestamp = await entityManager
             .query(CONST_QUERYCURRENT_TIMESTAMP)
             .then((res) => {
@@ -684,6 +691,7 @@ export class EmployeesService {
           employee.fullName = `${dto.firstName} ${dto.lastName}`;
           employee.mobileNumber = dto.mobileNumber;
           employee.cardNumber = dto.cardNumber;
+          employee.orgEmployeeId = dto.orgEmployeeId;
           const timestamp = await entityManager
             .query(CONST_QUERYCURRENT_TIMESTAMP)
             .then((res) => {
@@ -813,6 +821,7 @@ export class EmployeesService {
           employee.fullName = `${dto.firstName} ${dto.lastName}`;
           employee.mobileNumber = dto.mobileNumber;
           employee.cardNumber = dto.cardNumber;
+          employee.orgEmployeeId = dto.orgEmployeeId;
           const timestamp = await entityManager
             .query(CONST_QUERYCURRENT_TIMESTAMP)
             .then((res) => {

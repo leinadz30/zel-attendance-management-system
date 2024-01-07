@@ -67,6 +67,27 @@
               style="color: #f44336;font-size: 14px!important;"
               *ngIf="f['employeeTitleId'].touched && f['employeeTitleId'].dirty && f['employeeTitleId'].errors">Please select Employee Title</span>
           </div>
+
+          <mat-form-field
+            appearance="outline"
+            class="readonly"
+            [ngClass.gt-sm]="{ isLargeScreen: true }">
+            <mat-label>Employee Id</mat-label>
+            <input
+              matInput
+              placeholder="Employee Id"
+              formControlName="orgEmployeeId"
+            />
+            <mat-error
+              *ngIf="getError('orgEmployeeId') !== (null || undefined)"
+              >{{
+                (getError("orgEmployeeId") &&
+                getError("orgEmployeeId")["required"]
+                  ? "Employee Id"
+                  : "")
+              }}</mat-error
+            >
+          </mat-form-field>
           <mat-form-field
             appearance="outline"
             [ngClass.gt-sm]="{ isLargeScreen: true }">

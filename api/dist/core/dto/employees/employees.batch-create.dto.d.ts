@@ -7,7 +7,7 @@ export declare class BatchCreateEmployeeDto {
     cardNumber: string;
     departmentName: string;
     employeeTitleName: string;
-    orgSchoolId: string;
+    orgSchoolCode: string;
     createdByUserId: string;
     refId: string;
 }

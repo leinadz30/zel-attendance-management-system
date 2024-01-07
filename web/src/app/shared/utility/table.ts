@@ -89,6 +89,7 @@ export class OpsSectionsTableColumn {
 
 export class OpsEmployeesTableColumn {
   employeeCode?: string;
+  orgEmployeeId?: string;
   fullName?: string;
   mobileNumber?: string;
   cardNumber?: string;

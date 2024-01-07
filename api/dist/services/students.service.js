@@ -333,7 +333,7 @@ let StudentsService = class StudentsService {
                     try {
                         const school = await entityManager.findOne(Schools_1.Schools, {
                             where: {
-                                orgSchoolCode: dto.orgSchoolId,
+                                orgSchoolCode: dto.orgSchoolCode,
                                 active: true,
                             },
                         });
@@ -344,7 +344,7 @@ let StudentsService = class StudentsService {
                             where: {
                                 orgStudentId: dto.orgStudentId,
                                 school: {
-                                    orgSchoolCode: dto.orgSchoolId,
+                                    orgSchoolCode: dto.orgSchoolCode,
                                 },
                                 active: true,
                             },
@@ -382,7 +382,7 @@ let StudentsService = class StudentsService {
                                 where: {
                                     departmentName: dto.departmentName,
                                     school: {
-                                        schoolId: dto.orgSchoolId,
+                                        orgSchoolCode: dto.orgSchoolCode,
                                     },
                                     active: true,
                                 },
@@ -395,7 +395,7 @@ let StudentsService = class StudentsService {
                                 where: {
                                     name: dto.schoolYearLeveName,
                                     school: {
-                                        schoolId: dto.orgSchoolId,
+                                        orgSchoolCode: dto.orgSchoolCode,
                                     },
                                     active: true,
                                 },
@@ -413,6 +413,9 @@ let StudentsService = class StudentsService {
                                 where: {
                                     sectionName: dto.sectionName,
                                     active: true,
+                                    school: {
+                                        orgSchoolCode: dto.orgSchoolCode,
+                                    },
                                 },
                             });
                             if (!section) {

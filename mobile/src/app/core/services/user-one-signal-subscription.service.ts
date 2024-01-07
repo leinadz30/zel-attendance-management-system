@@ -24,7 +24,7 @@ export class UserOneSignalSubscriptionService implements IServices {
     );
   }
 
-  create(data: any): Observable<ApiResponse<UserOneSignalSubscription>> {
+  create(data: { userId: string; subscriptionId: string }): Observable<ApiResponse<UserOneSignalSubscription>> {
     return this.http.post<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.userOneSignalSubscription.create, data)
     .pipe(
       tap(_ => this.log('user-one-signal-subscription')),

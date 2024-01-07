@@ -50,6 +50,7 @@ export class OpsEmployeeFormComponent {
     public dialogRef: MatDialogRef<OpsEmployeeFormComponent>) {
       this.employeeForm = this.formBuilder.group(
         {
+          orgEmployeeId: new FormControl(null, Validators.required),
           firstName: new FormControl(null, Validators.required),
           middleInitial: new FormControl(null),
           lastName: new FormControl(null, Validators.required),
@@ -81,6 +82,7 @@ export class OpsEmployeeFormComponent {
         if (employee.success) {
           this.employee = employee.data;
           this.employeeForm.patchValue({
+            orgEmployeeId: employee.data.orgEmployeeId,
             firstName: employee.data.firstName,
             middleInitial: employee.data.middleInitial,
             lastName: employee.data.lastName,

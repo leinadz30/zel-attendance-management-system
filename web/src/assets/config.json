@@ -232,6 +232,16 @@
     ],
     "employees": [
       {
+        "name": "orgEmployeeId",
+        "label": "Employee Id",
+        "apiNotation": "orgEmployeeId",
+        "type": "string",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Employee Id"
+        }
+      },
+      {
         "name": "fullName",
         "label": "Name",
         "apiNotation": "fullName",

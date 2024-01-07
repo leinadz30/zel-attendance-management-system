@@ -233,7 +233,7 @@ let EmployeesService = class EmployeesService {
                     try {
                         const school = await entityManager.findOne(Schools_1.Schools, {
                             where: {
-                                orgSchoolCode: dto.orgSchoolId,
+                                orgSchoolCode: dto.orgSchoolCode,
                                 active: true,
                             },
                         });
@@ -244,7 +244,7 @@ let EmployeesService = class EmployeesService {
                             where: {
                                 orgEmployeeId: dto.orgEmployeeId,
                                 school: {
-                                    orgSchoolCode: dto.orgSchoolId,
+                                    orgSchoolCode: dto.orgSchoolCode,
                                 },
                                 active: true,
                             },
@@ -280,7 +280,7 @@ let EmployeesService = class EmployeesService {
                                 where: {
                                     departmentName: dto.departmentName,
                                     school: {
-                                        schoolId: dto.orgSchoolId,
+                                        orgSchoolCode: dto.orgSchoolCode,
                                     },
                                     active: true,
                                 },
@@ -293,7 +293,7 @@ let EmployeesService = class EmployeesService {
                                 where: {
                                     name: dto.employeeTitleName,
                                     school: {
-                                        schoolId: dto.orgSchoolId,
+                                        orgSchoolCode: dto.orgSchoolCode,
                                     },
                                     active: true,
                                 },
@@ -344,6 +344,11 @@ let EmployeesService = class EmployeesService {
                         });
                     }
                 }
+                return {
+                    success,
+                    duplicates,
+                    failed,
+                };
             });
         }
         catch (ex) {
@@ -377,6 +382,7 @@ let EmployeesService = class EmployeesService {
                 employee.fullName = `${dto.firstName} ${dto.lastName}`;
                 employee.mobileNumber = dto.mobileNumber;
                 employee.cardNumber = dto.cardNumber;
+                employee.orgEmployeeId = dto.orgEmployeeId;
                 const timestamp = await entityManager
                     .query(timestamp_constant_1.CONST_QUERYCURRENT_TIMESTAMP)
                     .then((res) => {
@@ -515,6 +521,7 @@ let EmployeesService = class EmployeesService {
                 employee.lastName = dto.lastName;
                 employee.fullName = `${dto.firstName} ${dto.lastName}`;
                 employee.mobileNumber = dto.mobileNumber;
+                employee.orgEmployeeId = dto.orgEmployeeId;
                 const timestamp = await entityManager
                     .query(timestamp_constant_1.CONST_QUERYCURRENT_TIMESTAMP)
                     .then((res) => {
@@ -625,6 +632,7 @@ let EmployeesService = class EmployeesService {
                 employee.fullName = `${dto.firstName} ${dto.lastName}`;
                 employee.mobileNumber = dto.mobileNumber;
                 employee.cardNumber = dto.cardNumber;
+                employee.orgEmployeeId = dto.orgEmployeeId;
                 const timestamp = await entityManager
                     .query(timestamp_constant_1.CONST_QUERYCURRENT_TIMESTAMP)
                     .then((res) => {
@@ -744,6 +752,7 @@ let EmployeesService = class EmployeesService {
                 employee.fullName = `${dto.firstName} ${dto.lastName}`;
                 employee.mobileNumber = dto.mobileNumber;
                 employee.cardNumber = dto.cardNumber;
+                employee.orgEmployeeId = dto.orgEmployeeId;
                 const timestamp = await entityManager
                     .query(timestamp_constant_1.CONST_QUERYCURRENT_TIMESTAMP)
                     .then((res) => {

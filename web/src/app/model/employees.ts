@@ -7,6 +7,7 @@ import { Users } from "./users";
 export class Employees {
   employeeId: string;
   employeeCode: string;
+  orgEmployeeId: string;
   firstName: string;
   middleInitial: string;
   lastName: string;

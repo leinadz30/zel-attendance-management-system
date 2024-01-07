@@ -59,7 +59,7 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], BatchCreateEmployeeDto.prototype, "orgSchoolId", void 0);
+], BatchCreateEmployeeDto.prototype, "orgSchoolCode", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsNotEmpty)(),

@@ -16,6 +16,7 @@ exports.EmployeesController = void 0;
 const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const api_response_constant_1 = require("../../common/constant/api-response.constant");
+const employees_batch_create_dto_1 = require("../../core/dto/employees/employees.batch-create.dto");
 const employees_create_dto_1 = require("../../core/dto/employees/employees.create.dto");
 const employees_update_dto_1 = require("../../core/dto/employees/employees.update.dto");
 const pagination_params_dto_1 = require("../../core/dto/pagination-params.dto");
@@ -70,6 +71,20 @@ let EmployeesController = class EmployeesController {
             res.data = await this.employeesService.createEmployeeUser(employeesDto);
             res.success = true;
             res.message = `Employee ${api_response_constant_1.SAVING_SUCCESS}`;
+            return res;
+        }
+        catch (e) {
+            res.success = false;
+            res.message = e.message !== undefined ? e.message : e;
+            return res;
+        }
+    }
+    async createBatch(employeeDtos) {
+        const res = {};
+        try {
+            res.data = await this.employeesService.createBatch(employeeDtos);
+            res.success = true;
+            res.message = `Employee Batch Complete`;
             return res;
         }
         catch (e) {
@@ -177,6 +192,17 @@ __decorate([
     __metadata("design:paramtypes", [employees_create_dto_1.CreateEmployeeUserDto]),
     __metadata("design:returntype", Promise)
 ], EmployeesController.prototype, "createEmployeeUser", null);
+__decorate([
+    (0, swagger_1.ApiBody)({
+        isArray: true,
+        type: employees_batch_create_dto_1.BatchCreateEmployeeDto,
+    }),
+    (0, common_1.Post)("createBatch"),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Array]),
+    __metadata("design:returntype", Promise)
+], EmployeesController.prototype, "createBatch", null);
 __decorate([
     (0, common_1.Put)("/:employeeCode"),
     __param(0, (0, common_1.Param)("employeeCode")),

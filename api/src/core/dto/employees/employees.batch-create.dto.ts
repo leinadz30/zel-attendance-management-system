@@ -49,7 +49,7 @@ export class BatchCreateEmployeeDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  orgSchoolId: string;
+  orgSchoolCode: string;
 
   @ApiProperty()
   @IsNotEmpty()

@@ -350,6 +350,7 @@ let AuthService = class AuthService {
                 employee.fullName = `${dto.firstName} ${dto.lastName}`;
                 employee.mobileNumber = dto.mobileNumber;
                 employee.cardNumber = dto.cardNumber;
+                employee.orgEmployeeId = dto.orgEmployeeId;
                 const timestamp = await entityManager
                     .query(timestamp_constant_1.CONST_QUERYCURRENT_TIMESTAMP)
                     .then((res) => {

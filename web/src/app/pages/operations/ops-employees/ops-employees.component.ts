@@ -226,6 +226,7 @@ export class OpsEmployeesComponent {
         if(res.success){
           let data = res.data.results.map((d)=>{
             return {
+              orgEmployeeId: d.orgEmployeeId,
               employeeCode: d.employeeCode,
               fullName: d.fullName,
               mobileNumber: d.mobileNumber,

@@ -61,6 +61,16 @@ export class StorageService {
   saveThemeIsDarkMode(value: any){
     return this.set('themeIsDarkMode', value);
   }
+  getReceivedNotification(): any[] {
+    const receivedNotification = this.get('receivedNotification');
+    if(receivedNotification !== null && receivedNotification !== ''){
+      return JSON.parse(receivedNotification);
+    }
+    else {return null;}
+  }
+  saveReceivedNotification(value: any){
+    return this.set('receivedNotification', JSON.stringify(value));
+  }
   private set(key: string, value: any){
     localStorage.setItem(key, value);
   }

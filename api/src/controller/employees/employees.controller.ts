@@ -7,12 +7,13 @@ import {
   Post,
   Put,
 } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiTags } from "@nestjs/swagger";
 import {
   DELETE_SUCCESS,
   SAVING_SUCCESS,
   UPDATE_SUCCESS,
 } from "src/common/constant/api-response.constant";
+import { BatchCreateEmployeeDto } from "src/core/dto/employees/employees.batch-create.dto";
 import {
   CreateEmployeeDto,
   CreateEmployeeUserDto,
@@ -87,6 +88,30 @@ export class EmployeesController {
       res.data = await this.employeesService.createEmployeeUser(employeesDto);
       res.success = true;
       res.message = `Employee ${SAVING_SUCCESS}`;
+      return res;
+    } catch (e) {
+      res.success = false;
+      res.message = e.message !== undefined ? e.message : e;
+      return res;
+    }
+  }
+
+  @ApiBody({
+    isArray: true,
+    type: BatchCreateEmployeeDto,
+  })
+  @Post("createBatch")
+  //   @UseGuards(JwtAuthGuard)
+  async createBatch(@Body() employeeDtos: BatchCreateEmployeeDto[]) {
+    const res: ApiResponseModel<{
+      success: any[];
+      failed: any[];
+      duplicates: any[];
+    }> = {} as any;
+    try {
+      res.data = await this.employeesService.createBatch(employeeDtos);
+      res.success = true;
+      res.message = `Employee Batch Complete`;
       return res;
     } catch (e) {
       res.success = false;

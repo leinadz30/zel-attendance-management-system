@@ -18,7 +18,11 @@ export declare class EmployeesService {
     }>;
     getByCode(employeeCode: any): Promise<Employees>;
     create(dto: CreateEmployeeDto): Promise<Employees>;
-    createBatch(dtos: BatchCreateEmployeeDto[]): Promise<void>;
+    createBatch(dtos: BatchCreateEmployeeDto[]): Promise<{
+        success: any[];
+        duplicates: any[];
+        failed: any[];
+    }>;
     createEmployeeUser(dto: CreateEmployeeUserDto): Promise<Employees>;
     updateProfile(employeeCode: any, dto: UpdateEmployeeDto): Promise<Employees>;
     update(employeeCode: any, dto: UpdateEmployeeDto): Promise<Employees>;

@@ -70,7 +70,7 @@ export class BatchCreateStudentDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  orgSchoolId: string;
+  orgSchoolCode: string;
 
   @ApiProperty()
   @IsNotEmpty()

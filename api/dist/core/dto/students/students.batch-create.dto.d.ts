@@ -12,7 +12,7 @@ export declare class BatchCreateStudentDto {
     sectionName: string;
     departmentName: string;
     schoolYearLeveName: string;
-    orgSchoolId: string;
+    orgSchoolCode: string;
     registeredByUserId: string;
     refId: string;
 }

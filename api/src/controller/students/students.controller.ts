@@ -110,7 +110,7 @@ export class StudentsController {
     try {
       res.data = await this.studentsService.createBatch(studentDtos);
       res.success = true;
-      res.message = `Student ${SAVING_SUCCESS}`;
+      res.message = `Employee Batch Complete`;
       return res;
     } catch (e) {
       res.success = false;
