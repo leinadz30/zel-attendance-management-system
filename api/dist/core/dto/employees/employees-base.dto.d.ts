@@ -6,4 +6,5 @@ export declare class DefaultEmployeeUserDto {
     cardNumber: string;
     departmentId: string;
     employeeTitleId: string;
+    orgEmployeeId: string;
 }

@@ -26,5 +26,5 @@ export declare class LinkStudentRequestService {
     approve(linkStudentRequestCode: any, dto: UpdateLinkStudentRequestStatusDto): Promise<LinkStudentRequest>;
     reject(linkStudentRequestCode: any, dto: UpdateLinkStudentRequestStatusDto): Promise<LinkStudentRequest>;
     cancel(linkStudentRequestCode: any, dto: UpdateLinkStudentRequestStatusDto): Promise<LinkStudentRequest>;
-    logNotification(user: Users, referenceId: any, entityManager: EntityManager, title: string, description: string): Promise<void>;
+    logNotification(user: Users, referenceId: any, entityManager: EntityManager, title: string, description: string): Promise<any[]>;
 }

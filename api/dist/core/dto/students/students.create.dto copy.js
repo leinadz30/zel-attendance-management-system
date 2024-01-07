@@ -9,41 +9,49 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DefaultEmployeeUserDto = void 0;
+exports.CreateStudentUserDto = exports.CreateStudentDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
-class DefaultEmployeeUserDto {
+const students_base_dto_1 = require("./students-base.dto");
+class CreateStudentDto extends students_base_dto_1.DefaultStudentUserDto {
+}
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsNumberString)(),
+    (0, class_transformer_1.Transform)(({ obj, key }) => {
+        var _a;
+        return (_a = obj[key]) === null || _a === void 0 ? void 0 : _a.toString();
+    }),
+    __metadata("design:type", String)
+], CreateStudentDto.prototype, "schoolId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsNumberString)(),
+    (0, class_transformer_1.Transform)(({ obj, key }) => {
+        var _a;
+        return (_a = obj[key]) === null || _a === void 0 ? void 0 : _a.toString();
+    }),
+    __metadata("design:type", String)
+], CreateStudentDto.prototype, "registeredByUserId", void 0);
+exports.CreateStudentDto = CreateStudentDto;
+class CreateStudentUserDto extends students_base_dto_1.DefaultStudentUserDto {
 }
 __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], DefaultEmployeeUserDto.prototype, "firstName", void 0);
+], CreateStudentUserDto.prototype, "userName", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", String)
-], DefaultEmployeeUserDto.prototype, "middleInitial", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], DefaultEmployeeUserDto.prototype, "lastName", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsNumberString)(),
     (0, class_transformer_1.Transform)(({ obj, key }) => {
         return obj[key].toString();
     }),
-    __metadata("design:type", String)
-], DefaultEmployeeUserDto.prototype, "mobileNumber", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], DefaultEmployeeUserDto.prototype, "cardNumber", void 0);
+], CreateStudentUserDto.prototype, "password", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsNotEmpty)(),
@@ -53,7 +61,7 @@ __decorate([
         return (_a = obj[key]) === null || _a === void 0 ? void 0 : _a.toString();
     }),
     __metadata("design:type", String)
-], DefaultEmployeeUserDto.prototype, "departmentId", void 0);
+], CreateStudentUserDto.prototype, "schoolId", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsNotEmpty)(),
@@ -63,11 +71,6 @@ __decorate([
         return (_a = obj[key]) === null || _a === void 0 ? void 0 : _a.toString();
     }),
     __metadata("design:type", String)
-], DefaultEmployeeUserDto.prototype, "employeeTitleId", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], DefaultEmployeeUserDto.prototype, "orgEmployeeId", void 0);
-exports.DefaultEmployeeUserDto = DefaultEmployeeUserDto;
-//# sourceMappingURL=employees-base.dto.js.map
+], CreateStudentUserDto.prototype, "registeredByUserId", void 0);
+exports.CreateStudentUserDto = CreateStudentUserDto;
+//# sourceMappingURL=students.create.dto%20copy.js.map

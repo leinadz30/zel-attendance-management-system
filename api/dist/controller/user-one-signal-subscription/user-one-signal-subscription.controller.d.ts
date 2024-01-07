@@ -7,4 +7,5 @@ export declare class UserOneSignalSubscriptionController {
     constructor(userOneSignalSubscriptionsService: UserOneSignalSubscriptionService);
     getBySubscriptionId(subscriptionId: string): Promise<ApiResponseModel<UserOneSignalSubscription>>;
     create(userOneSignalSubscriptionsDto: CreateUserOneSignalSubscriptionDto): Promise<ApiResponseModel<UserOneSignalSubscription>>;
+    mobileOneSignalScanner(): Promise<ApiResponseModel<any>>;
 }

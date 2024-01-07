@@ -20,9 +20,11 @@ const user_one_signal_subscription_constant_1 = require("../common/constant/user
 const UserOneSignalSubscription_1 = require("../db/entities/UserOneSignalSubscription");
 const Users_1 = require("../db/entities/Users");
 const typeorm_2 = require("typeorm");
+const pusher_service_1 = require("./pusher.service");
 let UserOneSignalSubscriptionService = class UserOneSignalSubscriptionService {
-    constructor(ueserFirebaseTokensRepo) {
+    constructor(ueserFirebaseTokensRepo, pusherService) {
         this.ueserFirebaseTokensRepo = ueserFirebaseTokensRepo;
+        this.pusherService = pusherService;
     }
     async getBySubscriptionId(subscriptionId) {
         var _a;
@@ -71,11 +73,15 @@ let UserOneSignalSubscriptionService = class UserOneSignalSubscriptionService {
             return userOneSignalSubscription;
         });
     }
+    async mobileOneSignalScanner() {
+        await this.pusherService.mobileOneSignalScanner();
+    }
 };
 UserOneSignalSubscriptionService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(UserOneSignalSubscription_1.UserOneSignalSubscription)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        pusher_service_1.PusherService])
 ], UserOneSignalSubscriptionService);
 exports.UserOneSignalSubscriptionService = UserOneSignalSubscriptionService;
 //# sourceMappingURL=user-one-signal-subscription.service.js.map

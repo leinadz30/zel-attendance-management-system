@@ -59,6 +59,9 @@ export class Employees {
   @Column("character varying", { name: "FullName", default: () => "''" })
   fullName: string;
 
+  @Column("character varying", { name: "OrgEmployeeId", default: () => "''" })
+  orgEmployeeId: string;
+
   @OneToOne(() => EmployeeUser, (employeeUser) => employeeUser.employee)
   employeeUser: EmployeeUser;
 

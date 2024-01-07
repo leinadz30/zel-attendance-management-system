@@ -92,7 +92,6 @@ let TapLogsController = class TapLogsController {
     async createBatch(tapLogsDtos) {
         const res = {};
         try {
-            res.data = await this.tapLogsService.createBatch(tapLogsDtos);
             res.success = true;
             res.message = `Tap Logs ${api_response_constant_1.SAVING_SUCCESS}`;
             return res;

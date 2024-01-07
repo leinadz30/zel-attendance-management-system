@@ -12,9 +12,10 @@ export class OneSignalNotificationService {
   ) {}
 
   async sendToSubscriber(
-    subscriptionIds: any[],
+    subscriptionId: string,
     type,
     referenceId,
+    notificationIds: any[],
     title,
     description
   ) {
@@ -28,8 +29,9 @@ export class OneSignalNotificationService {
             url,
             {
               app_id: this.config.get<string>("ONE_SIGNAL_APP_ID"),
-              include_subscription_ids: subscriptionIds,
+              include_subscription_ids: [subscriptionId],
               data: {
+                notificationIds,
                 type,
                 referenceId,
               },
@@ -64,8 +66,10 @@ export class OneSignalNotificationService {
             })
           )
       );
-    } catch (ex) {}
+    } catch (ex) {
+      return { subscriptionId, success: false };
+    }
     console.log(result?.data);
-    return result?.data;
+    return { subscriptionId, success: true };
   }
 }

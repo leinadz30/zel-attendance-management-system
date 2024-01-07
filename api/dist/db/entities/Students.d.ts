@@ -7,7 +7,6 @@ import { Departments } from "./Departments";
 import { Users } from "./Users";
 import { Schools } from "./Schools";
 import { SchoolYearLevels } from "./SchoolYearLevels";
-import { TapLogs } from "./TapLogs";
 export declare class Students {
     studentId: string;
     studentCode: string | null;
@@ -34,5 +33,4 @@ export declare class Students {
     school: Schools;
     schoolYearLevel: SchoolYearLevels;
     updatedByUser: Users;
-    tapLogs: TapLogs[];
 }

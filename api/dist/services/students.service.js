@@ -306,9 +306,205 @@ let StudentsService = class StudentsService {
                 ex["message"].includes("u_user")) {
                 throw Error("Username already used!");
             }
+            else if (ex["message"] &&
+                (ex["message"].includes("duplicate key") ||
+                    ex["message"].includes("violates unique constraint")) &&
+                ex["message"].includes("u_students_card")) {
+                throw Error("Student Card Number already used!");
+            }
+            else if (ex["message"] &&
+                (ex["message"].includes("duplicate key") ||
+                    ex["message"].includes("violates unique constraint")) &&
+                ex["message"].includes("u_student_orgstudentid")) {
+                throw Error("Student Id already used!");
+            }
             else {
                 throw ex;
             }
+        }
+    }
+    async createBatch(dtos) {
+        try {
+            return await this.studentRepo.manager.transaction(async (entityManager) => {
+                const success = [];
+                const duplicates = [];
+                const failed = [];
+                for (const dto of dtos) {
+                    try {
+                        const school = await entityManager.findOne(Schools_1.Schools, {
+                            where: {
+                                orgSchoolCode: dto.orgSchoolId,
+                                active: true,
+                            },
+                        });
+                        if (!school) {
+                            throw Error(schools_constant_1.SCHOOLS_ERROR_NOT_FOUND);
+                        }
+                        let student = await entityManager.findOne(Students_1.Students, {
+                            where: {
+                                orgStudentId: dto.orgStudentId,
+                                school: {
+                                    orgSchoolCode: dto.orgSchoolId,
+                                },
+                                active: true,
+                            },
+                        });
+                        if (!student) {
+                            student = new Students_1.Students();
+                            student.school = school;
+                            student.accessGranted = true;
+                            student.firstName = dto.firstName;
+                            student.middleInitial = dto.middleInitial;
+                            student.lastName = dto.lastName;
+                            student.fullName = `${dto.firstName} ${dto.lastName}`;
+                            student.email = dto.email;
+                            student.mobileNumber = dto.mobileNumber;
+                            student.cardNumber = dto.cardNumber;
+                            student.address = dto.address;
+                            student.orgStudentId = dto.orgStudentId;
+                            const timestamp = await entityManager
+                                .query(timestamp_constant_1.CONST_QUERYCURRENT_TIMESTAMP)
+                                .then((res) => {
+                                return res[0]["timestamp"];
+                            });
+                            student.registrationDate = timestamp;
+                            const registeredByUser = await entityManager.findOne(Users_1.Users, {
+                                where: {
+                                    userId: dto.registeredByUserId,
+                                    active: true,
+                                },
+                            });
+                            if (!registeredByUser) {
+                                throw Error(user_error_constant_1.USER_ERROR_USER_NOT_FOUND);
+                            }
+                            student.registeredByUser = registeredByUser;
+                            const department = await entityManager.findOne(Departments_1.Departments, {
+                                where: {
+                                    departmentName: dto.departmentName,
+                                    school: {
+                                        schoolId: dto.orgSchoolId,
+                                    },
+                                    active: true,
+                                },
+                            });
+                            if (!department) {
+                                throw Error(departments_constant_1.DEPARTMENTS_ERROR_NOT_FOUND);
+                            }
+                            student.department = department;
+                            const schoolYearLevel = await entityManager.findOne(SchoolYearLevels_1.SchoolYearLevels, {
+                                where: {
+                                    name: dto.schoolYearLeveName,
+                                    school: {
+                                        schoolId: dto.orgSchoolId,
+                                    },
+                                    active: true,
+                                },
+                            });
+                            if (!schoolYearLevel) {
+                                throw Error(school_year_levels_constant_1.SCHOOL_YEAR_LEVELS_ERROR_NOT_FOUND);
+                            }
+                            student.schoolYearLevel = schoolYearLevel;
+                            student = await entityManager.save(Students_1.Students, student);
+                            student.studentCode = (0, utils_1.generateIndentityCode)(student.studentId);
+                            student = await entityManager.save(Students_1.Students, student);
+                            const studentSection = new StudentSection_1.StudentSection();
+                            studentSection.student = student;
+                            const section = await entityManager.findOne(Sections_1.Sections, {
+                                where: {
+                                    sectionName: dto.sectionName,
+                                    active: true,
+                                },
+                            });
+                            if (!section) {
+                                throw Error(sections_constant_1.SECTIONS_ERROR_NOT_FOUND);
+                            }
+                            studentSection.section = section;
+                            await entityManager.save(StudentSection_1.StudentSection, studentSection);
+                            if (schoolYearLevel.educationalStage === educational_stage_constant_1.EDUCATIONAL_STAGE.COLLEGE) {
+                                const studentCourse = new StudentCourse_1.StudentCourse();
+                                studentCourse.student = student;
+                                const course = await entityManager.findOne(Courses_1.Courses, {
+                                    where: {
+                                        name: dto.courseName,
+                                        active: true,
+                                    },
+                                });
+                                if (!course) {
+                                    throw Error(courses_constant_1.COURSES_ERROR_NOT_FOUND);
+                                }
+                                studentCourse.course = course;
+                                await entityManager.save(StudentCourse_1.StudentCourse, studentCourse);
+                            }
+                            else if (schoolYearLevel.educationalStage === educational_stage_constant_1.EDUCATIONAL_STAGE.SENIOR) {
+                                const studentStrand = new StudentStrand_1.StudentStrand();
+                                studentStrand.student = student;
+                                const strand = await entityManager.findOne(Strands_1.Strands, {
+                                    where: {
+                                        name: dto.strandName,
+                                        active: true,
+                                    },
+                                });
+                                if (!strand) {
+                                    throw Error(strand_constant_1.STRAND_ERROR_NOT_FOUND);
+                                }
+                                studentStrand.strand = strand;
+                                await entityManager.save(StudentStrand_1.StudentStrand, studentStrand);
+                            }
+                            student = await entityManager.findOne(Students_1.Students, {
+                                where: {
+                                    studentCode: student.studentCode,
+                                    active: true,
+                                },
+                                relations: {
+                                    parentStudents: {
+                                        parent: true,
+                                    },
+                                    studentCourse: {
+                                        course: true,
+                                    },
+                                    studentStrand: {
+                                        strand: true,
+                                    },
+                                    department: true,
+                                    registeredByUser: true,
+                                    updatedByUser: true,
+                                    school: true,
+                                    schoolYearLevel: true,
+                                    studentSection: {
+                                        section: true,
+                                    },
+                                },
+                            });
+                            delete student.registeredByUser.password;
+                            success.push({
+                                orgStudentId: dto.orgStudentId,
+                                refId: dto.refId,
+                            });
+                        }
+                        else {
+                            duplicates.push({
+                                orgStudentId: dto.orgStudentId,
+                                refId: dto.refId,
+                            });
+                        }
+                    }
+                    catch (ex) {
+                        failed.push({
+                            orgStudentId: dto.orgStudentId,
+                            refId: dto.refId,
+                            comments: ex === null || ex === void 0 ? void 0 : ex.message,
+                        });
+                    }
+                }
+                return {
+                    success,
+                    duplicates,
+                    failed,
+                };
+            });
+        }
+        catch (ex) {
+            throw ex;
         }
     }
     async update(studentCode, dto) {

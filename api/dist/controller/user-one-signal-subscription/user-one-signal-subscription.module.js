@@ -12,14 +12,15 @@ const user_one_signal_subscription_controller_1 = require("./user-one-signal-sub
 const user_one_signal_subscription_service_1 = require("../../services/user-one-signal-subscription.service");
 const typeorm_1 = require("@nestjs/typeorm");
 const UserOneSignalSubscription_1 = require("../../db/entities/UserOneSignalSubscription");
+const pusher_service_1 = require("../../services/pusher.service");
 let UserOneSignalSubscriptionModule = class UserOneSignalSubscriptionModule {
 };
 UserOneSignalSubscriptionModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([UserOneSignalSubscription_1.UserOneSignalSubscription])],
         controllers: [user_one_signal_subscription_controller_1.UserOneSignalSubscriptionController],
-        providers: [user_one_signal_subscription_service_1.UserOneSignalSubscriptionService],
-        exports: [user_one_signal_subscription_service_1.UserOneSignalSubscriptionService],
+        providers: [user_one_signal_subscription_service_1.UserOneSignalSubscriptionService, pusher_service_1.PusherService],
+        exports: [user_one_signal_subscription_service_1.UserOneSignalSubscriptionService, pusher_service_1.PusherService],
     })
 ], UserOneSignalSubscriptionModule);
 exports.UserOneSignalSubscriptionModule = UserOneSignalSubscriptionModule;

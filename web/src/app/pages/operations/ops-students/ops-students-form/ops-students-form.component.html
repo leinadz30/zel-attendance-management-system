@@ -18,7 +18,8 @@
           fxLayout="column"
           fxFlex="100">
             <mat-form-field
-              appearance="outline">
+              appearance="outline"
+              class="readonly">
               <mat-label>Department </mat-label>
               <input
                 matInput
@@ -30,7 +31,7 @@
                   style="cursor: pointer;"
                   matSuffix
                   matTooltip="Department"
-                  *ngIf="studentForm.enabled"
+                  *ngIf="!studentForm.disable"
                   (click)="showSelectDepartmentDialog()">
                   search
                 </mat-icon>
@@ -43,7 +44,8 @@
           fxLayout="column"
           fxFlex="100">
             <mat-form-field
-              appearance="outline">
+              appearance="outline"
+              class="readonly">
               <mat-label>School year level </mat-label>
               <input
                 matInput
@@ -55,7 +57,7 @@
                   style="cursor: pointer;"
                   matSuffix
                   matTooltip="School year level"
-                  *ngIf="studentForm.enabled"
+                  *ngIf="!studentForm.disable"
                   (click)="showSelectSchoolYearLevelDialog()">
                   search
                 </mat-icon>
@@ -69,7 +71,8 @@
           fxFlex="100"
           *ngIf="schoolYearLevel && schoolYearLevel?.educationalStage === 'COLLEGE'">
             <mat-form-field
-              appearance="outline">
+              appearance="outline"
+              class="readonly">
               <mat-label>Course </mat-label>
               <input
                 matInput
@@ -81,7 +84,7 @@
                   style="cursor: pointer;"
                   matSuffix
                   matTooltip="Course"
-                  *ngIf="studentForm.enabled"
+                  *ngIf="!studentForm.disable"
                   (click)="showSelectCourseDialog()">
                   search
                 </mat-icon>
@@ -95,7 +98,8 @@
           fxFlex="100"
           *ngIf="schoolYearLevel && schoolYearLevel?.educationalStage === 'SENIOR'">
             <mat-form-field
-              appearance="outline">
+              appearance="outline"
+              class="readonly">
               <mat-label>Strand </mat-label>
               <input
                 matInput
@@ -107,7 +111,7 @@
                   style="cursor: pointer;"
                   matSuffix
                   matTooltip="Strand"
-                  *ngIf="studentForm.enabled"
+                  *ngIf="!studentForm.disable"
                   (click)="showSelectStrandDialog()">
                   search
                 </mat-icon>
@@ -120,7 +124,8 @@
             fxLayout="column"
             fxFlex="100">
             <mat-form-field
-              appearance="outline">
+              appearance="outline"
+              class="readonly">
               <mat-label>Section </mat-label>
               <input
                 matInput
@@ -132,7 +137,7 @@
                   style="cursor: pointer;"
                   matSuffix
                   matTooltip="Section"
-                  *ngIf="studentForm.enabled"
+                  *ngIf="!studentForm.disable"
                   (click)="showSelectSectionDialog()">
                   search
                 </mat-icon>
@@ -143,6 +148,7 @@
           </div>
           <mat-form-field
             appearance="outline"
+            class="readonly"
             [ngClass.gt-sm]="{ isLargeScreen: true }">
             <mat-label>{{schoolYearLevel?.educationalStage !== 'COLLEGE' ? 'Student Id or LRN' : 'Student Id'}}</mat-label>
             <input
@@ -162,6 +168,7 @@
           </mat-form-field>
           <mat-form-field
             appearance="outline"
+            class="readonly"
             [ngClass.gt-sm]="{ isLargeScreen: true }">
             <mat-label>First Name</mat-label>
             <input
@@ -185,6 +192,7 @@
           </mat-form-field>
           <mat-form-field
             appearance="outline"
+            class="readonly"
             [ngClass.gt-sm]="{ isLargeScreen: true }">
             <mat-label>Middle Initial</mat-label>
             <input
@@ -208,7 +216,8 @@
           </mat-form-field>
           <mat-form-field
             appearance="outline"
-            [ngClass.gt-sm]="{ isLargeScreen: true }">
+            [ngClass.gt-sm]="{ isLargeScreen: true }"
+            class="readonly">
             <mat-label>Last Name </mat-label>
             <input
               matInput
@@ -231,7 +240,8 @@
           </mat-form-field>
           <mat-form-field
             appearance="outline"
-            [ngClass.gt-sm]="{ isLargeScreen: true }">
+            [ngClass.gt-sm]="{ isLargeScreen: true }"
+            class="readonly">
             <mat-label>Mobile number </mat-label>
             <input
               matInput
@@ -254,7 +264,8 @@
           </mat-form-field>
           <mat-form-field
             appearance="outline"
-            [ngClass.gt-sm]="{ isLargeScreen: true }">
+            [ngClass.gt-sm]="{ isLargeScreen: true }"
+            class="readonly">
             <mat-label>Card number </mat-label>
             <input
               matInput
@@ -309,7 +320,7 @@
       {{studentForm.enabled ? 'Cancel': 'Close'}}
     </button>
     <button
-      *ngIf="studentForm.enabled"
+      *ngIf="!studentForm.disable"
       mat-flat-button
       [disabled]="!formIsValid || !formIsReady"
       color="primary"

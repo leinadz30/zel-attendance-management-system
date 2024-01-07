@@ -17,6 +17,7 @@ export declare class Employees {
     mobileNumber: string;
     cardNumber: string;
     fullName: string;
+    orgEmployeeId: string;
     employeeUser: EmployeeUser;
     createdByUser: Users;
     department: Departments;

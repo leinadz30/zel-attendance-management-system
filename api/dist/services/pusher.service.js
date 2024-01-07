@@ -38,16 +38,25 @@ let PusherService = class PusherService {
             throw ex;
         }
     }
-    async sendNotif(userIds, title, description) {
+    async sendNotif(userIds, notificationIds, title, description) {
         try {
             if (userIds && userIds.length > 0) {
                 for (const userId of userIds) {
                     this.pusher.trigger(userId, "notifAdded", {
+                        notificationIds,
                         title,
                         description,
                     });
                 }
             }
+        }
+        catch (ex) {
+            throw ex;
+        }
+    }
+    async mobileOneSignalScanner() {
+        try {
+            this.pusher.trigger("all", "mobileOneSignalScanner", {});
         }
         catch (ex) {
             throw ex;

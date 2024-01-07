@@ -1,4 +1,5 @@
 import { UpdateUserResetPasswordDto } from "src/core/dto/auth/reset-password.dto";
+import { BatchCreateEmployeeDto } from "src/core/dto/employees/employees.batch-create.dto";
 import { CreateEmployeeDto, CreateEmployeeUserDto } from "src/core/dto/employees/employees.create.dto";
 import { UpdateEmployeeDto, UpdateEmployeeUserDto } from "src/core/dto/employees/employees.update.dto";
 import { Employees } from "src/db/entities/Employees";
@@ -17,6 +18,7 @@ export declare class EmployeesService {
     }>;
     getByCode(employeeCode: any): Promise<Employees>;
     create(dto: CreateEmployeeDto): Promise<Employees>;
+    createBatch(dtos: BatchCreateEmployeeDto[]): Promise<void>;
     createEmployeeUser(dto: CreateEmployeeUserDto): Promise<Employees>;
     updateProfile(employeeCode: any, dto: UpdateEmployeeDto): Promise<Employees>;
     update(employeeCode: any, dto: UpdateEmployeeDto): Promise<Employees>;

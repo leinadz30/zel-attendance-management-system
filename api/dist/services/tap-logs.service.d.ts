@@ -26,6 +26,5 @@ export declare class TapLogsService {
     getStudentsTapsByStudentCode(studentCode: any, date: any): Promise<TapLogs[]>;
     getById(tapLogId: any): Promise<TapLogs>;
     create(dto: CreateTapLogDto): Promise<TapLogs>;
-    createBatch(dtos: CreateTapLogDto[]): Promise<any[]>;
-    logNotification(users: Users[], referenceId: any, entityManager: EntityManager, title: string, description: string): Promise<void>;
+    logNotification(users: Users[], referenceId: any, entityManager: EntityManager, title: string, description: string): Promise<any[]>;
 }

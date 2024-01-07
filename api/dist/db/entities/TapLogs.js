@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TapLogs = void 0;
 const typeorm_1 = require("typeorm");
 const Machines_1 = require("./Machines");
-const Students_1 = require("./Students");
 let TapLogs = class TapLogs {
 };
 __decorate([
@@ -35,15 +34,14 @@ __decorate([
     __metadata("design:type", String)
 ], TapLogs.prototype, "time", void 0);
 __decorate([
+    (0, typeorm_1.Column)("character varying", { name: "CardNumber" }),
+    __metadata("design:type", String)
+], TapLogs.prototype, "cardNumber", void 0);
+__decorate([
     (0, typeorm_1.ManyToOne)(() => Machines_1.Machines, (machines) => machines.tapLogs),
     (0, typeorm_1.JoinColumn)([{ name: "MachineId", referencedColumnName: "machineId" }]),
     __metadata("design:type", Machines_1.Machines)
 ], TapLogs.prototype, "machine", void 0);
-__decorate([
-    (0, typeorm_1.ManyToOne)(() => Students_1.Students, (students) => students.tapLogs),
-    (0, typeorm_1.JoinColumn)([{ name: "StudentId", referencedColumnName: "studentId" }]),
-    __metadata("design:type", Students_1.Students)
-], TapLogs.prototype, "student", void 0);
 TapLogs = __decorate([
     (0, typeorm_1.Index)("TapLogs_pkey", ["tapLogId"], { unique: true }),
     (0, typeorm_1.Entity)("TapLogs", { schema: "dbo" })

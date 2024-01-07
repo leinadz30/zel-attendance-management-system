@@ -1,19 +1,20 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Transform, Type } from "class-transformer";
 import {
+  IsNotEmpty,
+  IsNumberString,
   ArrayNotEmpty,
   IsArray,
+  ValidateNested,
+  IsBooleanString,
   IsDateString,
   IsEmail,
   IsIn,
-  IsNotEmpty,
-  IsNumberString,
   IsOptional,
   IsUppercase,
-  ValidateNested,
+  Matches,
 } from "class-validator";
-
-export class DefaultEmployeeUserDto {
+export class BatchCreateStudentDto {
   @ApiProperty()
   @IsNotEmpty()
   firstName: string;
@@ -28,23 +29,48 @@ export class DefaultEmployeeUserDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsNumberString()
-  @Transform(({ obj, key }) => {
-    return obj[key].toString();
-  })
   mobileNumber: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  orgStudentId: string;
 
   @ApiProperty()
   @IsNotEmpty()
   cardNumber: string;
 
   @ApiProperty()
+  @IsOptional()
+  @IsEmail()
+  email: string;
+
+  @ApiProperty()
+  @IsOptional()
+  address: string;
+
+  @ApiProperty()
+  @IsOptional()
+  courseName: string;
+
+  @ApiProperty()
+  @IsOptional()
+  strandName: string;
+
+  @ApiProperty()
+  @IsOptional()
+  sectionName: string;
+
+  @ApiProperty()
   @IsNotEmpty()
-  @IsNumberString()
-  @Transform(({ obj, key }) => {
-    return obj[key]?.toString();
-  })
-  departmentId: string;
+  departmentName: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  schoolYearLeveName: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  orgSchoolId: string;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -52,9 +78,9 @@ export class DefaultEmployeeUserDto {
   @Transform(({ obj, key }) => {
     return obj[key]?.toString();
   })
-  employeeTitleId: string;
+  registeredByUserId: string;
 
   @ApiProperty()
   @IsNotEmpty()
-  orgEmployeeId: string;
+  refId: string;
 }

@@ -20,6 +20,7 @@ const students_create_dto_1 = require("../../core/dto/students/students.create.d
 const students_update_dto_1 = require("../../core/dto/students/students.update.dto");
 const pagination_params_dto_1 = require("../../core/dto/pagination-params.dto");
 const students_service_1 = require("../../services/students.service");
+const students_batch_create_dto_1 = require("../../core/dto/students/students.batch-create.dto");
 let StudentsController = class StudentsController {
     constructor(studentsService) {
         this.studentsService = studentsService;
@@ -67,6 +68,20 @@ let StudentsController = class StudentsController {
         const res = {};
         try {
             res.data = await this.studentsService.create(studentsDto);
+            res.success = true;
+            res.message = `Student ${api_response_constant_1.SAVING_SUCCESS}`;
+            return res;
+        }
+        catch (e) {
+            res.success = false;
+            res.message = e.message !== undefined ? e.message : e;
+            return res;
+        }
+    }
+    async createBatch(studentDtos) {
+        const res = {};
+        try {
+            res.data = await this.studentsService.createBatch(studentDtos);
             res.success = true;
             res.message = `Student ${api_response_constant_1.SAVING_SUCCESS}`;
             return res;
@@ -148,6 +163,17 @@ __decorate([
     __metadata("design:paramtypes", [students_create_dto_1.CreateStudentDto]),
     __metadata("design:returntype", Promise)
 ], StudentsController.prototype, "create", null);
+__decorate([
+    (0, swagger_1.ApiBody)({
+        isArray: true,
+        type: students_batch_create_dto_1.BatchCreateStudentDto,
+    }),
+    (0, common_1.Post)("createBatch"),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Array]),
+    __metadata("design:returntype", Promise)
+], StudentsController.prototype, "createBatch", null);
 __decorate([
     (0, common_1.Put)("/:studentCode"),
     __param(0, (0, common_1.Param)("studentCode")),

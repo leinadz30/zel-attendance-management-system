@@ -71,6 +71,10 @@ __decorate([
     __metadata("design:type", String)
 ], Employees.prototype, "fullName", void 0);
 __decorate([
+    (0, typeorm_1.Column)("character varying", { name: "OrgEmployeeId", default: () => "''" }),
+    __metadata("design:type", String)
+], Employees.prototype, "orgEmployeeId", void 0);
+__decorate([
     (0, typeorm_1.OneToOne)(() => EmployeeUser_1.EmployeeUser, (employeeUser) => employeeUser.employee),
     __metadata("design:type", EmployeeUser_1.EmployeeUser)
 ], Employees.prototype, "employeeUser", void 0);

@@ -20,7 +20,6 @@ const Departments_1 = require("./Departments");
 const Users_1 = require("./Users");
 const Schools_1 = require("./Schools");
 const SchoolYearLevels_1 = require("./SchoolYearLevels");
-const TapLogs_1 = require("./TapLogs");
 let Students = class Students {
 };
 __decorate([
@@ -137,13 +136,9 @@ __decorate([
     (0, typeorm_1.JoinColumn)([{ name: "UpdatedByUserId", referencedColumnName: "userId" }]),
     __metadata("design:type", Users_1.Users)
 ], Students.prototype, "updatedByUser", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => TapLogs_1.TapLogs, (tapLogs) => tapLogs.student),
-    __metadata("design:type", Array)
-], Students.prototype, "tapLogs", void 0);
 Students = __decorate([
-    (0, typeorm_1.Index)("u_students_email", ["active", "email"], { unique: true }),
     (0, typeorm_1.Index)("u_students_number", ["active", "mobileNumber"], { unique: true }),
+    (0, typeorm_1.Index)("u_students_email", ["active", "email"], { unique: true }),
     (0, typeorm_1.Index)("u_students_card", ["active", "cardNumber"], { unique: true }),
     (0, typeorm_1.Index)("Students_pkey", ["studentId"], { unique: true }),
     (0, typeorm_1.Entity)("Students", { schema: "dbo" })

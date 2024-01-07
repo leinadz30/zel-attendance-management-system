@@ -43,7 +43,7 @@ export declare class AuthService {
     getByCredentials({ userName, password }: {
         userName: any;
         password: any;
-    }): Promise<Operators | Employees | Parents>;
+    }): Promise<Parents | Employees | Operators>;
     getUserById(userId: any): Promise<Users>;
     registerEmployee(dto: RegisterEmployeeUserDto): Promise<Employees>;
     registerParent(dto: RegisterParentUserDto): Promise<Parents>;

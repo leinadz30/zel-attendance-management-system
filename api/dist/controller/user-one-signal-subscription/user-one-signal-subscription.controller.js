@@ -50,6 +50,21 @@ let UserOneSignalSubscriptionController = class UserOneSignalSubscriptionControl
             return res;
         }
     }
+    async mobileOneSignalScanner() {
+        const res = {};
+        try {
+            await this.userOneSignalSubscriptionsService.mobileOneSignalScanner();
+            res.data = {};
+            res.success = true;
+            res.message = `Mobile One Signal Scan sucess!`;
+            return res;
+        }
+        catch (e) {
+            res.success = false;
+            res.message = e.message !== undefined ? e.message : e;
+            return res;
+        }
+    }
 };
 __decorate([
     (0, common_1.Get)("/getBySubscriptionId/:subscriptionId"),
@@ -65,6 +80,12 @@ __decorate([
     __metadata("design:paramtypes", [user_one_signal_subscription_create_dto_1.CreateUserOneSignalSubscriptionDto]),
     __metadata("design:returntype", Promise)
 ], UserOneSignalSubscriptionController.prototype, "create", null);
+__decorate([
+    (0, common_1.Post)("mobileOneSignalScanner"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], UserOneSignalSubscriptionController.prototype, "mobileOneSignalScanner", null);
 UserOneSignalSubscriptionController = __decorate([
     (0, swagger_1.ApiTags)("user-one-signal-subscription"),
     (0, common_1.Controller)("user-one-signal-subscription"),

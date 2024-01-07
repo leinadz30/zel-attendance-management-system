@@ -328,14 +328,22 @@ export class LinkStudentRequestService {
             },
           }
         );
+        const notificationIds = await this.logNotification(
+          linkStudentRequest.requestedByParent.user,
+          linkStudentRequest.linkStudentRequestCode,
+          entityManager,
+          notifTitle,
+          notifDesc
+        );
         if (subscriptions.length > 0) {
           const massRequest = [];
           for (const subscription of subscriptions) {
             massRequest.push(
-              await this.oneSignalNotificationService.sendToSubscriber(
-                [subscription.subscriptionId],
+              this.oneSignalNotificationService.sendToSubscriber(
+                subscription.subscriptionId,
                 NOTIF_TYPE.LINK_REQUEST.toString(),
                 linkStudentRequest.linkStudentRequestCode,
+                notificationIds,
                 notifTitle,
                 notifDesc
               )
@@ -346,13 +354,6 @@ export class LinkStudentRequestService {
 
         delete linkStudentRequest.requestedByParent.user.password;
         delete linkStudentRequest.updatedByUser.password;
-        await this.logNotification(
-          linkStudentRequest.requestedByParent.user,
-          linkStudentRequest.linkStudentRequestCode,
-          entityManager,
-          notifTitle,
-          notifDesc
-        );
         return linkStudentRequest;
       }
     );
@@ -454,14 +455,22 @@ export class LinkStudentRequestService {
             },
           }
         );
+        const notificationIds = await this.logNotification(
+          linkStudentRequest.requestedByParent.user,
+          linkStudentRequest.linkStudentRequestCode,
+          entityManager,
+          notifTitle,
+          notifDesc
+        );
         if (subscriptions.length > 0) {
           const massRequest = [];
           for (const subscription of subscriptions) {
             massRequest.push(
-              await this.oneSignalNotificationService.sendToSubscriber(
-                [subscription.subscriptionId],
+              this.oneSignalNotificationService.sendToSubscriber(
+                subscription.subscriptionId,
                 NOTIF_TYPE.LINK_REQUEST.toString(),
                 linkStudentRequest.linkStudentRequestCode,
+                notificationIds,
                 notifTitle,
                 notifDesc
               )
@@ -471,13 +480,6 @@ export class LinkStudentRequestService {
         }
         delete linkStudentRequest.requestedByParent.user.password;
         delete linkStudentRequest.updatedByUser.password;
-        await this.logNotification(
-          linkStudentRequest.requestedByParent.user,
-          linkStudentRequest.linkStudentRequestCode,
-          entityManager,
-          notifTitle,
-          notifDesc
-        );
         return linkStudentRequest;
       }
     );
@@ -566,8 +568,15 @@ export class LinkStudentRequestService {
       isRead: false,
       forUser: user,
     };
-    await entityManager.save(Notifications, notifcation);
-    await this.pusherService.sendNotif([user.userId], title, description);
+    const res: any = await entityManager.save(Notifications, notifcation);
+    const notifcationIds = [res.notificationId];
+    await this.pusherService.sendNotif(
+      [user.userId],
+      notifcationIds,
+      title,
+      description
+    );
+    return notifcationIds;
   }
 
   // async firebaseSendToDevice(token, title, description) {

@@ -19,7 +19,7 @@ let OneSignalNotificationService = class OneSignalNotificationService {
         this.httpService = httpService;
         this.config = config;
     }
-    async sendToSubscriber(subscriptionIds, type, referenceId, title, description) {
+    async sendToSubscriber(subscriptionId, type, referenceId, notificationIds, title, description) {
         const url = this.config.get("ONE_SIGNAL_NOTIF_URL");
         const apiKey = this.config.get("ONE_SIGNAL_API_KEY");
         let result;
@@ -27,8 +27,9 @@ let OneSignalNotificationService = class OneSignalNotificationService {
             result = await (0, rxjs_1.firstValueFrom)(this.httpService
                 .post(url, {
                 app_id: this.config.get("ONE_SIGNAL_APP_ID"),
-                include_subscription_ids: subscriptionIds,
+                include_subscription_ids: [subscriptionId],
                 data: {
+                    notificationIds,
                     type,
                     referenceId,
                 },
@@ -53,9 +54,11 @@ let OneSignalNotificationService = class OneSignalNotificationService {
                 throw new common_1.HttpException(error.response, common_1.HttpStatus.BAD_REQUEST);
             })));
         }
-        catch (ex) { }
+        catch (ex) {
+            return { subscriptionId, success: false };
+        }
         console.log(result === null || result === void 0 ? void 0 : result.data);
-        return result === null || result === void 0 ? void 0 : result.data;
+        return { subscriptionId, success: true };
     }
 };
 OneSignalNotificationService = __decorate([

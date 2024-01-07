@@ -126,7 +126,7 @@ export class TapLogsController {
   async createBatch(@Body() tapLogsDtos: CreateTapLogDto[]) {
     const res: ApiResponseModel<any[]> = {} as any;
     try {
-      res.data = await this.tapLogsService.createBatch(tapLogsDtos);
+      // res.data = await this.tapLogsService.createBatch(tapLogsDtos);
       res.success = true;
       res.message = `Tap Logs ${SAVING_SUCCESS}`;
       return res;

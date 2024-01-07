@@ -6,12 +6,14 @@ import { CreateUserOneSignalSubscriptionDto } from "src/core/dto/user-one-signal
 import { UserOneSignalSubscription } from "src/db/entities/UserOneSignalSubscription";
 import { Users } from "src/db/entities/Users";
 import { Repository } from "typeorm";
+import { PusherService } from "./pusher.service";
 
 @Injectable()
 export class UserOneSignalSubscriptionService {
   constructor(
     @InjectRepository(UserOneSignalSubscription)
-    private readonly ueserFirebaseTokensRepo: Repository<UserOneSignalSubscription>
+    private readonly ueserFirebaseTokensRepo: Repository<UserOneSignalSubscription>,
+    private pusherService: PusherService
   ) {}
 
   async getBySubscriptionId(subscriptionId) {
@@ -70,5 +72,9 @@ export class UserOneSignalSubscriptionService {
         return userOneSignalSubscription;
       }
     );
+  }
+
+  async mobileOneSignalScanner() {
+    await this.pusherService.mobileOneSignalScanner();
   }
 }

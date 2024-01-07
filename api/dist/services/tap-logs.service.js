@@ -20,7 +20,6 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const moment_1 = __importDefault(require("moment"));
 const notifications_constant_1 = require("../common/constant/notifications.constant");
-const students_constant_1 = require("../common/constant/students.constant");
 const timestamp_constant_1 = require("../common/constant/timestamp.constant");
 const top_logs_constant_1 = require("../common/constant/top-logs.constant");
 const utils_1 = require("../common/utils/utils");
@@ -35,7 +34,9 @@ const Machines_1 = require("../db/entities/Machines");
 const machines_constant_1 = require("../common/constant/machines.constant");
 const firebase_cloud_messaging_service_1 = require("./firebase-cloud-messaging.service");
 const date_constant_1 = require("../common/constant/date.constant");
+const UserOneSignalSubscription_1 = require("../db/entities/UserOneSignalSubscription");
 const one_signal_notification_service_1 = require("./one-signal-notification.service");
+const Employees_1 = require("../db/entities/Employees");
 let TapLogsService = class TapLogsService {
     constructor(tapLogsRepo, pusherService, firebaseProvoder, firebaseCloudMessagingService, oneSignalNotificationService) {
         this.tapLogsRepo = tapLogsRepo;
@@ -52,9 +53,6 @@ let TapLogsService = class TapLogsService {
             this.tapLogsRepo.find({
                 where: condition,
                 relations: {
-                    student: {
-                        parentStudents: true,
-                    },
                     machine: true,
                 },
                 skip,
@@ -137,10 +135,6 @@ let TapLogsService = class TapLogsService {
                 tapLogId,
             },
             relations: {
-                student: {
-                    parentStudents: true,
-                    school: true,
-                },
                 machine: true,
             },
         });
@@ -153,34 +147,25 @@ let TapLogsService = class TapLogsService {
         return await this.tapLogsRepo.manager.transaction(async (entityManager) => {
             const date = (0, moment_1.default)(dto.date, date_constant_1.DateConstant.DATE_LANGUAGE).format("YYYY-MM-DD");
             const longDate = (0, moment_1.default)(dto.date, date_constant_1.DateConstant.DATE_LANGUAGE).format("MMM DD, YYYY");
-            let tapLog = await entityManager.findOne(TapLogs_1.TapLogs, {
+            const { cardNumber, status, time, sender } = dto;
+            let tapLog;
+            tapLog = await entityManager.findOne(TapLogs_1.TapLogs, {
                 where: {
                     date,
-                    status: dto.status,
-                    student: {
-                        cardNumber: dto.cardNumber,
-                    },
-                    time: dto.time.toUpperCase(),
+                    cardNumber,
+                    status,
+                    time: time.toUpperCase(),
                 },
             });
             if (!tapLog) {
                 tapLog = new TapLogs_1.TapLogs();
                 tapLog.date = date;
+                tapLog.cardNumber = cardNumber;
                 tapLog.time = dto.time;
                 tapLog.status = dto.status;
-                const student = await entityManager.findOne(Students_1.Students, {
-                    where: {
-                        cardNumber: dto.cardNumber,
-                        active: true,
-                    },
-                });
-                if (!student) {
-                    throw Error(students_constant_1.STUDENTS_ERROR_NOT_FOUND);
-                }
-                tapLog.student = student;
                 const machine = await entityManager.findOne(Machines_1.Machines, {
                     where: {
-                        description: dto.sender,
+                        description: sender,
                         active: true,
                     },
                 });
@@ -189,139 +174,103 @@ let TapLogsService = class TapLogsService {
                 }
                 tapLog.machine = machine;
                 tapLog = await entityManager.save(TapLogs_1.TapLogs, tapLog);
-                const parentStudents = await entityManager.find(ParentStudent_1.ParentStudent, {
-                    where: {
-                        student: {
-                            studentId: student.studentId,
+                const subscriptions = [];
+                const userToNotify = [];
+                let title;
+                let desc;
+                let type;
+                if (dto.userType === "STUDENT") {
+                    const student = await entityManager.findOne(Students_1.Students, {
+                        where: { cardNumber },
+                    });
+                    const { studentId, fullName } = student;
+                    title = fullName;
+                    desc =
+                        dto.status.toUpperCase() === "LOG IN"
+                            ? `Your child, ${fullName} has arrived in the school on ${longDate} at ${dto.time}`
+                            : `Your child, ${fullName} has left the school premises on ${longDate} at ${dto.time}`;
+                    type = notifications_constant_1.NOTIF_TYPE.STUDENT_LOG.toString();
+                    const parentStudents = await entityManager.find(ParentStudent_1.ParentStudent, {
+                        where: {
+                            student: { studentId },
                         },
-                    },
-                    relations: {
-                        parent: {
-                            user: {
-                                userFirebaseTokens: true,
-                                userOneSignalSubscriptions: true,
+                        relations: {
+                            parent: {
+                                user: {
+                                    userFirebaseTokens: true,
+                                    userOneSignalSubscriptions: true,
+                                },
                             },
                         },
-                    },
-                });
-                const subscriptions = [];
-                for (const parentStudent of parentStudents) {
-                    if (parentStudent.parent &&
-                        parentStudent.parent.user &&
-                        parentStudent.parent.user.userOneSignalSubscriptions) {
-                        for (const subscription of parentStudent.parent.user
-                            .userOneSignalSubscriptions) {
-                            if (!subscriptions.some((x) => x === subscription.subscriptionId)) {
-                                subscriptions.push(subscription.subscriptionId);
+                    });
+                    for (const parentStudent of parentStudents) {
+                        if (parentStudent.parent &&
+                            parentStudent.parent.user &&
+                            parentStudent.parent.user.userOneSignalSubscriptions) {
+                            for (const subscription of parentStudent.parent.user
+                                .userOneSignalSubscriptions) {
+                                if (!subscriptions.some((x) => x === subscription.subscriptionId)) {
+                                    subscriptions.push(subscription.subscriptionId);
+                                }
+                            }
+                            if (!userToNotify.some((x) => x.userId === parentStudent.parent.user.userId)) {
+                                userToNotify.push(parentStudent.parent.user);
                             }
                         }
                     }
                 }
+                else {
+                    const employee = await entityManager.findOne(Employees_1.Employees, {
+                        where: { cardNumber },
+                    });
+                    const { employeeId, fullName } = employee;
+                    title = fullName;
+                    desc =
+                        dto.status.toUpperCase() === "LOG IN"
+                            ? `Employee tap activity, ${fullName} has arrived in the school on ${longDate} at ${dto.time}`
+                            : `Employee tap activity, ${fullName} has left the school premises on ${longDate} at ${dto.time}`;
+                    type = notifications_constant_1.NOTIF_TYPE.EMPLOYEET_LOG.toString();
+                    const userOneSignalSubscription = await entityManager.find(UserOneSignalSubscription_1.UserOneSignalSubscription, {
+                        where: {
+                            user: {
+                                employees: {
+                                    employeeId,
+                                },
+                            },
+                        },
+                    });
+                    for (const subscription of userOneSignalSubscription) {
+                        if (!subscriptions.some((x) => x === subscription.subscriptionId)) {
+                            subscriptions.push(subscription.subscriptionId);
+                        }
+                    }
+                }
+                tapLog = await entityManager.findOne(TapLogs_1.TapLogs, {
+                    where: {
+                        tapLogId: tapLog.tapLogId,
+                    },
+                    relations: {
+                        machine: true,
+                    },
+                });
+                const notificationIds = await this.logNotification(userToNotify, tapLog.tapLogId, entityManager, title, desc);
                 if (subscriptions.length > 0) {
-                    const title = student === null || student === void 0 ? void 0 : student.fullName;
-                    let desc;
-                    if (dto.status.toUpperCase() === "LOG IN") {
-                        desc = `Your child, ${student === null || student === void 0 ? void 0 : student.fullName} has arrived in the school on ${longDate} at ${dto.time}`;
-                    }
-                    else {
-                        desc = `Your child, ${student === null || student === void 0 ? void 0 : student.fullName} has left the school premises on ${longDate} at ${dto.time}`;
-                    }
                     const massRequest = [];
                     for (const subscription of subscriptions) {
-                        massRequest.push(await this.oneSignalNotificationService.sendToSubscriber([subscription], notifications_constant_1.NOTIF_TYPE.STUDENT_LOG.toString(), tapLog.tapLogId, title, desc));
+                        massRequest.push(this.oneSignalNotificationService.sendToSubscriber(subscription, type, tapLog.tapLogId, notificationIds, title, desc));
                     }
-                    await Promise.all(massRequest);
-                    await this.logNotification(parentStudents.map((x) => x.parent.user), tapLog.tapLogId, entityManager, title, desc);
+                    const results = await Promise.all(massRequest);
+                    const toDeleteOneSignalSubscriptionIds = results
+                        .filter((x) => !x.success)
+                        .map((x) => x.subscriptionId);
+                    const deleteResult = await entityManager.delete(UserOneSignalSubscription_1.UserOneSignalSubscription, {
+                        subscriptionId: (0, typeorm_2.In)(toDeleteOneSignalSubscriptionIds),
+                    });
+                    console.log("deleted subsciption ", toDeleteOneSignalSubscriptionIds);
+                    console.log("deleted subsciption ", deleteResult);
                 }
             }
             return tapLog;
-        });
-    }
-    async createBatch(dtos) {
-        return await this.tapLogsRepo.manager.transaction(async (entityManager) => {
-            const tapLogs = [];
-            for (const dto of dtos) {
-                const date = (0, moment_1.default)(dto.date, date_constant_1.DateConstant.DATE_LANGUAGE).format("YYYY-MM-DD");
-                const longDate = (0, moment_1.default)(dto.date, date_constant_1.DateConstant.DATE_LANGUAGE).format("MMM DD, YYYY");
-                let tapLog = await entityManager.findOne(TapLogs_1.TapLogs, {
-                    where: {
-                        date,
-                        time: dto.time.toUpperCase(),
-                    },
-                });
-                if (!tapLog) {
-                    tapLog = new TapLogs_1.TapLogs();
-                    tapLog.date = date;
-                    tapLog.time = dto.time;
-                    tapLog.status = dto.status;
-                    const student = await entityManager.findOne(Students_1.Students, {
-                        where: {
-                            cardNumber: dto.cardNumber,
-                            active: true,
-                        },
-                    });
-                    if (student) {
-                        tapLog.student = student;
-                        const machine = await entityManager.findOne(Machines_1.Machines, {
-                            where: {
-                                description: dto.sender,
-                                active: true,
-                            },
-                        });
-                        if (!machine) {
-                            throw Error(machines_constant_1.MACHINES_ERROR_NOT_FOUND);
-                        }
-                        tapLog.machine = machine;
-                        tapLog = await entityManager.save(TapLogs_1.TapLogs, tapLog);
-                        const parentStudents = await entityManager.find(ParentStudent_1.ParentStudent, {
-                            where: {
-                                student: {
-                                    studentId: student.studentId,
-                                },
-                            },
-                            relations: {
-                                parent: {
-                                    user: {
-                                        userFirebaseTokens: true,
-                                        userOneSignalSubscriptions: true,
-                                    },
-                                },
-                            },
-                        });
-                        const subscriptions = [];
-                        for (const parentStudent of parentStudents) {
-                            if (parentStudent.parent &&
-                                parentStudent.parent.user &&
-                                parentStudent.parent.user.userOneSignalSubscriptions) {
-                                for (const subscription of parentStudent.parent.user
-                                    .userOneSignalSubscriptions) {
-                                    if (!subscriptions.some((x) => x === subscription.subscriptionId)) {
-                                        subscriptions.push(subscription.subscriptionId);
-                                    }
-                                }
-                            }
-                        }
-                        if (subscriptions.length > 0) {
-                            const title = student === null || student === void 0 ? void 0 : student.fullName;
-                            let desc;
-                            if (dto.status.toUpperCase() === "LOG IN") {
-                                desc = `Your child, ${student === null || student === void 0 ? void 0 : student.fullName} has arrived in the school on ${longDate} at ${dto.time}`;
-                            }
-                            else {
-                                desc = `Your child, ${student === null || student === void 0 ? void 0 : student.fullName} has left the school premises on ${longDate} at ${dto.time}`;
-                            }
-                            const massRequest = [];
-                            for (const subscription of subscriptions) {
-                                massRequest.push(await this.oneSignalNotificationService.sendToSubscriber([subscription], notifications_constant_1.NOTIF_TYPE.STUDENT_LOG.toString(), tapLog.tapLogId, title, desc));
-                            }
-                            await Promise.all(massRequest);
-                            await this.logNotification(parentStudents.map((x) => x.parent.user), tapLog.tapLogId, entityManager, title, desc);
-                        }
-                    }
-                    tapLogs.push(Object.assign({ refId: dto.refId }, tapLog));
-                }
-            }
-            return tapLogs;
         });
     }
     async logNotification(users, referenceId, entityManager, title, description) {
@@ -342,8 +291,10 @@ let TapLogsService = class TapLogsService {
                 forUser: x,
             });
         });
-        await entityManager.save(Notifications_1.Notifications, notifcations);
-        await this.pusherService.sendNotif(users.map((x) => x.userId), title, description);
+        const res = await entityManager.save(Notifications_1.Notifications, notifcations);
+        const notificationsIds = res.map((x) => x.notificationId);
+        await this.pusherService.sendNotif(users.map((x) => x.userId), notificationsIds, title, description);
+        return notificationsIds;
     }
 };
 TapLogsService = __decorate([
