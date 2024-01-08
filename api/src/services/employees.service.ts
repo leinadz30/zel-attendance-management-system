@@ -361,18 +361,18 @@ export class EmployeesService {
                 delete employee.employeeUser?.user?.password;
                 delete employee.createdByUser.password;
                 success.push({
-                  orgStudentId: dto.orgEmployeeId,
+                  orgEmployeeId: dto.orgEmployeeId,
                   refId: dto.refId,
                 });
               } else {
                 duplicates.push({
-                  orgStudentId: dto.orgEmployeeId,
+                  orgEmployeeId: dto.orgEmployeeId,
                   refId: dto.refId,
                 });
               }
             } catch (ex) {
               failed.push({
-                orgStudentId: dto.orgEmployeeId,
+                orgEmployeeId: dto.orgEmployeeId,
                 refId: dto.refId,
                 comments: ex?.message,
               });

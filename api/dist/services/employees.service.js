@@ -325,20 +325,20 @@ let EmployeesService = class EmployeesService {
                             (_b = (_a = employee.employeeUser) === null || _a === void 0 ? void 0 : _a.user) === null || _b === void 0 ? true : delete _b.password;
                             delete employee.createdByUser.password;
                             success.push({
-                                orgStudentId: dto.orgEmployeeId,
+                                orgEmployeeId: dto.orgEmployeeId,
                                 refId: dto.refId,
                             });
                         }
                         else {
                             duplicates.push({
-                                orgStudentId: dto.orgEmployeeId,
+                                orgEmployeeId: dto.orgEmployeeId,
                                 refId: dto.refId,
                             });
                         }
                     }
                     catch (ex) {
                         failed.push({
-                            orgStudentId: dto.orgEmployeeId,
+                            orgEmployeeId: dto.orgEmployeeId,
                             refId: dto.refId,
                             comments: ex === null || ex === void 0 ? void 0 : ex.message,
                         });
