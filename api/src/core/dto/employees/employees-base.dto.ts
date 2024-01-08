@@ -27,15 +27,11 @@ export class DefaultEmployeeUserDto {
   lastName: string;
 
   @ApiProperty()
-  @IsNotEmpty()
-  @IsNumberString()
-  @Transform(({ obj, key }) => {
-    return obj[key].toString();
-  })
+  @IsOptional()
   mobileNumber: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   cardNumber: string;
 
   @ApiProperty()
@@ -55,6 +51,6 @@ export class DefaultEmployeeUserDto {
   employeeTitleId: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   orgEmployeeId: string;
 }

@@ -125,7 +125,7 @@ let SectionsService = class SectionsService {
             sections.adviserEmployee = adviserEmployee;
             const department = await entityManager.findOne(Departments_1.Departments, {
                 where: {
-                    departmentId: dto.schoolId,
+                    departmentId: dto.departmentId,
                     active: true,
                 },
             });
@@ -212,7 +212,7 @@ let SectionsService = class SectionsService {
             sections.adviserEmployee = adviserEmployee;
             const department = await entityManager.findOne(Departments_1.Departments, {
                 where: {
-                    departmentId: sections.school.schoolId,
+                    departmentId: dto.departmentId,
                     active: true,
                 },
             });

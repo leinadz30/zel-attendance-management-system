@@ -131,7 +131,7 @@ export class SectionsService {
 
         const department = await entityManager.findOne(Departments, {
           where: {
-            departmentId: dto.schoolId,
+            departmentId: dto.departmentId,
             active: true,
           },
         });
@@ -224,7 +224,7 @@ export class SectionsService {
 
         const department = await entityManager.findOne(Departments, {
           where: {
-            departmentId: sections.school.schoolId,
+            departmentId: dto.departmentId,
             active: true,
           },
         });

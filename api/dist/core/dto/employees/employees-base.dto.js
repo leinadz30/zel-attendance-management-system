@@ -32,16 +32,12 @@ __decorate([
 ], DefaultEmployeeUserDto.prototype, "lastName", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsNumberString)(),
-    (0, class_transformer_1.Transform)(({ obj, key }) => {
-        return obj[key].toString();
-    }),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], DefaultEmployeeUserDto.prototype, "mobileNumber", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], DefaultEmployeeUserDto.prototype, "cardNumber", void 0);
 __decorate([
@@ -66,7 +62,7 @@ __decorate([
 ], DefaultEmployeeUserDto.prototype, "employeeTitleId", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], DefaultEmployeeUserDto.prototype, "orgEmployeeId", void 0);
 exports.DefaultEmployeeUserDto = DefaultEmployeeUserDto;
