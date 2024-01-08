@@ -32,6 +32,7 @@ export class OpsStudentFormComponent {
   title;
   studentCode;
   isNew = false;
+  viewOnly = false;
   error;
   isLoading = true;
   studentForm: FormGroup;

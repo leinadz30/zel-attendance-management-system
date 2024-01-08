@@ -231,7 +231,7 @@ export class OpsEmployeesComponent {
               fullName: d.fullName,
               mobileNumber: d.mobileNumber,
               cardNumber: d.cardNumber,
-              department: d.department.departmentName,
+              department: d.department?.departmentName,
             } as OpsEmployeesTableColumn
           });
           this.total = res.data.total;

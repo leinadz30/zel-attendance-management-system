@@ -72,7 +72,7 @@ export class OpsLinkStudentRequestDetailsComponent {
     dialogRef.componentInstance.title = "Student Information";
     dialogRef.componentInstance.studentCode = this.linkStudentRequest.student.studentCode;
     dialogRef.componentInstance.initDetails();
-    dialogRef.componentInstance.studentForm.disable();
+    dialogRef.componentInstance.viewOnly = true;
   }
 
   async showParentDetails() {

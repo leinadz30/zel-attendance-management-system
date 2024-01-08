@@ -7,7 +7,7 @@
     [formGroup]="studentForm"
     fxLayout="row wrap"
     id="studentForm"
-    [ngClass]="{ 'readonly': studentForm.disabled }"
+    [ngClass]="{ 'readonly': viewOnly }"
     (ngSubmit)="onSubmit()">
       <fieldset fxFlex="100" fxLayout="column">
         <div
@@ -31,7 +31,7 @@
                   style="cursor: pointer;"
                   matSuffix
                   matTooltip="Department"
-                  *ngIf="!studentForm.disable"
+                  *ngIf="!viewOnly"
                   (click)="showSelectDepartmentDialog()">
                   search
                 </mat-icon>
@@ -57,7 +57,7 @@
                   style="cursor: pointer;"
                   matSuffix
                   matTooltip="School year level"
-                  *ngIf="!studentForm.disable"
+                  *ngIf="!viewOnly"
                   (click)="showSelectSchoolYearLevelDialog()">
                   search
                 </mat-icon>
@@ -84,7 +84,7 @@
                   style="cursor: pointer;"
                   matSuffix
                   matTooltip="Course"
-                  *ngIf="!studentForm.disable"
+                  *ngIf="!viewOnly"
                   (click)="showSelectCourseDialog()">
                   search
                 </mat-icon>
@@ -111,7 +111,7 @@
                   style="cursor: pointer;"
                   matSuffix
                   matTooltip="Strand"
-                  *ngIf="!studentForm.disable"
+                  *ngIf="!viewOnly"
                   (click)="showSelectStrandDialog()">
                   search
                 </mat-icon>
@@ -137,7 +137,7 @@
                   style="cursor: pointer;"
                   matSuffix
                   matTooltip="Section"
-                  *ngIf="!studentForm.disable"
+                  *ngIf="!viewOnly"
                   (click)="showSelectSectionDialog()">
                   search
                 </mat-icon>
@@ -317,10 +317,10 @@
       mat-flat-button
       cdkFocusInitial
       (click)="dialogRef.close(false)">
-      {{studentForm.enabled ? 'Cancel': 'Close'}}
+      {{!viewOnly ? 'Cancel': 'Close'}}
     </button>
     <button
-      *ngIf="!studentForm.disable"
+      *ngIf="!viewOnly"
       mat-flat-button
       [disabled]="!formIsValid || !formIsReady"
       color="primary"

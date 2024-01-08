@@ -225,9 +225,9 @@ export class OpsSectionsComponent {
             return {
               sectionCode: d.sectionCode,
               sectionName: d.sectionName,
-              schoolYearLevel: d.schoolYearLevel.name,
-              department: d.department.departmentName,
-              adviserEmployee: d.adviserEmployee.fullName,
+              schoolYearLevel: d.schoolYearLevel?.name,
+              department: d.department?.departmentName,
+              adviserEmployee: d.adviserEmployee?.fullName,
             } as OpsSectionsTableColumn
           });
           this.total = res.data.total;

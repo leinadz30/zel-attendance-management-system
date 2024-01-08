@@ -306,9 +306,9 @@ export class OpsStudentsComponent  {
               orgStudentId: d.orgStudentId,
               cardNumber: d.cardNumber,
               mobileNumber: d.mobileNumber,
-              schoolYearLevel: d.schoolYearLevel.name,
-              studentSection: d.studentSection.section.sectionName,
-              department: d.department.departmentName,
+              schoolYearLevel: d.schoolYearLevel?.name,
+              studentSection: d.studentSection?.section?.sectionName,
+              department: d.department?.departmentName,
             } as OpsStudentsTableColumn
           });
           this.total = res.data.total;
