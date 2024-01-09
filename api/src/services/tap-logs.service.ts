@@ -325,7 +325,7 @@ export class TapLogsService {
           massRequest.push(
             this.oneSignalNotificationService.sendToExternalUser(
               user.userName,
-              NOTIF_TYPE.LINK_REQUEST.toString(),
+              type,
               tapLog.tapLogId,
               notificationIds,
               title,
@@ -475,7 +475,7 @@ export class TapLogsService {
                   massRequest.push(
                     this.oneSignalNotificationService.sendToExternalUser(
                       user.userName,
-                      NOTIF_TYPE.LINK_REQUEST.toString(),
+                      type,
                       tapLog.tapLogId,
                       notificationIds,
                       title,

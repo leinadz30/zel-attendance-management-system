@@ -285,7 +285,7 @@ let TapLogsService = class TapLogsService {
                 const notificationIds = await this.logNotification(userToNotify, tapLog.tapLogId, entityManager, title, desc);
                 const massRequest = [];
                 for (const user of userToNotify) {
-                    massRequest.push(this.oneSignalNotificationService.sendToExternalUser(user.userName, notifications_constant_1.NOTIF_TYPE.LINK_REQUEST.toString(), tapLog.tapLogId, notificationIds, title, desc));
+                    massRequest.push(this.oneSignalNotificationService.sendToExternalUser(user.userName, type, tapLog.tapLogId, notificationIds, title, desc));
                 }
                 const results = await Promise.all(massRequest);
                 console.log("Notify to user results ", JSON.stringify(results));
@@ -398,7 +398,7 @@ let TapLogsService = class TapLogsService {
                             const notificationIds = await this.logNotification(userToNotify, tapLog.tapLogId, entityManager, title, desc);
                             const massRequest = [];
                             for (const user of userToNotify) {
-                                massRequest.push(this.oneSignalNotificationService.sendToExternalUser(user.userName, notifications_constant_1.NOTIF_TYPE.LINK_REQUEST.toString(), tapLog.tapLogId, notificationIds, title, desc));
+                                massRequest.push(this.oneSignalNotificationService.sendToExternalUser(user.userName, type, tapLog.tapLogId, notificationIds, title, desc));
                             }
                             const results = await Promise.all(massRequest);
                             console.log("Notify to user results ", JSON.stringify(results));
