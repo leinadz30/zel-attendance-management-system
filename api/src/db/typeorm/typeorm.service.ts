@@ -1,3 +1,4 @@
+import { Announcements } from './../entities/Announcements';
 import { StudentStrand } from './../entities/StudentStrand';
 import { TypeOrmOptionsFactory, TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { ConfigService } from "@nestjs/config";
@@ -71,6 +72,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         Files,
         UserProfilePic,
         UserOneSignalSubscription,
+        Announcements,
       ],
       synchronize: false, // never use TRUE in production!
       ssl: ssl.toLocaleLowerCase().includes("true"),

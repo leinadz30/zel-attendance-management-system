@@ -1,4 +1,4 @@
-import { CreateEmployeeTitleDto } from "src/core/dto/employee-titles/employee-titles.create.dto";
+import { BatchCreateEmployeeTitleDto, CreateEmployeeTitleDto } from "src/core/dto/employee-titles/employee-titles.create.dto";
 import { UpdateEmployeeTitleDto } from "src/core/dto/employee-titles/employee-titles.update.dto";
 import { PaginationParamsDto } from "src/core/dto/pagination-params.dto";
 import { ApiResponseModel } from "src/core/models/api-response.model";
@@ -13,7 +13,11 @@ export declare class EmployeeTitlesController {
         total: number;
     }>>;
     create(employeeTitlesDto: CreateEmployeeTitleDto): Promise<ApiResponseModel<EmployeeTitles>>;
-    batchCreate(employeeTitlesDto: CreateEmployeeTitleDto[]): Promise<ApiResponseModel<EmployeeTitles[]>>;
+    batchCreate(dtos: BatchCreateEmployeeTitleDto[]): Promise<ApiResponseModel<{
+        success: any[];
+        failed: any[];
+        duplicates: any[];
+    }>>;
     update(employeeTitleCode: string, dto: UpdateEmployeeTitleDto): Promise<ApiResponseModel<EmployeeTitles>>;
     delete(employeeTitleCode: string): Promise<ApiResponseModel<EmployeeTitles>>;
 }

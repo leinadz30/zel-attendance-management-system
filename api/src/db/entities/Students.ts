@@ -19,11 +19,11 @@ import { Schools } from "./Schools";
 import { SchoolYearLevels } from "./SchoolYearLevels";
 
 @Index("u_students_number", ["active", "mobileNumber"], { unique: true })
-@Index("u_students_email", ["active", "email"], { unique: true })
 @Index("u_students_card", ["active", "cardNumber"], { unique: true })
 @Index("u_student_orgstudentid", ["active", "orgStudentId", "schoolId"], {
   unique: true,
 })
+@Index("u_students_email", ["active", "email"], { unique: true })
 @Index("Students_pkey", ["studentId"], { unique: true })
 @Entity("Students", { schema: "dbo" })
 export class Students {

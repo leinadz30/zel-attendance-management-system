@@ -21,10 +21,12 @@ const UserOneSignalSubscription_1 = require("../db/entities/UserOneSignalSubscri
 const Users_1 = require("../db/entities/Users");
 const typeorm_2 = require("typeorm");
 const pusher_service_1 = require("./pusher.service");
+const one_signal_notification_service_1 = require("./one-signal-notification.service");
 let UserOneSignalSubscriptionService = class UserOneSignalSubscriptionService {
-    constructor(ueserFirebaseTokensRepo, pusherService) {
+    constructor(ueserFirebaseTokensRepo, pusherService, oneSignalNotificationService) {
         this.ueserFirebaseTokensRepo = ueserFirebaseTokensRepo;
         this.pusherService = pusherService;
+        this.oneSignalNotificationService = oneSignalNotificationService;
     }
     async getBySubscriptionId(subscriptionId) {
         var _a;
@@ -45,7 +47,7 @@ let UserOneSignalSubscriptionService = class UserOneSignalSubscriptionService {
         return result;
     }
     async create(dto) {
-        return await this.ueserFirebaseTokensRepo.manager.transaction(async (entityManager) => {
+        return this.ueserFirebaseTokensRepo.manager.transaction(async (entityManager) => {
             let userOneSignalSubscription = await entityManager.findOne(UserOneSignalSubscription_1.UserOneSignalSubscription, {
                 where: {
                     subscriptionId: dto.subscriptionId,
@@ -81,7 +83,8 @@ UserOneSignalSubscriptionService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(UserOneSignalSubscription_1.UserOneSignalSubscription)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        pusher_service_1.PusherService])
+        pusher_service_1.PusherService,
+        one_signal_notification_service_1.OneSignalNotificationService])
 ], UserOneSignalSubscriptionService);
 exports.UserOneSignalSubscriptionService = UserOneSignalSubscriptionService;
 //# sourceMappingURL=user-one-signal-subscription.service.js.map

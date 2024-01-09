@@ -1,4 +1,4 @@
-import { CreateDepartmentDto } from "src/core/dto/departments/departments.create.dto";
+import { BatchCreateDepartmentDto, CreateDepartmentDto } from "src/core/dto/departments/departments.create.dto";
 import { UpdateDepartmentDto } from "src/core/dto/departments/departments.update.dto";
 import { Departments } from "src/db/entities/Departments";
 import { Repository } from "typeorm";
@@ -16,7 +16,11 @@ export declare class DepartmentsService {
     }>;
     getByCode(departmentCode: any): Promise<Departments>;
     create(dto: CreateDepartmentDto): Promise<Departments>;
-    batchCreate(dtos: CreateDepartmentDto[]): Promise<any[]>;
+    batchCreate(dtos: BatchCreateDepartmentDto[]): Promise<{
+        success: any[];
+        duplicates: any[];
+        failed: any[];
+    }>;
     update(departmentCode: any, dto: UpdateDepartmentDto): Promise<Departments>;
     delete(departmentCode: any): Promise<Departments>;
 }

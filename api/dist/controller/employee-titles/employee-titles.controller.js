@@ -64,10 +64,10 @@ let EmployeeTitlesController = class EmployeeTitlesController {
             return res;
         }
     }
-    async batchCreate(employeeTitlesDto) {
+    async batchCreate(dtos) {
         const res = {};
         try {
-            res.data = await this.employeeTitlesService.batchCreate(employeeTitlesDto);
+            res.data = await this.employeeTitlesService.batchCreate(dtos);
             res.success = true;
             res.message = `Employee Titles ${api_response_constant_1.SAVING_SUCCESS}`;
             return res;
@@ -129,7 +129,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], EmployeeTitlesController.prototype, "create", null);
 __decorate([
-    (0, common_1.Post)("batchCreate"),
+    (0, common_1.Post)("createBatch"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Array]),

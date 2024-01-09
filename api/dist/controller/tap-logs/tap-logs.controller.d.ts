@@ -14,5 +14,9 @@ export declare class TapLogsController {
     getStudentsTapsByParentCode(parentCode: string, date?: Date): Promise<ApiResponseModel<any>>;
     getStudentsTapsByStudentCode(studentCode: string, date?: Date): Promise<ApiResponseModel<any>>;
     create(tapLogsDto: CreateTapLogDto): Promise<ApiResponseModel<TapLogs>>;
-    createBatch(tapLogsDtos: CreateTapLogDto[]): Promise<ApiResponseModel<any[]>>;
+    createBatch(tapLogsDtos: CreateTapLogDto[]): Promise<ApiResponseModel<{
+        success: any[];
+        failed: any[];
+        duplicates: any[];
+    }>>;
 }

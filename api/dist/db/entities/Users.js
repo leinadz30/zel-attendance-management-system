@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Users = void 0;
 const typeorm_1 = require("typeorm");
+const Announcements_1 = require("./Announcements");
 const Courses_1 = require("./Courses");
 const Departments_1 = require("./Departments");
 const EmployeeRoles_1 = require("./EmployeeRoles");
@@ -68,6 +69,14 @@ __decorate([
     (0, typeorm_1.Column)("boolean", { name: "Active", default: () => "true" }),
     __metadata("design:type", Boolean)
 ], Users.prototype, "active", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Announcements_1.Announcements, (announcements) => announcements.createdByUser),
+    __metadata("design:type", Array)
+], Users.prototype, "announcements", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Announcements_1.Announcements, (announcements) => announcements.updatedByUser),
+    __metadata("design:type", Array)
+], Users.prototype, "announcements2", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Courses_1.Courses, (courses) => courses.createdByUser),
     __metadata("design:type", Array)

@@ -33,7 +33,6 @@ const ParentStudent_1 = require("../db/entities/ParentStudent");
 const parents_constant_1 = require("../common/constant/parents.constant");
 const firebase_provider_1 = require("../core/provider/firebase/firebase-provider");
 const one_signal_notification_service_1 = require("./one-signal-notification.service");
-const UserOneSignalSubscription_1 = require("../db/entities/UserOneSignalSubscription");
 let LinkStudentRequestService = class LinkStudentRequestService {
     constructor(linkStudentRequestRepo, pusherService, firebaseProvoder, oneSignalNotificationService) {
         this.linkStudentRequestRepo = linkStudentRequestRepo;
@@ -263,21 +262,9 @@ let LinkStudentRequestService = class LinkStudentRequestService {
             const notifDesc = "Request to Link Student " +
                 ((_a = linkStudentRequest.student) === null || _a === void 0 ? void 0 : _a.fullName) +
                 " was approved!";
-            const subscriptions = await this.linkStudentRequestRepo.manager.find(UserOneSignalSubscription_1.UserOneSignalSubscription, {
-                where: {
-                    user: {
-                        userId: (_c = (_b = linkStudentRequest === null || linkStudentRequest === void 0 ? void 0 : linkStudentRequest.requestedByParent) === null || _b === void 0 ? void 0 : _b.user) === null || _c === void 0 ? void 0 : _c.userId,
-                    },
-                },
-            });
             const notificationIds = await this.logNotification(linkStudentRequest.requestedByParent.user, linkStudentRequest.linkStudentRequestCode, entityManager, notifTitle, notifDesc);
-            if (subscriptions.length > 0) {
-                const massRequest = [];
-                for (const subscription of subscriptions) {
-                    massRequest.push(this.oneSignalNotificationService.sendToSubscriber(subscription.subscriptionId, notifications_constant_1.NOTIF_TYPE.LINK_REQUEST.toString(), linkStudentRequest.linkStudentRequestCode, notificationIds, notifTitle, notifDesc));
-                }
-                await Promise.all(massRequest);
-            }
+            const pushResult = await this.oneSignalNotificationService.sendToExternalUser((_c = (_b = linkStudentRequest === null || linkStudentRequest === void 0 ? void 0 : linkStudentRequest.requestedByParent) === null || _b === void 0 ? void 0 : _b.user) === null || _c === void 0 ? void 0 : _c.userName, notifications_constant_1.NOTIF_TYPE.LINK_REQUEST.toString(), linkStudentRequest.linkStudentRequestCode, notificationIds, notifTitle, notifDesc);
+            console.log(pushResult);
             delete linkStudentRequest.requestedByParent.user.password;
             delete linkStudentRequest.updatedByUser.password;
             return linkStudentRequest;
@@ -341,21 +328,9 @@ let LinkStudentRequestService = class LinkStudentRequestService {
             const notifDesc = "Request to Link Student " +
                 ((_a = linkStudentRequest.student) === null || _a === void 0 ? void 0 : _a.fullName) +
                 " was rejected!";
-            const subscriptions = await this.linkStudentRequestRepo.manager.find(UserOneSignalSubscription_1.UserOneSignalSubscription, {
-                where: {
-                    user: {
-                        userId: (_c = (_b = linkStudentRequest === null || linkStudentRequest === void 0 ? void 0 : linkStudentRequest.requestedByParent) === null || _b === void 0 ? void 0 : _b.user) === null || _c === void 0 ? void 0 : _c.userId,
-                    },
-                },
-            });
             const notificationIds = await this.logNotification(linkStudentRequest.requestedByParent.user, linkStudentRequest.linkStudentRequestCode, entityManager, notifTitle, notifDesc);
-            if (subscriptions.length > 0) {
-                const massRequest = [];
-                for (const subscription of subscriptions) {
-                    massRequest.push(this.oneSignalNotificationService.sendToSubscriber(subscription.subscriptionId, notifications_constant_1.NOTIF_TYPE.LINK_REQUEST.toString(), linkStudentRequest.linkStudentRequestCode, notificationIds, notifTitle, notifDesc));
-                }
-                await Promise.all(massRequest);
-            }
+            const pushResult = await this.oneSignalNotificationService.sendToExternalUser((_c = (_b = linkStudentRequest === null || linkStudentRequest === void 0 ? void 0 : linkStudentRequest.requestedByParent) === null || _b === void 0 ? void 0 : _b.user) === null || _c === void 0 ? void 0 : _c.userName, notifications_constant_1.NOTIF_TYPE.LINK_REQUEST.toString(), linkStudentRequest.linkStudentRequestCode, notificationIds, notifTitle, notifDesc);
+            console.log(pushResult);
             delete linkStudentRequest.requestedByParent.user.password;
             delete linkStudentRequest.updatedByUser.password;
             return linkStudentRequest;

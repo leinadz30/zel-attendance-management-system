@@ -8,4 +8,10 @@ export declare class OneSignalNotificationService {
         subscriptionId: string;
         success: boolean;
     }>;
+    sendToExternalUser(userId: string, type: any, referenceId: any, notificationIds: any[], title: any, description: any): Promise<{
+        userId: string;
+        success: boolean;
+    }>;
+    setExternalUserId(subscriptionId: string, externalUserId: string): Promise<any>;
+    setTags(subscriptionId: string, tags: any): Promise<any>;
 }

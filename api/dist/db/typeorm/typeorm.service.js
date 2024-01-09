@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TypeOrmConfigService = void 0;
+const Announcements_1 = require("./../entities/Announcements");
 const StudentStrand_1 = require("./../entities/StudentStrand");
 const config_1 = require("@nestjs/config");
 const common_1 = require("@nestjs/common");
@@ -77,6 +78,7 @@ let TypeOrmConfigService = class TypeOrmConfigService {
                 Files_1.Files,
                 UserProfilePic_1.UserProfilePic,
                 UserOneSignalSubscription_1.UserOneSignalSubscription,
+                Announcements_1.Announcements,
             ],
             synchronize: false,
             ssl: ssl.toLocaleLowerCase().includes("true"),

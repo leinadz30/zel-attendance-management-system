@@ -20,3 +20,21 @@ export class CreateDepartmentDto extends DefaultDepartmentDto {
   })
   schoolId: string;
 }
+
+export class BatchCreateDepartmentDto extends DefaultDepartmentDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumberString()
+  @Transform(({ obj, key }) => {
+    return obj[key]?.toString();
+  })
+  createdByUserId: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  orgSchoolCode: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  refId: string;
+}

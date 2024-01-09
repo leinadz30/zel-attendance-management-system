@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Schools = void 0;
 const typeorm_1 = require("typeorm");
+const Announcements_1 = require("./Announcements");
 const Courses_1 = require("./Courses");
 const Departments_1 = require("./Departments");
 const EmployeeRoles_1 = require("./EmployeeRoles");
@@ -123,6 +124,10 @@ __decorate([
     (0, typeorm_1.Column)("character varying", { name: "OrgSchoolCode", default: () => "''" }),
     __metadata("design:type", String)
 ], Schools.prototype, "orgSchoolCode", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Announcements_1.Announcements, (announcements) => announcements.school),
+    __metadata("design:type", Array)
+], Schools.prototype, "announcements", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Courses_1.Courses, (courses) => courses.school),
     __metadata("design:type", Array)

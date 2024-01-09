@@ -13,14 +13,24 @@ const user_one_signal_subscription_service_1 = require("../../services/user-one-
 const typeorm_1 = require("@nestjs/typeorm");
 const UserOneSignalSubscription_1 = require("../../db/entities/UserOneSignalSubscription");
 const pusher_service_1 = require("../../services/pusher.service");
+const one_signal_notification_service_1 = require("../../services/one-signal-notification.service");
+const axios_1 = require("@nestjs/axios");
 let UserOneSignalSubscriptionModule = class UserOneSignalSubscriptionModule {
 };
 UserOneSignalSubscriptionModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([UserOneSignalSubscription_1.UserOneSignalSubscription])],
+        imports: [axios_1.HttpModule, typeorm_1.TypeOrmModule.forFeature([UserOneSignalSubscription_1.UserOneSignalSubscription])],
         controllers: [user_one_signal_subscription_controller_1.UserOneSignalSubscriptionController],
-        providers: [user_one_signal_subscription_service_1.UserOneSignalSubscriptionService, pusher_service_1.PusherService],
-        exports: [user_one_signal_subscription_service_1.UserOneSignalSubscriptionService, pusher_service_1.PusherService],
+        providers: [
+            user_one_signal_subscription_service_1.UserOneSignalSubscriptionService,
+            pusher_service_1.PusherService,
+            one_signal_notification_service_1.OneSignalNotificationService,
+        ],
+        exports: [
+            user_one_signal_subscription_service_1.UserOneSignalSubscriptionService,
+            pusher_service_1.PusherService,
+            one_signal_notification_service_1.OneSignalNotificationService,
+        ],
     })
 ], UserOneSignalSubscriptionModule);
 exports.UserOneSignalSubscriptionModule = UserOneSignalSubscriptionModule;

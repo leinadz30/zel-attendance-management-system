@@ -1,3 +1,4 @@
+import { Announcements } from "./Announcements";
 import { Courses } from "./Courses";
 import { Departments } from "./Departments";
 import { EmployeeRoles } from "./EmployeeRoles";
@@ -31,6 +32,7 @@ export declare class Schools {
     dateUpdated: Date | null;
     active: boolean;
     orgSchoolCode: string;
+    announcements: Announcements[];
     courses: Courses[];
     departments: Departments[];
     employeeRoles: EmployeeRoles[];

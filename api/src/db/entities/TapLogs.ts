@@ -26,7 +26,7 @@ export class TapLogs {
   @Column("character varying", { name: "Time" })
   time: string;
 
-  @Column("character varying", { name: "CardNumber" })
+  @Column("character varying", { name: "CardNumber", default: () => "''" })
   cardNumber: string;
 
   @Column("character varying", { name: "Type", default: () => "''" })

@@ -64,12 +64,12 @@ let DepartmentsController = class DepartmentsController {
             return res;
         }
     }
-    async batchCreate(departmentsDto) {
+    async batchCreate(dtos) {
         const res = {};
         try {
-            res.data = await this.departmentsService.batchCreate(departmentsDto);
+            res.data = await this.departmentsService.batchCreate(dtos);
             res.success = true;
-            res.message = `Departments ${api_response_constant_1.SAVING_SUCCESS}`;
+            res.message = `Departments Batch Create Complete`;
             return res;
         }
         catch (e) {
@@ -133,7 +133,7 @@ __decorate([
         isArray: true,
         type: departments_create_dto_1.CreateDepartmentDto,
     }),
-    (0, common_1.Post)("batchCreate"),
+    (0, common_1.Post)("createBatch"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Array]),

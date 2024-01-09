@@ -50,12 +50,12 @@ export class OpsEmployeeFormComponent {
     public dialogRef: MatDialogRef<OpsEmployeeFormComponent>) {
       this.employeeForm = this.formBuilder.group(
         {
-          orgEmployeeId: new FormControl(null, Validators.required),
+          orgEmployeeId: new FormControl(),
           firstName: new FormControl(null, Validators.required),
           middleInitial: new FormControl(null),
           lastName: new FormControl(null, Validators.required),
-          mobileNumber: new FormControl(null, Validators.required),
-          cardNumber: new FormControl(null, Validators.required),
+          mobileNumber: new FormControl(),
+          cardNumber: new FormControl(),
           departmentId: new FormControl(null, Validators.required),
           employeeTitleId: new FormControl(null, Validators.required)
         }

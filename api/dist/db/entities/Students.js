@@ -142,11 +142,11 @@ __decorate([
 ], Students.prototype, "updatedByUser", void 0);
 Students = __decorate([
     (0, typeorm_1.Index)("u_students_number", ["active", "mobileNumber"], { unique: true }),
-    (0, typeorm_1.Index)("u_students_email", ["active", "email"], { unique: true }),
     (0, typeorm_1.Index)("u_students_card", ["active", "cardNumber"], { unique: true }),
     (0, typeorm_1.Index)("u_student_orgstudentid", ["active", "orgStudentId", "schoolId"], {
         unique: true,
     }),
+    (0, typeorm_1.Index)("u_students_email", ["active", "email"], { unique: true }),
     (0, typeorm_1.Index)("Students_pkey", ["studentId"], { unique: true }),
     (0, typeorm_1.Entity)("Students", { schema: "dbo" })
 ], Students);

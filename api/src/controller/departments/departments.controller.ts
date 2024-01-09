@@ -13,7 +13,7 @@ import {
   SAVING_SUCCESS,
   UPDATE_SUCCESS,
 } from "src/common/constant/api-response.constant";
-import { CreateDepartmentDto } from "src/core/dto/departments/departments.create.dto";
+import { BatchCreateDepartmentDto, CreateDepartmentDto } from "src/core/dto/departments/departments.create.dto";
 import { UpdateDepartmentDto } from "src/core/dto/departments/departments.update.dto";
 import { PaginationParamsDto } from "src/core/dto/pagination-params.dto";
 import { ApiResponseModel } from "src/core/models/api-response.model";
@@ -76,14 +76,18 @@ export class DepartmentsController {
     isArray: true,
     type: CreateDepartmentDto,
   })
-  @Post("batchCreate")
+  @Post("createBatch")
   //   @UseGuards(JwtAuthGuard)
-  async batchCreate(@Body() departmentsDto: CreateDepartmentDto[]) {
-    const res: ApiResponseModel<Departments[]> = {} as any;
+  async batchCreate(@Body() dtos: BatchCreateDepartmentDto[]) {
+    const res: ApiResponseModel<{
+      success: any[];
+      failed: any[];
+      duplicates: any[];
+    }> = {} as any;
     try {
-      res.data = await this.departmentsService.batchCreate(departmentsDto);
+      res.data = await this.departmentsService.batchCreate(dtos);
       res.success = true;
-      res.message = `Departments ${SAVING_SUCCESS}`;
+      res.message = `Departments Batch Create Complete`;
       return res;
     } catch (e) {
       res.success = false;

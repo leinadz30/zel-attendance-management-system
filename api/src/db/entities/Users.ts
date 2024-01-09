@@ -6,6 +6,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Announcements } from "./Announcements";
 import { Courses } from "./Courses";
 import { Departments } from "./Departments";
 import { EmployeeRoles } from "./EmployeeRoles";
@@ -57,6 +58,18 @@ export class Users {
 
   @Column("boolean", { name: "Active", default: () => "true" })
   active: boolean;
+
+  @OneToMany(
+    () => Announcements,
+    (announcements) => announcements.createdByUser
+  )
+  announcements: Announcements[];
+
+  @OneToMany(
+    () => Announcements,
+    (announcements) => announcements.updatedByUser
+  )
+  announcements2: Announcements[];
 
   @OneToMany(() => Courses, (courses) => courses.createdByUser)
   courses: Courses[];

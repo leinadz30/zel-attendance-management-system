@@ -60,6 +60,101 @@ let OneSignalNotificationService = class OneSignalNotificationService {
         console.log(result === null || result === void 0 ? void 0 : result.data);
         return { subscriptionId, success: true };
     }
+    async sendToExternalUser(userId, type, referenceId, notificationIds, title, description) {
+        const url = this.config.get("ONE_SIGNAL_NOTIF_URL");
+        const apiKey = this.config.get("ONE_SIGNAL_API_KEY");
+        let result;
+        try {
+            result = await (0, rxjs_1.firstValueFrom)(this.httpService
+                .post(url, {
+                app_id: this.config.get("ONE_SIGNAL_APP_ID"),
+                include_external_user_ids: [userId],
+                data: {
+                    notificationIds,
+                    type,
+                    referenceId,
+                },
+                big_picture: this.config.get("ONE_SIGNAL_NOTIF_IMAGE"),
+                headings: {
+                    en: title,
+                },
+                contents: {
+                    en: description,
+                },
+                android_sound: this.config.get("ONE_SIGNAL_NOTIF_A_SOUND"),
+                android_channel_id: this.config.get("ONE_SIGNAL_NOTIF_A_CHANNEL_ID"),
+                existing_android_channel_id: this.config.get("ONE_SIGNAL_NOTIF_A_EXISTING_CHANNEL_ID"),
+            }, {
+                responseType: "json",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Basic " + apiKey,
+                },
+            })
+                .pipe((0, rxjs_1.catchError)((error) => {
+                throw new common_1.HttpException(error.response, common_1.HttpStatus.BAD_REQUEST);
+            })));
+        }
+        catch (ex) {
+            return { userId, success: false };
+        }
+        return { userId, success: true };
+    }
+    async setExternalUserId(subscriptionId, externalUserId) {
+        const url = this.config.get("ONE_SIGNAL_PLAYERS_URL");
+        const apiKey = this.config.get("ONE_SIGNAL_API_KEY");
+        let result;
+        try {
+            result = await (0, rxjs_1.firstValueFrom)(this.httpService
+                .put(url.slice(-1) === "/"
+                ? `${url}${subscriptionId}`
+                : `${url}/${subscriptionId}`, {
+                app_id: this.config.get("ONE_SIGNAL_APP_ID"),
+                external_user_id: externalUserId,
+            }, {
+                responseType: "json",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Basic " + apiKey,
+                },
+            })
+                .pipe((0, rxjs_1.catchError)((error) => {
+                throw new common_1.HttpException(error.response, common_1.HttpStatus.BAD_REQUEST);
+            })));
+        }
+        catch (ex) {
+            return ex.message;
+        }
+        console.log(result === null || result === void 0 ? void 0 : result.data);
+        return result === null || result === void 0 ? void 0 : result.data;
+    }
+    async setTags(subscriptionId, tags) {
+        const url = this.config.get("ONE_SIGNAL_PLAYERS_URL");
+        const apiKey = this.config.get("ONE_SIGNAL_API_KEY");
+        let result;
+        try {
+            result = await (0, rxjs_1.firstValueFrom)(this.httpService
+                .put(url.slice(-1) === "/"
+                ? `${url}${subscriptionId}`
+                : `${url}/${subscriptionId}`, {
+                app_id: this.config.get("ONE_SIGNAL_APP_ID"),
+                tags,
+            }, {
+                responseType: "json",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Basic " + apiKey,
+                },
+            })
+                .pipe((0, rxjs_1.catchError)((error) => {
+                throw new common_1.HttpException(error.response, common_1.HttpStatus.BAD_REQUEST);
+            })));
+        }
+        catch (ex) {
+            return ex.message;
+        }
+        return result === null || result === void 0 ? void 0 : result.data;
+    }
 };
 OneSignalNotificationService = __decorate([
     (0, common_1.Injectable)(),

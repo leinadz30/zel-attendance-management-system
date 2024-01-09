@@ -84,7 +84,7 @@ let EmployeesController = class EmployeesController {
         try {
             res.data = await this.employeesService.createBatch(employeeDtos);
             res.success = true;
-            res.message = `Employee Batch Complete`;
+            res.message = `Employee Batch Create Complete`;
             return res;
         }
         catch (e) {

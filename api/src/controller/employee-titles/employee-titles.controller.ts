@@ -13,7 +13,10 @@ import {
   SAVING_SUCCESS,
   UPDATE_SUCCESS,
 } from "src/common/constant/api-response.constant";
-import { CreateEmployeeTitleDto } from "src/core/dto/employee-titles/employee-titles.create.dto";
+import {
+  BatchCreateEmployeeTitleDto,
+  CreateEmployeeTitleDto,
+} from "src/core/dto/employee-titles/employee-titles.create.dto";
 import { UpdateEmployeeTitleDto } from "src/core/dto/employee-titles/employee-titles.update.dto";
 import { PaginationParamsDto } from "src/core/dto/pagination-params.dto";
 import { ApiResponseModel } from "src/core/models/api-response.model";
@@ -74,14 +77,16 @@ export class EmployeeTitlesController {
     }
   }
 
-  @Post("batchCreate")
+  @Post("createBatch")
   //   @UseGuards(JwtAuthGuard)
-  async batchCreate(@Body() employeeTitlesDto: CreateEmployeeTitleDto[]) {
-    const res: ApiResponseModel<EmployeeTitles[]> = {} as any;
+  async batchCreate(@Body() dtos: BatchCreateEmployeeTitleDto[]) {
+    const res: ApiResponseModel<{
+      success: any[];
+      failed: any[];
+      duplicates: any[];
+    }> = {} as any;
     try {
-      res.data = await this.employeeTitlesService.batchCreate(
-        employeeTitlesDto
-      );
+      res.data = await this.employeeTitlesService.batchCreate(dtos);
       res.success = true;
       res.message = `Employee Titles ${SAVING_SUCCESS}`;
       return res;

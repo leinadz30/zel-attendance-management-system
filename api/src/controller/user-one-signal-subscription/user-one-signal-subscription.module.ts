@@ -4,11 +4,21 @@ import { UserOneSignalSubscriptionService } from "src/services/user-one-signal-s
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserOneSignalSubscription } from "src/db/entities/UserOneSignalSubscription";
 import { PusherService } from "src/services/pusher.service";
+import { OneSignalNotificationService } from "src/services/one-signal-notification.service";
+import { HttpModule } from "@nestjs/axios";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserOneSignalSubscription])],
+  imports: [HttpModule, TypeOrmModule.forFeature([UserOneSignalSubscription])],
   controllers: [UserOneSignalSubscriptionController],
-  providers: [UserOneSignalSubscriptionService, PusherService],
-  exports: [UserOneSignalSubscriptionService, PusherService],
+  providers: [
+    UserOneSignalSubscriptionService,
+    PusherService,
+    OneSignalNotificationService,
+  ],
+  exports: [
+    UserOneSignalSubscriptionService,
+    PusherService,
+    OneSignalNotificationService,
+  ],
 })
 export class UserOneSignalSubscriptionModule {}

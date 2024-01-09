@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateEmployeeTitleDto = void 0;
+exports.BatchCreateEmployeeTitleDto = exports.CreateEmployeeTitleDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_transformer_1 = require("class-transformer");
 const employee_titles_base_dto_1 = require("./employee-titles-base.dto");
@@ -37,4 +37,27 @@ __decorate([
     __metadata("design:type", String)
 ], CreateEmployeeTitleDto.prototype, "schoolId", void 0);
 exports.CreateEmployeeTitleDto = CreateEmployeeTitleDto;
+class BatchCreateEmployeeTitleDto extends employee_titles_base_dto_1.DefaultEmployeeTitleDto {
+}
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsNumberString)(),
+    (0, class_transformer_1.Transform)(({ obj, key }) => {
+        var _a;
+        return (_a = obj[key]) === null || _a === void 0 ? void 0 : _a.toString();
+    }),
+    __metadata("design:type", String)
+], BatchCreateEmployeeTitleDto.prototype, "createdByUserId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], BatchCreateEmployeeTitleDto.prototype, "orgSchoolCode", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], BatchCreateEmployeeTitleDto.prototype, "refId", void 0);
+exports.BatchCreateEmployeeTitleDto = BatchCreateEmployeeTitleDto;
 //# sourceMappingURL=employee-titles.create.dto.js.map

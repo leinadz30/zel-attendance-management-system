@@ -7,6 +7,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Announcements } from "./Announcements";
 import { Courses } from "./Courses";
 import { Departments } from "./Departments";
 import { EmployeeRoles } from "./EmployeeRoles";
@@ -101,6 +102,9 @@ export class Schools {
 
   @Column("character varying", { name: "OrgSchoolCode", default: () => "''" })
   orgSchoolCode: string;
+
+  @OneToMany(() => Announcements, (announcements) => announcements.school)
+  announcements: Announcements[];
 
   @OneToMany(() => Courses, (courses) => courses.school)
   courses: Courses[];

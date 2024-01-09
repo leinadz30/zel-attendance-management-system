@@ -8,7 +8,7 @@ import {
   columnDefToTypeORMCondition,
   generateIndentityCode,
 } from "src/common/utils/utils";
-import { CreateDepartmentDto } from "src/core/dto/departments/departments.create.dto";
+import { BatchCreateDepartmentDto, CreateDepartmentDto } from "src/core/dto/departments/departments.create.dto";
 import { UpdateDepartmentDto } from "src/core/dto/departments/departments.update.dto";
 import { Departments } from "src/db/entities/Departments";
 import { Users } from "src/db/entities/Users";
@@ -139,50 +139,83 @@ export class DepartmentsService {
     }
   }
 
-  async batchCreate(dtos: CreateDepartmentDto[]) {
+  async batchCreate(dtos: BatchCreateDepartmentDto[]) {
     return await this.departmentsRepo.manager.transaction(
       async (entityManager) => {
-        const departments = [];
+        const success = [];
+        const duplicates = [];
+        const failed = [];
         for (const dto of dtos) {
-          let department = new Departments();
-          department.departmentName = dto.departmentName;
-          const timestamp = await entityManager
-            .query(CONST_QUERYCURRENT_TIMESTAMP)
-            .then((res) => {
-              return res[0]["timestamp"];
+          try {
+            let department = await entityManager.findOne(Departments, {
+              where: {
+                departmentName: dto.departmentName,
+                school: {
+                  orgSchoolCode: dto.orgSchoolCode,
+                },
+                active: true,
+              },
             });
-          department.createdDate = timestamp;
+            if (!department) {
+              department = new Departments();
+              department.departmentName = dto.departmentName;
+              const timestamp = await entityManager
+                .query(CONST_QUERYCURRENT_TIMESTAMP)
+                .then((res) => {
+                  return res[0]["timestamp"];
+                });
+              department.createdDate = timestamp;
 
-          const school = await entityManager.findOne(Schools, {
-            where: {
-              schoolId: dto.schoolId,
-              active: true,
-            },
-          });
-          if (!school) {
-            throw Error(SCHOOLS_ERROR_NOT_FOUND);
-          }
-          department.school = school;
+              const school = await entityManager.findOne(Schools, {
+                where: {
+                  orgSchoolCode: dto.orgSchoolCode,
+                  active: true,
+                },
+              });
+              if (!school) {
+                throw Error(SCHOOLS_ERROR_NOT_FOUND);
+              }
+              department.school = school;
 
-          const createdByUser = await entityManager.findOne(Users, {
-            where: {
-              userId: dto.createdByUserId,
-              active: true,
-            },
-          });
-          if (!createdByUser) {
-            throw Error(USER_ERROR_USER_NOT_FOUND);
+              const createdByUser = await entityManager.findOne(Users, {
+                where: {
+                  userId: dto.createdByUserId,
+                  active: true,
+                },
+              });
+              if (!createdByUser) {
+                throw Error(USER_ERROR_USER_NOT_FOUND);
+              }
+              department.createdByUser = createdByUser;
+              department = await entityManager.save(department);
+              department.departmentCode = generateIndentityCode(
+                department.departmentId
+              );
+              department = await entityManager.save(Departments, department);
+              delete department.createdByUser.password;
+              success.push({
+                departmentName: dto.departmentName,
+                refId: dto.refId,
+              });
+            } else {
+              duplicates.push({
+                departmentName: dto.departmentName,
+                refId: dto.refId,
+              });
+            }
+          } catch (ex) {
+            failed.push({
+              departmentName: dto.departmentName,
+              refId: dto.refId,
+              comments: ex?.message,
+            });
           }
-          department.createdByUser = createdByUser;
-          department = await entityManager.save(department);
-          department.departmentCode = generateIndentityCode(
-            department.departmentId
-          );
-          department = await entityManager.save(Departments, department);
-          delete department.createdByUser.password;
-          departments.push(department);
         }
-        return departments;
+        return {
+          success,
+          duplicates,
+          failed,
+        };
       }
     );
   }

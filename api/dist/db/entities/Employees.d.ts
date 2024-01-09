@@ -12,13 +12,12 @@ export declare class Employees {
     lastName: string;
     createdDate: Date;
     updatedDate: Date | null;
-    schoolId: string;
     active: boolean;
     accessGranted: boolean;
-    mobileNumber: string;
-    cardNumber: string;
+    mobileNumber: string | null;
+    cardNumber: string | null;
     fullName: string;
-    orgEmployeeId: string;
+    orgEmployeeId: string | null;
     employeeUser: EmployeeUser;
     createdByUser: Users;
     department: Departments;
