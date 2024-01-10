@@ -1,3 +1,4 @@
+import { Employees } from './employees';
 import { Machines } from './machines';
 import { Students } from './students';
 
@@ -8,4 +9,5 @@ export class TapLogs {
   time: string;
   machine: Machines;
   student: Students;
+  employees: Employees;
 }

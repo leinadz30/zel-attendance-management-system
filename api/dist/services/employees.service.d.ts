@@ -20,7 +20,7 @@ export declare class EmployeesService {
     create(dto: CreateEmployeeDto): Promise<Employees>;
     createBatch(dtos: BatchCreateEmployeeDto[]): Promise<{
         success: any[];
-        duplicates: any[];
+        warning: any[];
         failed: any[];
     }>;
     createEmployeeUser(dto: CreateEmployeeUserDto): Promise<Employees>;

@@ -174,6 +174,163 @@ let SectionsService = class SectionsService {
             return sections;
         });
     }
+    async batchCreate(dtos) {
+        try {
+            return await this.sectionsRepo.manager.transaction(async (entityManager) => {
+                const success = [];
+                const warning = [];
+                const failed = [];
+                for (const dto of dtos) {
+                    try {
+                        let hasWarning = false;
+                        let sections = new Sections_1.Sections();
+                        sections.sectionName = dto.sectionName;
+                        const timestamp = await entityManager
+                            .query(timestamp_constant_1.CONST_QUERYCURRENT_TIMESTAMP)
+                            .then((res) => {
+                            return res[0]["timestamp"];
+                        });
+                        sections.createdDate = timestamp;
+                        const school = await entityManager.findOne(Schools_1.Schools, {
+                            where: {
+                                orgSchoolCode: dto.orgSchoolCode,
+                                active: true,
+                            },
+                        });
+                        if (!school) {
+                            throw Error(schools_constant_1.SCHOOLS_ERROR_NOT_FOUND);
+                        }
+                        sections.school = school;
+                        const adviserEmployee = await entityManager.findOne(Employees_1.Employees, {
+                            where: {
+                                orgEmployeeId: dto.adviserOrgEmployeeId,
+                                school: {
+                                    orgSchoolCode: dto.orgSchoolCode,
+                                },
+                                active: true,
+                            },
+                        });
+                        if (adviserEmployee) {
+                            sections.adviserEmployee = adviserEmployee;
+                        }
+                        else {
+                            warning.push({
+                                sectionName: dto.sectionName,
+                                refId: dto.refId,
+                                comments: `${departments_constant_1.DEPARTMENTS_ERROR_NOT_FOUND} ${dto.departmentName}`,
+                            });
+                            hasWarning = true;
+                        }
+                        if (dto.departmentName && dto.departmentName !== "") {
+                            const department = (await entityManager
+                                .createQueryBuilder("Departments", "d")
+                                .leftJoinAndSelect("d.school", "s")
+                                .where("trim(upper(d.departmentName)) = trim(upper(:departmentName)) AND " +
+                                "s.orgSchoolCode = :orgSchoolCode")
+                                .setParameters({
+                                departmentName: dto.departmentName,
+                                orgSchoolCode: dto.orgSchoolCode,
+                            })
+                                .getOne());
+                            if (!department) {
+                                warning.push({
+                                    sectionName: dto.sectionName,
+                                    refId: dto.refId,
+                                    comments: `${departments_constant_1.DEPARTMENTS_ERROR_NOT_FOUND} ${dto.departmentName}`,
+                                });
+                                hasWarning = true;
+                            }
+                            sections.department = department;
+                        }
+                        else {
+                            warning.push({
+                                sectionName: dto.sectionName,
+                                refId: dto.refId,
+                                comments: `${departments_constant_1.DEPARTMENTS_ERROR_NOT_FOUND} ${dto.departmentName}`,
+                            });
+                            hasWarning = true;
+                        }
+                        if (dto.schoolYearLevelName && dto.schoolYearLevelName !== "") {
+                            const schoolYearLevel = (await entityManager
+                                .createQueryBuilder("SchoolYearLevels", "syl")
+                                .leftJoinAndSelect("syl.school", "s")
+                                .where("trim(upper(syl.name)) = trim(upper(:schoolYearLevelName)) AND " +
+                                "s.orgSchoolCode = :orgSchoolCode")
+                                .setParameters({
+                                schoolYearLevelName: dto.schoolYearLevelName,
+                                orgSchoolCode: dto.orgSchoolCode,
+                            })
+                                .getOne());
+                            if (!schoolYearLevel) {
+                                warning.push({
+                                    sectionName: dto.sectionName,
+                                    refId: dto.refId,
+                                    comments: `${departments_constant_1.DEPARTMENTS_ERROR_NOT_FOUND} ${dto.departmentName}`,
+                                });
+                                hasWarning = true;
+                            }
+                            sections.schoolYearLevel = schoolYearLevel;
+                        }
+                        else {
+                            warning.push({
+                                sectionName: dto.sectionName,
+                                refId: dto.refId,
+                                comments: `${departments_constant_1.DEPARTMENTS_ERROR_NOT_FOUND} ${dto.departmentName}`,
+                            });
+                            hasWarning = true;
+                        }
+                        const createdByUser = await entityManager.findOne(Users_1.Users, {
+                            where: {
+                                userId: dto.createdByUserId,
+                                active: true,
+                            },
+                        });
+                        if (!createdByUser) {
+                            throw Error(user_error_constant_1.USER_ERROR_USER_NOT_FOUND);
+                        }
+                        sections.createdByUser = createdByUser;
+                        sections = await entityManager.save(sections);
+                        sections.sectionCode = (0, utils_1.generateIndentityCode)(sections.sectionId);
+                        sections = await entityManager.save(Sections_1.Sections, sections);
+                        sections = await entityManager.findOne(Sections_1.Sections, {
+                            where: {
+                                sectionId: sections.sectionId,
+                                active: true,
+                            },
+                            relations: {
+                                school: true,
+                                department: true,
+                                adviserEmployee: true,
+                                schoolYearLevel: true,
+                                createdByUser: true,
+                                updatedByUser: true,
+                            },
+                        });
+                        delete sections.createdByUser.password;
+                        success.push({
+                            sectionName: dto.sectionName,
+                            refId: dto.refId,
+                        });
+                    }
+                    catch (ex) {
+                        failed.push({
+                            sectionName: dto.sectionName,
+                            refId: dto.refId,
+                            comments: ex === null || ex === void 0 ? void 0 : ex.message,
+                        });
+                    }
+                }
+                return {
+                    success,
+                    warning,
+                    failed,
+                };
+            });
+        }
+        catch (ex) {
+            throw ex;
+        }
+    }
     async update(sectionCode, dto) {
         return await this.sectionsRepo.manager.transaction(async (entityManager) => {
             var _a, _b;

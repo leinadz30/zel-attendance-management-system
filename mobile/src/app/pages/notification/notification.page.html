@@ -36,12 +36,14 @@
   </div>
   <ng-template #elseLoading >
     <ion-list>
-      <ion-item >
+      <ion-item lines="full">
+        <h1 slot="start" style="width: 40px;height:70px; margin-bottom: 0!important; margin-right: 10px!important;"><ion-skeleton-text [animated]="true"></ion-skeleton-text></h1>
         <ion-label>
-          <div>
-            <h1 style="width: 50%;" class="title"><ion-skeleton-text [animated]="true"></ion-skeleton-text></h1>
-            <h1><ion-skeleton-text [animated]="true"></ion-skeleton-text></h1>
-            <h1 style="width: 40%;"><ion-skeleton-text [animated]="true"></ion-skeleton-text></h1>
+          <div style="display: flex;flex-direction: column;row-gap: 10px;">
+            <h1 style="width: 100%;height: 30px;margin:0!important"><ion-skeleton-text [animated]="true"></ion-skeleton-text></h1>
+            <h1 style="width: 100%;height: 20px;margin:0!important"><ion-skeleton-text [animated]="true"></ion-skeleton-text></h1>
+            <h1 style="width: 100%;height: 20px;margin:0!important;margin-bottom: 10px!important"><ion-skeleton-text [animated]="true"></ion-skeleton-text></h1>
+            <h1 style="width: 40%;height: 20px;margin:0!important"><ion-skeleton-text [animated]="true"></ion-skeleton-text></h1>
           </div>
         </ion-label>
       </ion-item>
@@ -120,7 +122,7 @@
       <ion-content mode="md">
         <div class="header">
           <h1 class="name">{{tapLog?.student.fullName}}</h1>
-          <h1>{{tapLog?.status}}</h1>
+          <h1>{{tapLog?.status === 'LOG IN' ? 'TAP IN':'TAP OUT'}}</h1>
           <div class="time">
             <ion-icon name="time-outline"></ion-icon>
             <h1>{{tapLog?.time}}</h1>

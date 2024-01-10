@@ -127,7 +127,7 @@ export class TapLogsController {
     const res: ApiResponseModel<{
       success: any[];
       failed: any[];
-      duplicates: any[];
+      warning: any[];
     }> = {} as any;
     try {
       res.data = await this.tapLogsService.createBatch(tapLogsDtos);

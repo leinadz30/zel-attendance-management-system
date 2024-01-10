@@ -1,6 +1,6 @@
 {
   "appId": "com.zams.mobile",
-  "appName": "ZAMS PORTAL",
+  "appName": "ZamsConnect",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",

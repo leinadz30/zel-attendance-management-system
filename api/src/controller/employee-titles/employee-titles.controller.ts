@@ -83,12 +83,12 @@ export class EmployeeTitlesController {
     const res: ApiResponseModel<{
       success: any[];
       failed: any[];
-      duplicates: any[];
+      warning: any[];
     }> = {} as any;
     try {
       res.data = await this.employeeTitlesService.batchCreate(dtos);
       res.success = true;
-      res.message = `Employee Titles ${SAVING_SUCCESS}`;
+      res.message = `Employee Titles Batch Create Complete`;
       return res;
     } catch (e) {
       res.success = false;

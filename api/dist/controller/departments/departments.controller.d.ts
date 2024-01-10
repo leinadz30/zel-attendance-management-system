@@ -16,7 +16,7 @@ export declare class DepartmentsController {
     batchCreate(dtos: BatchCreateDepartmentDto[]): Promise<ApiResponseModel<{
         success: any[];
         failed: any[];
-        duplicates: any[];
+        warning: any[];
     }>>;
     update(departmentCode: string, dto: UpdateDepartmentDto): Promise<ApiResponseModel<Departments>>;
     delete(departmentCode: string): Promise<ApiResponseModel<Departments>>;

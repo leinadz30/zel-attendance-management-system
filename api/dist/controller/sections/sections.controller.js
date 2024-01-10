@@ -64,6 +64,20 @@ let SectionsController = class SectionsController {
             return res;
         }
     }
+    async batchCreate(dtos) {
+        const res = {};
+        try {
+            res.data = await this.sectionsService.batchCreate(dtos);
+            res.success = true;
+            res.message = `Sections Batch Create Complete`;
+            return res;
+        }
+        catch (e) {
+            res.success = false;
+            res.message = e.message !== undefined ? e.message : e;
+            return res;
+        }
+    }
     async update(sectionCode, dto) {
         const res = {};
         try {
@@ -114,6 +128,17 @@ __decorate([
     __metadata("design:paramtypes", [sections_create_dto_1.CreateSectionDto]),
     __metadata("design:returntype", Promise)
 ], SectionsController.prototype, "create", null);
+__decorate([
+    (0, swagger_1.ApiBody)({
+        isArray: true,
+        type: sections_create_dto_1.BatchCreateSectionDto,
+    }),
+    (0, common_1.Post)("createBatch"),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Array]),
+    __metadata("design:returntype", Promise)
+], SectionsController.prototype, "batchCreate", null);
 __decorate([
     (0, common_1.Put)("/:sectionCode"),
     __param(0, (0, common_1.Param)("sectionCode")),

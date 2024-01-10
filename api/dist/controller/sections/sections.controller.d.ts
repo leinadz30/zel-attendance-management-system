@@ -1,4 +1,4 @@
-import { CreateSectionDto } from "src/core/dto/sections/sections.create.dto";
+import { BatchCreateSectionDto, CreateSectionDto } from "src/core/dto/sections/sections.create.dto";
 import { UpdateSectionDto } from "src/core/dto/sections/sections.update.dto";
 import { PaginationParamsDto } from "src/core/dto/pagination-params.dto";
 import { ApiResponseModel } from "src/core/models/api-response.model";
@@ -13,6 +13,11 @@ export declare class SectionsController {
         total: number;
     }>>;
     create(sectionsDto: CreateSectionDto): Promise<ApiResponseModel<Sections>>;
+    batchCreate(dtos: BatchCreateSectionDto[]): Promise<ApiResponseModel<{
+        success: any[];
+        failed: any[];
+        warning: any[];
+    }>>;
     update(sectionCode: string, dto: UpdateSectionDto): Promise<ApiResponseModel<Sections>>;
     delete(sectionCode: string): Promise<ApiResponseModel<Sections>>;
 }

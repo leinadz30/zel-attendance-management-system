@@ -45,6 +45,14 @@ export class StudentsService implements IServices {
     );
   }
 
+  getByCardNumber(cardNumber: string): Observable<ApiResponse<Students>> {
+    return this.http.get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.students.getByCardNumber + cardNumber)
+    .pipe(
+      tap(_ => this.log('students')),
+      catchError(this.handleError('students', []))
+    );
+  }
+
   create(data: any): Observable<ApiResponse<Students>> {
     return this.http.post<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.students.create, data)
     .pipe(

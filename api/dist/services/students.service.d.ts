@@ -21,7 +21,7 @@ export declare class StudentsService {
     create(dto: CreateStudentDto): Promise<Students>;
     createBatch(dtos: BatchCreateStudentDto[]): Promise<{
         success: any[];
-        duplicates: any[];
+        warning: any[];
         failed: any[];
     }>;
     update(studentCode: any, dto: UpdateStudentDto): Promise<Students>;

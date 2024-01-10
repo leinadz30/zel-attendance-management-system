@@ -134,24 +134,26 @@ export class EmployeeTitlesService {
   }
 
   async batchCreate(dtos: BatchCreateEmployeeTitleDto[]) {
-    return await this.employeeTitlesRepo.manager.transaction(
-      async (entityManager) => {
-        const success = [];
-        const duplicates = [];
-        const failed = [];
-        for (const dto of dtos) {
-          try {
-            let employeeTitle = await entityManager.findOne(EmployeeTitles, {
-              where: {
-                name: dto.name,
-                school: {
-                  orgSchoolCode: dto.orgSchoolCode,
+    try {
+      return await this.employeeTitlesRepo.manager.transaction(
+        async (entityManager) => {
+          const success = [];
+          const warning = [];
+          const failed = [];
+          for (const dto of dtos) {
+            try {
+              let employeeTitle = await entityManager.findOne(EmployeeTitles, {
+                where: {
+                  name: dto.name,
+                  school: {
+                    orgSchoolCode: dto.orgSchoolCode,
+                  },
+                  active: true,
                 },
-                active: true,
-              },
-            });
-            if (!employeeTitle) {
-              employeeTitle = new EmployeeTitles();
+              });
+              if (!employeeTitle) {
+                employeeTitle = new EmployeeTitles();
+              }
               employeeTitle.name = dto.name;
               const timestamp = await entityManager
                 .query(CONST_QUERYCURRENT_TIMESTAMP)
@@ -194,27 +196,24 @@ export class EmployeeTitlesService {
                 name: dto.name,
                 refId: dto.refId,
               });
-            } else {
-              duplicates.push({
+            } catch (ex) {
+              failed.push({
                 name: dto.name,
                 refId: dto.refId,
+                comments: ex?.message,
               });
             }
-          } catch (ex) {
-            failed.push({
-              name: dto.name,
-              refId: dto.refId,
-              comments: ex?.message,
-            });
           }
+          return {
+            success,
+            warning,
+            failed,
+          };
         }
-        return {
-          success,
-          duplicates,
-          failed,
-        };
-      }
-    );
+      );
+    } catch (ex) {
+      throw ex;
+    }
   }
 
   async update(employeeTitleCode, dto: UpdateEmployeeTitleDto) {

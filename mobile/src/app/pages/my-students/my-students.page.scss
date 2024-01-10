@@ -74,6 +74,11 @@ h1,h2,h3,h4,h5,h6,p {
           gap: 5px!important;
           white-space: break-spaces!important;
           .desc {
+            -webkit-line-clamp: 2;
+            display: -webkit-box;
+            max-width: 100%;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
           }
           .course-level {
 

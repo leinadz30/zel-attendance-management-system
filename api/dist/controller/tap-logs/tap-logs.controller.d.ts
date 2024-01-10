@@ -17,6 +17,6 @@ export declare class TapLogsController {
     createBatch(tapLogsDtos: CreateTapLogDto[]): Promise<ApiResponseModel<{
         success: any[];
         failed: any[];
-        duplicates: any[];
+        warning: any[];
     }>>;
 }

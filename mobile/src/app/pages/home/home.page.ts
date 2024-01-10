@@ -24,7 +24,6 @@ import { SettingsPage } from '../settings/settings.page';
 import * as moment from 'moment';
 import { DateConstant } from 'src/app/core/constant/date.constant';
 
-import type { EChartsOption } from 'echarts';
 import { AnimationService } from 'src/app/core/services/animation.service';
 import { AppConfigService } from 'src/app/core/services/app-config.service';
 import { environment } from 'src/environments/environment';

@@ -46,7 +46,7 @@ export class FcmService {
       this.delete();
       PushNotifications.createChannel({
        id: 'fcm_default_channel',
-       name: 'ZAMS PORTAL',
+       name: 'ZamsConnect',
        importance: 5,
        visibility: 1,
        lights: true,

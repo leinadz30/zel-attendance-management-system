@@ -16,9 +16,6 @@ import { forkJoin } from 'rxjs';
 import { NotificationService } from './notification.service';
 import { RequestInfoPage } from 'src/app/component/request-info/request-info.page';
 import { LinkStudentRequestService } from './link-student-request.service';
-import { LocalNotifications } from '@capacitor/local-notifications';
-
-
 
 @Injectable({
   providedIn: 'root'
@@ -46,28 +43,23 @@ export class OneSignalNotificationService {
   }
 
   async registerOneSignal() {
-    // Uncomment to set OneSignal device logging to VERBOSE
-    // OneSignal.Debug.setLogLevel(6);
-
-    // Uncomment to set OneSignal visual logging to VERBOSE
-    // OneSignal.Debug.setAlertLevel(6);
-
-    // NOTE: Update the init value below with your OneSignal AppId.
     console.log('calling setAppId');
+    OneSignalPlugin.setAppId(environment.oneSignalAppId);
     OneSignalPlugin.disablePush(true);
     OneSignalPlugin.disablePush(false);
-    OneSignalPlugin.setAppId(environment.oneSignalAppId);
     OneSignalPlugin.promptForPushNotificationsWithUserResponse(true);
     OneSignalPlugin.getDeviceState(res=> {
       console.log('getDeviceState ', JSON.stringify(res));
+      this.addCredentials();
     });
-
+    this.addCredentials();
     console.log('calling addSubscriptionObserver');
     OneSignalPlugin.addSubscriptionObserver(res=> {
       console.log('Subscription id ', res?.to?.userId);
 
       this.storageService.saveOneSignalSubscriptionId(res?.to?.userId);
       if(this.isAuthenticated) {
+        this.addCredentials();
         const currentUser = this.storageService.getLoginUser();
         this.userOneSignalSubscriptionService.create({
           userId: currentUser?.user?.userId,
@@ -142,5 +134,13 @@ export class OneSignalNotificationService {
       const { notificationIds } = res.getNotification().additionalData as any;
       this.storageService.saveReceivedNotification(notificationIds);
     });
+  }
+
+  async addCredentials() {
+    if(this.isAuthenticated) {
+      const currentUser = this.storageService.getLoginUser();
+      console.log('OneSignalPlugin.setExternalUserId ', currentUser?.user?.userName);
+      OneSignalPlugin.setExternalUserId(currentUser?.user?.userName);
+    }
   }
 }

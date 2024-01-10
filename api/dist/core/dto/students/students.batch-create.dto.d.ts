@@ -11,7 +11,7 @@ export declare class BatchCreateStudentDto {
     strandName: string;
     sectionName: string;
     departmentName: string;
-    schoolYearLeveName: string;
+    schoolYearLevelName: string;
     orgSchoolCode: string;
     registeredByUserId: string;
     refId: string;

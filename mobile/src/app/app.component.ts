@@ -12,16 +12,14 @@ import { AuthService } from './core/services/auth.service';
 import { StorageService } from './core/storage/storage.service';
 import { Capacitor } from '@capacitor/core';
 import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
-import { Style } from '@capacitor/status-bar';
-import { environment } from 'src/environments/environment';
 
 
 import { Device } from '@capacitor/device';
 import { FcmService } from './core/services/fcm.service';
 import { App } from '@capacitor/app';
-import { UserFirebaseTokenService } from './core/services/user-firebase-token.service';
 import { OneSignalNotificationService } from './core/services/one-signal-notification.service';
 import { LocalNotificationsService } from './core/services/local-notifications.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -33,7 +31,6 @@ export class AppComponent implements OnInit {
     private platform: Platform,
     private alertController: AlertController,
     private authService: AuthService,
-    private userFirebaseTokenService: UserFirebaseTokenService,
     private route: ActivatedRoute,
     private router: Router,
     private modalCtrl: ModalController,
@@ -49,14 +46,6 @@ export class AppComponent implements OnInit {
     Device.getInfo().then(res=> {
       this.currentDeviceModel = res.model;
     });
-
-
-    this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.CAMERA).then(
-      result => console.log('Has permission?',result.hasPermission),
-      err => this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.CAMERA)
-    );
-
-    this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.CAMERA, this.androidPermissions.PERMISSION.GET_ACCOUNTS]);
 
     this.platform.backButton.subscribeWithPriority(10, async () => {
       const modal = await this.modalCtrl.getTop();
@@ -108,13 +97,6 @@ export class AppComponent implements OnInit {
   }
 
   async ngOnInit() {
-    // const channelAll = this.pusherService.init('all');
-    // channelAll.bind('mobileOneSignalScanner', async (res: any) => {
-    //   console.log('OneSignal scanning....');
-    //   if (Capacitor.platform !== 'web') {
-    //     // await this.oneSignalNotificationService.registerOneSignal();
-    //   }
-    // });
     this.platform.ready().then(async () => {
       if (Capacitor.platform !== 'web') {
         await this.localNotificationsService.init();

@@ -18,7 +18,7 @@ export declare class DepartmentsService {
     create(dto: CreateDepartmentDto): Promise<Departments>;
     batchCreate(dtos: BatchCreateDepartmentDto[]): Promise<{
         success: any[];
-        duplicates: any[];
+        warning: any[];
         failed: any[];
     }>;
     update(departmentCode: any, dto: UpdateDepartmentDto): Promise<Departments>;

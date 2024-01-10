@@ -18,7 +18,7 @@ export declare class EmployeeTitlesService {
     create(dto: CreateEmployeeTitleDto): Promise<EmployeeTitles>;
     batchCreate(dtos: BatchCreateEmployeeTitleDto[]): Promise<{
         success: any[];
-        duplicates: any[];
+        warning: any[];
         failed: any[];
     }>;
     update(employeeTitleCode: any, dto: UpdateEmployeeTitleDto): Promise<EmployeeTitles>;

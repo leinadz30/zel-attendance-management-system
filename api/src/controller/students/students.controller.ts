@@ -120,7 +120,7 @@ export class StudentsController {
     const res: ApiResponseModel<{
       success: any[];
       failed: any[];
-      duplicates: any[];
+      warning: any[];
     }> = {} as any;
     try {
       res.data = await this.studentsService.createBatch(studentDtos);

@@ -18,7 +18,7 @@ export declare class EmployeesController {
     createBatch(employeeDtos: BatchCreateEmployeeDto[]): Promise<ApiResponseModel<{
         success: any[];
         failed: any[];
-        duplicates: any[];
+        warning: any[];
     }>>;
     update(employeeCode: string, dto: UpdateEmployeeDto): Promise<ApiResponseModel<Employees>>;
     updateEmployeeUser(employeeCode: string, dto: UpdateEmployeeUserDto): Promise<ApiResponseModel<Employees>>;

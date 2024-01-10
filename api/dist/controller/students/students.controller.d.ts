@@ -19,7 +19,7 @@ export declare class StudentsController {
     createBatch(studentDtos: BatchCreateStudentDto[]): Promise<ApiResponseModel<{
         success: any[];
         failed: any[];
-        duplicates: any[];
+        warning: any[];
     }>>;
     update(studentCode: string, dto: UpdateStudentDto): Promise<ApiResponseModel<Students>>;
     approveAccessRequest(studentCode: string): Promise<ApiResponseModel<Students>>;

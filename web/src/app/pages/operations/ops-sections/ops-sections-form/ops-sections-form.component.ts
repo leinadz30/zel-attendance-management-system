@@ -53,8 +53,8 @@ export class OpsSectionFormComponent {
         {
           sectionName: [null, [Validators.required]],
           adviserEmployeeId: new FormControl(null, Validators.required),
-          schoolYearLevelId: new FormControl(null, Validators.required),
-          departmentId: new FormControl(null, Validators.required),
+          schoolYearLevelId: new FormControl(),
+          departmentId: new FormControl(),
         }
       );
   }

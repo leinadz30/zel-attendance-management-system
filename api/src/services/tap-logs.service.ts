@@ -346,7 +346,7 @@ export class TapLogsService {
       return await this.tapLogsRepo.manager.transaction(
         async (entityManager) => {
           const success = [];
-          const duplicates = [];
+          const warning = [];
           const failed = [];
           for (const dto of dtos) {
             try {
@@ -501,7 +501,7 @@ export class TapLogsService {
           }
           return {
             success,
-            duplicates,
+            warning,
             failed,
           };
         }

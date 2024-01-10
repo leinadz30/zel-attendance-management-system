@@ -49,7 +49,7 @@ export declare class TapLogsService {
     create(dto: CreateTapLogDto): Promise<TapLogs>;
     createBatch(dtos: CreateTapLogDto[]): Promise<{
         success: any[];
-        duplicates: any[];
+        warning: any[];
         failed: any[];
     }>;
     logNotification(users: Users[], referenceId: any, entityManager: EntityManager, title: string, description: string): Promise<any[]>;

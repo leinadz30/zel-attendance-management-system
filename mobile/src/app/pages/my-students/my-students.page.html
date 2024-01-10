@@ -30,7 +30,12 @@
                   </ion-avatar>
                   <ion-label>
                     <h1><strong>{{item.fullName}}</strong></h1>
-                    <h2 class="desc">{{ item.schoolYearLevel.educationalStage === 'COLLEGE' ? item?.studentCourse?.course?.name : item?.studentStrand?.strand?.name }}</h2>
+                    <h2 class="desc">{{
+                    item.schoolYearLevel.educationalStage === 'COLLEGE' ?
+                     item?.studentCourse?.course?.name :
+                     item.schoolYearLevel.educationalStage === 'SENIOR' ?
+                    item?.studentStrand?.strand?.name : item?.schoolYearLevel?.name
+                    }}</h2>
                   </ion-label>
                 </ion-item>
               </ion-card-content>

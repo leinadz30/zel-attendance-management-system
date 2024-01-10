@@ -28,23 +28,23 @@ export class BatchCreateEmployeeDto {
   lastName: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   mobileNumber: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   orgEmployeeId: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   cardNumber: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   departmentName: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   employeeTitleName: string;
 
   @ApiProperty()

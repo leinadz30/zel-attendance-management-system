@@ -138,6 +138,83 @@ let SchoolYearLevelsService = class SchoolYearLevelsService {
             }
         }
     }
+    async batchCreate(dtos) {
+        try {
+            return await this.schoolYearLevelsRepo.manager.transaction(async (entityManager) => {
+                const success = [];
+                const warning = [];
+                const failed = [];
+                for (const dto of dtos) {
+                    try {
+                        let schoolYearLevel = await entityManager.findOne(SchoolYearLevels_1.SchoolYearLevels, {
+                            where: {
+                                name: dto.name,
+                                school: {
+                                    orgSchoolCode: dto.orgSchoolCode,
+                                },
+                                active: true,
+                            },
+                        });
+                        if (!schoolYearLevel) {
+                            schoolYearLevel = new SchoolYearLevels_1.SchoolYearLevels();
+                        }
+                        schoolYearLevel.name = dto.name;
+                        schoolYearLevel.educationalStage =
+                            dto.educationalStage.toUpperCase();
+                        const timestamp = await entityManager
+                            .query(timestamp_constant_1.CONST_QUERYCURRENT_TIMESTAMP)
+                            .then((res) => {
+                            return res[0]["timestamp"];
+                        });
+                        schoolYearLevel.createdDate = timestamp;
+                        const school = await entityManager.findOne(Schools_1.Schools, {
+                            where: {
+                                orgSchoolCode: dto.orgSchoolCode,
+                                active: true,
+                            },
+                        });
+                        if (!school) {
+                            throw Error(schools_constant_1.SCHOOLS_ERROR_NOT_FOUND);
+                        }
+                        schoolYearLevel.school = school;
+                        const createdByUser = await entityManager.findOne(Users_1.Users, {
+                            where: {
+                                userId: dto.createdByUserId,
+                                active: true,
+                            },
+                        });
+                        if (!createdByUser) {
+                            throw Error(user_error_constant_1.USER_ERROR_USER_NOT_FOUND);
+                        }
+                        schoolYearLevel.createdByUser = createdByUser;
+                        schoolYearLevel = await entityManager.save(SchoolYearLevels_1.SchoolYearLevels, schoolYearLevel);
+                        schoolYearLevel.schoolYearLevelCode = (0, utils_1.generateIndentityCode)(schoolYearLevel.schoolYearLevelId);
+                        schoolYearLevel = await entityManager.save(SchoolYearLevels_1.SchoolYearLevels, schoolYearLevel);
+                        delete schoolYearLevel.createdByUser.password;
+                        success.push({
+                            name: dto.name,
+                            refId: dto.refId,
+                        });
+                    }
+                    catch (ex) {
+                        failed.push({
+                            name: dto.name,
+                            refId: dto.refId,
+                            comments: ex === null || ex === void 0 ? void 0 : ex.message,
+                        });
+                    }
+                }
+                return {
+                    success,
+                    warning,
+                    failed,
+                };
+            });
+        }
+        catch (ex) {
+            throw ex;
+        }
+    }
     async update(schoolYearLevelCode, dto) {
         try {
             return await this.schoolYearLevelsRepo.manager.transaction(async (entityManager) => {

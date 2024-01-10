@@ -133,7 +133,7 @@ let DepartmentsService = class DepartmentsService {
     async batchCreate(dtos) {
         return await this.departmentsRepo.manager.transaction(async (entityManager) => {
             const success = [];
-            const duplicates = [];
+            const warning = [];
             const failed = [];
             for (const dto of dtos) {
                 try {
@@ -148,48 +148,42 @@ let DepartmentsService = class DepartmentsService {
                     });
                     if (!department) {
                         department = new Departments_1.Departments();
-                        department.departmentName = dto.departmentName;
-                        const timestamp = await entityManager
-                            .query(timestamp_constant_1.CONST_QUERYCURRENT_TIMESTAMP)
-                            .then((res) => {
-                            return res[0]["timestamp"];
-                        });
-                        department.createdDate = timestamp;
-                        const school = await entityManager.findOne(Schools_1.Schools, {
-                            where: {
-                                orgSchoolCode: dto.orgSchoolCode,
-                                active: true,
-                            },
-                        });
-                        if (!school) {
-                            throw Error(schools_constant_1.SCHOOLS_ERROR_NOT_FOUND);
-                        }
-                        department.school = school;
-                        const createdByUser = await entityManager.findOne(Users_1.Users, {
-                            where: {
-                                userId: dto.createdByUserId,
-                                active: true,
-                            },
-                        });
-                        if (!createdByUser) {
-                            throw Error(user_error_constant_1.USER_ERROR_USER_NOT_FOUND);
-                        }
-                        department.createdByUser = createdByUser;
-                        department = await entityManager.save(department);
-                        department.departmentCode = (0, utils_1.generateIndentityCode)(department.departmentId);
-                        department = await entityManager.save(Departments_1.Departments, department);
-                        delete department.createdByUser.password;
-                        success.push({
-                            departmentName: dto.departmentName,
-                            refId: dto.refId,
-                        });
                     }
-                    else {
-                        duplicates.push({
-                            departmentName: dto.departmentName,
-                            refId: dto.refId,
-                        });
+                    department.departmentName = dto.departmentName;
+                    const timestamp = await entityManager
+                        .query(timestamp_constant_1.CONST_QUERYCURRENT_TIMESTAMP)
+                        .then((res) => {
+                        return res[0]["timestamp"];
+                    });
+                    department.createdDate = timestamp;
+                    const school = await entityManager.findOne(Schools_1.Schools, {
+                        where: {
+                            orgSchoolCode: dto.orgSchoolCode,
+                            active: true,
+                        },
+                    });
+                    if (!school) {
+                        throw Error(schools_constant_1.SCHOOLS_ERROR_NOT_FOUND);
                     }
+                    department.school = school;
+                    const createdByUser = await entityManager.findOne(Users_1.Users, {
+                        where: {
+                            userId: dto.createdByUserId,
+                            active: true,
+                        },
+                    });
+                    if (!createdByUser) {
+                        throw Error(user_error_constant_1.USER_ERROR_USER_NOT_FOUND);
+                    }
+                    department.createdByUser = createdByUser;
+                    department = await entityManager.save(department);
+                    department.departmentCode = (0, utils_1.generateIndentityCode)(department.departmentId);
+                    department = await entityManager.save(Departments_1.Departments, department);
+                    delete department.createdByUser.password;
+                    success.push({
+                        departmentName: dto.departmentName,
+                        refId: dto.refId,
+                    });
                 }
                 catch (ex) {
                     failed.push({
@@ -201,7 +195,7 @@ let DepartmentsService = class DepartmentsService {
             }
             return {
                 success,
-                duplicates,
+                warning,
                 failed,
             };
         });

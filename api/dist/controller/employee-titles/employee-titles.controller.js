@@ -69,7 +69,7 @@ let EmployeeTitlesController = class EmployeeTitlesController {
         try {
             res.data = await this.employeeTitlesService.batchCreate(dtos);
             res.success = true;
-            res.message = `Employee Titles ${api_response_constant_1.SAVING_SUCCESS}`;
+            res.message = `Employee Titles Batch Create Complete`;
             return res;
         }
         catch (e) {

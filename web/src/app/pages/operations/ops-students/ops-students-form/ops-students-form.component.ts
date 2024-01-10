@@ -67,7 +67,7 @@ export class OpsStudentFormComponent {
           address: new FormControl(null),
           courseId: new FormControl(null, [Validators.required]),
           strandId: new FormControl(null, [Validators.required]),
-          sectionId: new FormControl(null, Validators.required),
+          sectionId: new FormControl(),
           departmentId: new FormControl(null, Validators.required),
           schoolYearLevelId: new FormControl(null, Validators.required)
         }
@@ -101,9 +101,9 @@ export class OpsStudentFormComponent {
             mobileNumber: student.data.mobileNumber,
             cardNumber: student.data.cardNumber,
             address: student.data.address,
-            studentId: student.data.studentSection?.student?.studentId,
-            sectionId: student.data.studentSection?.section?.sectionId,
-            departmentId: student.data.department?.departmentId,
+            studentId: student.data?.studentId,
+            sectionId: student.data?.studentSection?.section?.sectionId,
+            departmentId: student.data?.department?.departmentId,
             schoolYearLevelId: student.data.schoolYearLevel?.schoolYearLevelId
           });
           this.course = student.data?.studentCourse?.course;

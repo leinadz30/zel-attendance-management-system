@@ -65,6 +65,20 @@ let SchoolYearLevelsController = class SchoolYearLevelsController {
             return res;
         }
     }
+    async batchCreate(dtos) {
+        const res = {};
+        try {
+            res.data = await this.schoolYearLevelsService.batchCreate(dtos);
+            res.success = true;
+            res.message = `School year level Batch Create Complete`;
+            return res;
+        }
+        catch (e) {
+            res.success = false;
+            res.message = e.message !== undefined ? e.message : e;
+            return res;
+        }
+    }
     async update(schoolYearLevelCode, dto) {
         const res = {};
         try {
@@ -115,6 +129,13 @@ __decorate([
     __metadata("design:paramtypes", [school_year_levels_create_dto_1.CreateSchoolYearLevelDto]),
     __metadata("design:returntype", Promise)
 ], SchoolYearLevelsController.prototype, "create", null);
+__decorate([
+    (0, common_1.Post)("createBatch"),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Array]),
+    __metadata("design:returntype", Promise)
+], SchoolYearLevelsController.prototype, "batchCreate", null);
 __decorate([
     (0, common_1.Put)("/:schoolYearLevelCode"),
     __param(0, (0, common_1.Param)("schoolYearLevelCode")),

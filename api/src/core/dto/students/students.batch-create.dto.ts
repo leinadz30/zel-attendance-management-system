@@ -28,15 +28,15 @@ export class BatchCreateStudentDto {
   lastName: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   mobileNumber: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   orgStudentId: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   cardNumber: string;
 
   @ApiProperty()
@@ -61,12 +61,12 @@ export class BatchCreateStudentDto {
   sectionName: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   departmentName: string;
 
   @ApiProperty()
-  @IsNotEmpty()
-  schoolYearLeveName: string;
+  @IsOptional()
+  schoolYearLevelName: string;
 
   @ApiProperty()
   @IsNotEmpty()

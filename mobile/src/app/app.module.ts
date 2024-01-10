@@ -15,13 +15,10 @@ import { MaterialModule } from './material/material.module';
 import { AppConfigService } from './core/services/app-config.service';
 import { PageLoaderModule } from './component/page-loader/page-loader.module';
 import { DirectiveModule } from './core/directive/directive.module';
-import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
 import { ImageViewerPageModule } from './component/image-viewer/image-viewer.module';
 import { SuperTabsModule } from '@ionic-super-tabs/angular';
 import { NgxIonicImageViewerModule } from 'ngx-ionic-image-viewer';
-import { HomePageModule } from './pages/home/home.module';
-import { NgxEchartsModule } from 'ngx-echarts';
 import {register} from 'swiper/element/bundle';
 import { NavigationPageModule } from './navigation/navigation.module';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
@@ -44,13 +41,9 @@ register();
     ImageViewerPageModule,
     SuperTabsModule.forRoot(),
     NgxIonicImageViewerModule,
-    NgxEchartsModule.forRoot({
-      echarts: () => import('echarts')
-    }),
   ],
   providers: [
     PusherService,
-    InAppBrowser,
     AndroidPermissions,
     LocalNotifications,
     { provide: LOCALE_ID, useValue: 'en_PH' },

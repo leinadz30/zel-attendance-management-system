@@ -1,4 +1,4 @@
-import { CreateSectionDto } from "src/core/dto/sections/sections.create.dto";
+import { BatchCreateSectionDto, CreateSectionDto } from "src/core/dto/sections/sections.create.dto";
 import { UpdateSectionDto } from "src/core/dto/sections/sections.update.dto";
 import { Sections } from "src/db/entities/Sections";
 import { Repository } from "typeorm";
@@ -16,6 +16,11 @@ export declare class SectionsService {
     }>;
     getByCode(sectionCode: any): Promise<Sections>;
     create(dto: CreateSectionDto): Promise<Sections>;
+    batchCreate(dtos: BatchCreateSectionDto[]): Promise<{
+        success: any[];
+        warning: any[];
+        failed: any[];
+    }>;
     update(sectionCode: any, dto: UpdateSectionDto): Promise<Sections>;
     delete(sectionCode: any): Promise<Sections>;
 }

@@ -7,7 +7,6 @@ import { HomePage } from './home.page';
 import { HomePageRoutingModule } from './home-routing.module';
 import { MaterialModule } from 'src/app/material/material.module';
 
-import { NgxEchartsModule } from 'ngx-echarts';
 
 @NgModule({
   imports: [
@@ -16,9 +15,6 @@ import { NgxEchartsModule } from 'ngx-echarts';
     IonicModule,
     HomePageRoutingModule,
     MaterialModule,
-    NgxEchartsModule.forRoot({
-      echarts: () => import('echarts')
-    })
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   declarations: [HomePage]

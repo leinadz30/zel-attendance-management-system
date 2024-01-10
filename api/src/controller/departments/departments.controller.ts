@@ -13,7 +13,10 @@ import {
   SAVING_SUCCESS,
   UPDATE_SUCCESS,
 } from "src/common/constant/api-response.constant";
-import { BatchCreateDepartmentDto, CreateDepartmentDto } from "src/core/dto/departments/departments.create.dto";
+import {
+  BatchCreateDepartmentDto,
+  CreateDepartmentDto,
+} from "src/core/dto/departments/departments.create.dto";
 import { UpdateDepartmentDto } from "src/core/dto/departments/departments.update.dto";
 import { PaginationParamsDto } from "src/core/dto/pagination-params.dto";
 import { ApiResponseModel } from "src/core/models/api-response.model";
@@ -82,7 +85,7 @@ export class DepartmentsController {
     const res: ApiResponseModel<{
       success: any[];
       failed: any[];
-      duplicates: any[];
+      warning: any[];
     }> = {} as any;
     try {
       res.data = await this.departmentsService.batchCreate(dtos);

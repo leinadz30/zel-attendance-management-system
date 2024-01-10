@@ -16,7 +16,7 @@ export declare class EmployeeTitlesController {
     batchCreate(dtos: BatchCreateEmployeeTitleDto[]): Promise<ApiResponseModel<{
         success: any[];
         failed: any[];
-        duplicates: any[];
+        warning: any[];
     }>>;
     update(employeeTitleCode: string, dto: UpdateEmployeeTitleDto): Promise<ApiResponseModel<EmployeeTitles>>;
     delete(employeeTitleCode: string): Promise<ApiResponseModel<EmployeeTitles>>;

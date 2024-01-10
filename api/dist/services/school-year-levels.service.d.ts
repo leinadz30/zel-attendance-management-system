@@ -1,4 +1,4 @@
-import { CreateSchoolYearLevelDto } from "src/core/dto/school-year-levels/school-year-levels.create.dto";
+import { BatchCreateSchoolYearLevelDto, CreateSchoolYearLevelDto } from "src/core/dto/school-year-levels/school-year-levels.create.dto";
 import { UpdateSchoolYearLevelDto } from "src/core/dto/school-year-levels/school-year-levels.update.dto";
 import { SchoolYearLevels } from "src/db/entities/SchoolYearLevels";
 import { Repository } from "typeorm";
@@ -16,6 +16,11 @@ export declare class SchoolYearLevelsService {
     }>;
     getByCode(schoolYearLevelCode: any): Promise<SchoolYearLevels>;
     create(dto: CreateSchoolYearLevelDto): Promise<SchoolYearLevels>;
+    batchCreate(dtos: BatchCreateSchoolYearLevelDto[]): Promise<{
+        success: any[];
+        warning: any[];
+        failed: any[];
+    }>;
     update(schoolYearLevelCode: any, dto: UpdateSchoolYearLevelDto): Promise<SchoolYearLevels>;
     delete(schoolYearLevelCode: any): Promise<SchoolYearLevels>;
 }

@@ -118,23 +118,25 @@ let EmployeeTitlesService = class EmployeeTitlesService {
         });
     }
     async batchCreate(dtos) {
-        return await this.employeeTitlesRepo.manager.transaction(async (entityManager) => {
-            const success = [];
-            const duplicates = [];
-            const failed = [];
-            for (const dto of dtos) {
-                try {
-                    let employeeTitle = await entityManager.findOne(EmployeeTitles_1.EmployeeTitles, {
-                        where: {
-                            name: dto.name,
-                            school: {
-                                orgSchoolCode: dto.orgSchoolCode,
+        try {
+            return await this.employeeTitlesRepo.manager.transaction(async (entityManager) => {
+                const success = [];
+                const warning = [];
+                const failed = [];
+                for (const dto of dtos) {
+                    try {
+                        let employeeTitle = await entityManager.findOne(EmployeeTitles_1.EmployeeTitles, {
+                            where: {
+                                name: dto.name,
+                                school: {
+                                    orgSchoolCode: dto.orgSchoolCode,
+                                },
+                                active: true,
                             },
-                            active: true,
-                        },
-                    });
-                    if (!employeeTitle) {
-                        employeeTitle = new EmployeeTitles_1.EmployeeTitles();
+                        });
+                        if (!employeeTitle) {
+                            employeeTitle = new EmployeeTitles_1.EmployeeTitles();
+                        }
                         employeeTitle.name = dto.name;
                         const timestamp = await entityManager
                             .query(timestamp_constant_1.CONST_QUERYCURRENT_TIMESTAMP)
@@ -171,27 +173,24 @@ let EmployeeTitlesService = class EmployeeTitlesService {
                             refId: dto.refId,
                         });
                     }
-                    else {
-                        duplicates.push({
+                    catch (ex) {
+                        failed.push({
                             name: dto.name,
                             refId: dto.refId,
+                            comments: ex === null || ex === void 0 ? void 0 : ex.message,
                         });
                     }
                 }
-                catch (ex) {
-                    failed.push({
-                        name: dto.name,
-                        refId: dto.refId,
-                        comments: ex === null || ex === void 0 ? void 0 : ex.message,
-                    });
-                }
-            }
-            return {
-                success,
-                duplicates,
-                failed,
-            };
-        });
+                return {
+                    success,
+                    warning,
+                    failed,
+                };
+            });
+        }
+        catch (ex) {
+            throw ex;
+        }
     }
     async update(employeeTitleCode, dto) {
         return await this.employeeTitlesRepo.manager.transaction(async (entityManager) => {

@@ -9,7 +9,6 @@ android {
 
 apply from: "../capacitor-cordova-android-plugins/cordova.variables.gradle"
 dependencies {
-    implementation project(':capacitor-community-background-geolocation')
     implementation project(':capacitor-community-fcm')
     implementation project(':capacitor-app')
     implementation project(':capacitor-browser')
@@ -22,7 +21,6 @@ dependencies {
     implementation project(':capacitor-push-notifications')
     implementation project(':capacitor-status-bar')
     implementation project(':capacitor-dark-mode')
-    implementation "androidx.webkit:webkit:1.4.0"
     implementation "com.onesignal:OneSignal:4.8.5"
 }
 apply from: "../../node_modules/onesignal-cordova-plugin/build-extras-onesignal.gradle"

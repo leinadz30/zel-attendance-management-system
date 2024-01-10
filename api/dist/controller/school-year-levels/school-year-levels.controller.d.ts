@@ -1,4 +1,4 @@
-import { CreateSchoolYearLevelDto } from "src/core/dto/school-year-levels/school-year-levels.create.dto";
+import { BatchCreateSchoolYearLevelDto, CreateSchoolYearLevelDto } from "src/core/dto/school-year-levels/school-year-levels.create.dto";
 import { UpdateSchoolYearLevelDto } from "src/core/dto/school-year-levels/school-year-levels.update.dto";
 import { PaginationParamsDto } from "src/core/dto/pagination-params.dto";
 import { ApiResponseModel } from "src/core/models/api-response.model";
@@ -13,6 +13,11 @@ export declare class SchoolYearLevelsController {
         total: number;
     }>>;
     create(schoolYearLevelsDto: CreateSchoolYearLevelDto): Promise<ApiResponseModel<SchoolYearLevels>>;
+    batchCreate(dtos: BatchCreateSchoolYearLevelDto[]): Promise<ApiResponseModel<{
+        success: any[];
+        failed: any[];
+        warning: any[];
+    }>>;
     update(schoolYearLevelCode: string, dto: UpdateSchoolYearLevelDto): Promise<ApiResponseModel<SchoolYearLevels>>;
     delete(schoolYearLevelCode: string): Promise<ApiResponseModel<SchoolYearLevels>>;
 }

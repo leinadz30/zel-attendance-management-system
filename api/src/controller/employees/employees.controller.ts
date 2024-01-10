@@ -106,7 +106,7 @@ export class EmployeesController {
     const res: ApiResponseModel<{
       success: any[];
       failed: any[];
-      duplicates: any[];
+      warning: any[];
     }> = {} as any;
     try {
       res.data = await this.employeesService.createBatch(employeeDtos);
