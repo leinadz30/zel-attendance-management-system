@@ -230,7 +230,7 @@ export class SectionsService {
                 warning.push({
                   sectionName: dto.sectionName,
                   refId: dto.refId,
-                  comments: `${DEPARTMENTS_ERROR_NOT_FOUND} ${dto.departmentName}`,
+                  comments: `${EMPLOYEES_ERROR_NOT_FOUND} ${dto.departmentName}`,
                 });
                 hasWarning = true;
               }
@@ -283,7 +283,7 @@ export class SectionsService {
                   warning.push({
                     sectionName: dto.sectionName,
                     refId: dto.refId,
-                    comments: `${DEPARTMENTS_ERROR_NOT_FOUND} ${dto.departmentName}`,
+                    comments: `${SCHOOL_YEAR_LEVELS_ERROR_NOT_FOUND} ${dto.departmentName}`,
                   });
                   hasWarning = true;
                 }
@@ -292,7 +292,7 @@ export class SectionsService {
                 warning.push({
                   sectionName: dto.sectionName,
                   refId: dto.refId,
-                  comments: `${DEPARTMENTS_ERROR_NOT_FOUND} ${dto.departmentName}`,
+                  comments: `${SCHOOL_YEAR_LEVELS_ERROR_NOT_FOUND} ${dto.departmentName}`,
                 });
                 hasWarning = true;
               }

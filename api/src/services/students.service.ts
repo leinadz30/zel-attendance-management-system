@@ -128,6 +128,7 @@ export class StudentsService {
     if (!res) {
       throw Error(USER_ERROR_USER_NOT_FOUND);
     }
+    res.parentStudents = res.parentStudents.filter((x) => x.active);
     delete res.registeredByUser.password;
     if (res?.updatedByUser?.password) {
       delete res.updatedByUser.password;
@@ -165,6 +166,7 @@ export class StudentsService {
     if (!res) {
       throw Error(USER_ERROR_USER_NOT_FOUND);
     }
+    res.parentStudents = res.parentStudents.filter((x) => x.active);
     delete res.registeredByUser.password;
     if (res?.updatedByUser?.password) {
       delete res.updatedByUser.password;
@@ -202,6 +204,7 @@ export class StudentsService {
     if (!res) {
       throw Error(USER_ERROR_USER_NOT_FOUND);
     }
+    res.parentStudents = res.parentStudents.filter((x) => x.active);
     delete res.registeredByUser.password;
     if (res?.updatedByUser?.password) {
       delete res.updatedByUser.password;
@@ -228,9 +231,11 @@ export class StudentsService {
           student.firstName = dto.firstName;
           student.middleInitial = dto.middleInitial;
           student.lastName = dto.lastName;
-          student.fullName = `${dto.firstName} ${
-            dto.middleInitial ? dto.middleInitial : ""
-          } ${dto.lastName}`;
+          if (dto.middleInitial && dto.middleInitial !== "") {
+            student.fullName = `${dto.firstName} ${dto.middleInitial} ${dto.lastName}`;
+          } else {
+            student.fullName = `${dto.firstName} ${dto.lastName}`;
+          }
           student.email = dto.email;
           student.mobileNumber = dto.mobileNumber;
           student.cardNumber = dto.cardNumber;
@@ -431,9 +436,11 @@ export class StudentsService {
               student.firstName = dto.firstName;
               student.middleInitial = dto.middleInitial;
               student.lastName = dto.lastName;
-              student.fullName = `${dto.firstName} ${
-                dto.middleInitial ? dto.middleInitial : ""
-              } ${dto.lastName}`;
+              if (dto.middleInitial && dto.middleInitial !== "") {
+                student.fullName = `${dto.firstName} ${dto.middleInitial} ${dto.lastName}`;
+              } else {
+                student.fullName = `${dto.firstName} ${dto.lastName}`;
+              }
               student.email = dto.email;
               student.mobileNumber = dto.mobileNumber;
               student.address = dto.address;
@@ -951,7 +958,11 @@ export class StudentsService {
       student.firstName = dto.firstName;
       student.middleInitial = dto.middleInitial;
       student.lastName = dto.lastName;
-      student.fullName = `${dto.firstName} ${dto.lastName}`;
+      if (dto.middleInitial && dto.middleInitial !== "") {
+        student.fullName = `${dto.firstName} ${dto.middleInitial} ${dto.lastName}`;
+      } else {
+        student.fullName = `${dto.firstName} ${dto.lastName}`;
+      }
       student.email = dto.email;
       student.mobileNumber = dto.mobileNumber;
       student.cardNumber = dto.cardNumber;

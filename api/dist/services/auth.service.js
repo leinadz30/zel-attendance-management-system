@@ -347,7 +347,12 @@ let AuthService = class AuthService {
                 employee.firstName = dto.firstName;
                 employee.middleInitial = dto.middleInitial;
                 employee.lastName = dto.lastName;
-                employee.fullName = `${dto.firstName} ${dto.lastName}`;
+                if (dto.middleInitial && dto.middleInitial !== "") {
+                    employee.fullName = `${dto.firstName} ${dto.middleInitial} ${dto.lastName}`;
+                }
+                else {
+                    employee.fullName = `${dto.firstName} ${dto.lastName}`;
+                }
                 employee.mobileNumber = dto.mobileNumber;
                 employee.cardNumber = dto.cardNumber;
                 employee.orgEmployeeId = dto.orgEmployeeId;
@@ -441,7 +446,12 @@ let AuthService = class AuthService {
                 parent.firstName = dto.firstName;
                 parent.middleInitial = dto.middleInitial;
                 parent.lastName = dto.lastName;
-                parent.fullName = `${dto.firstName} ${dto.lastName}`;
+                if (dto.middleInitial && dto.middleInitial !== "") {
+                    parent.fullName = `${dto.firstName} ${dto.middleInitial} ${dto.lastName}`;
+                }
+                else {
+                    parent.fullName = `${dto.firstName} ${dto.lastName}`;
+                }
                 parent.mobileNumber = dto.mobileNumber;
                 parent.birthDate = (0, moment_1.default)(dto.birthDate.toString()).format("YYYY-MM-DD");
                 parent.gender = dto.gender;

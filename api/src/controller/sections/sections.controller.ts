@@ -13,7 +13,10 @@ import {
   SAVING_SUCCESS,
   UPDATE_SUCCESS,
 } from "src/common/constant/api-response.constant";
-import { BatchCreateSectionDto, CreateSectionDto } from "src/core/dto/sections/sections.create.dto";
+import {
+  BatchCreateSectionDto,
+  CreateSectionDto,
+} from "src/core/dto/sections/sections.create.dto";
 import { UpdateSectionDto } from "src/core/dto/sections/sections.update.dto";
 import { PaginationParamsDto } from "src/core/dto/pagination-params.dto";
 import { ApiResponseModel } from "src/core/models/api-response.model";

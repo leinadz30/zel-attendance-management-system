@@ -94,6 +94,7 @@ let ParentsService = class ParentsService {
         if (!res) {
             throw Error(user_error_constant_1.USER_ERROR_USER_NOT_FOUND);
         }
+        res.parentStudents = res.parentStudents.filter((x) => x.active);
         delete res.user.password;
         delete res.registeredByUser.password;
         if ((_a = res === null || res === void 0 ? void 0 : res.updatedByUser) === null || _a === void 0 ? void 0 : _a.password) {
@@ -121,6 +122,7 @@ from dbo."Students" s
 left join dbo."ParentStudent" ps ON s."StudentId" = ps."StudentId"
 left join dbo."Parents" p ON ps."ParentId" = p."ParentId"
 WHERE p."ParentCode" = '${parentCode}'
+ANd ps."Active" = true
     `);
         return res;
     }
@@ -144,7 +146,12 @@ WHERE p."ParentCode" = '${parentCode}'
             parent.firstName = dto.firstName;
             parent.middleInitial = dto.middleInitial;
             parent.lastName = dto.lastName;
-            parent.fullName = `${dto.firstName} ${dto.lastName}`;
+            if (dto.middleInitial && dto.middleInitial !== "") {
+                parent.fullName = `${dto.firstName} ${dto.middleInitial} ${dto.lastName}`;
+            }
+            else {
+                parent.fullName = `${dto.firstName} ${dto.lastName}`;
+            }
             parent.mobileNumber = dto.mobileNumber;
             const timestamp = await entityManager
                 .query(timestamp_constant_1.CONST_QUERYCURRENT_TIMESTAMP)

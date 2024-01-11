@@ -105,6 +105,7 @@ export class ParentsService {
     if (!res) {
       throw Error(USER_ERROR_USER_NOT_FOUND);
     }
+    res.parentStudents = res.parentStudents.filter((x) => x.active);
     delete res.user.password;
     delete res.registeredByUser.password;
     if (res?.updatedByUser?.password) {
@@ -133,6 +134,7 @@ from dbo."Students" s
 left join dbo."ParentStudent" ps ON s."StudentId" = ps."StudentId"
 left join dbo."Parents" p ON ps."ParentId" = p."ParentId"
 WHERE p."ParentCode" = '${parentCode}'
+ANd ps."Active" = true
     `);
     return res;
   }
@@ -158,7 +160,11 @@ WHERE p."ParentCode" = '${parentCode}'
       parent.firstName = dto.firstName;
       parent.middleInitial = dto.middleInitial;
       parent.lastName = dto.lastName;
-      parent.fullName = `${dto.firstName} ${dto.lastName}`;
+      if (dto.middleInitial && dto.middleInitial !== "") {
+        parent.fullName = `${dto.firstName} ${dto.middleInitial} ${dto.lastName}`;
+      } else {
+        parent.fullName = `${dto.firstName} ${dto.lastName}`;
+      }
       parent.mobileNumber = dto.mobileNumber;
       const timestamp = await entityManager
         .query(CONST_QUERYCURRENT_TIMESTAMP)

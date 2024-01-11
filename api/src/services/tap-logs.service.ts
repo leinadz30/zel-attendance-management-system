@@ -101,6 +101,7 @@ export class TapLogsService {
       LEFT JOIN dbo."Parents" p ON ps."ParentId" = p."ParentId"
       WHERE tl."Date" = '${date}'
       AND p."ParentCode" = '${parentCode}'
+      ANd ps."Active" = true
       GROUP BY s."StudentId"
       ORDER BY s."StudentId"
     `);
@@ -259,6 +260,7 @@ export class TapLogsService {
           const parentStudents = await entityManager.find(ParentStudent, {
             where: {
               student: { studentId },
+              active: true,
             },
             relations: {
               parent: {

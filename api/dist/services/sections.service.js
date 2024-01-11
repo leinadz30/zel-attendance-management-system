@@ -29,6 +29,7 @@ const departments_constant_1 = require("../common/constant/departments.constant"
 const SchoolYearLevels_1 = require("../db/entities/SchoolYearLevels");
 const school_year_levels_constant_1 = require("../common/constant/school-year-levels.constant");
 const Employees_1 = require("../db/entities/Employees");
+const employees_constant_1 = require("../common/constant/employees.constant");
 let SectionsService = class SectionsService {
     constructor(sectionsRepo) {
         this.sectionsRepo = sectionsRepo;
@@ -217,7 +218,7 @@ let SectionsService = class SectionsService {
                             warning.push({
                                 sectionName: dto.sectionName,
                                 refId: dto.refId,
-                                comments: `${departments_constant_1.DEPARTMENTS_ERROR_NOT_FOUND} ${dto.departmentName}`,
+                                comments: `${employees_constant_1.EMPLOYEES_ERROR_NOT_FOUND} ${dto.departmentName}`,
                             });
                             hasWarning = true;
                         }
@@ -265,7 +266,7 @@ let SectionsService = class SectionsService {
                                 warning.push({
                                     sectionName: dto.sectionName,
                                     refId: dto.refId,
-                                    comments: `${departments_constant_1.DEPARTMENTS_ERROR_NOT_FOUND} ${dto.departmentName}`,
+                                    comments: `${school_year_levels_constant_1.SCHOOL_YEAR_LEVELS_ERROR_NOT_FOUND} ${dto.departmentName}`,
                                 });
                                 hasWarning = true;
                             }
@@ -275,7 +276,7 @@ let SectionsService = class SectionsService {
                             warning.push({
                                 sectionName: dto.sectionName,
                                 refId: dto.refId,
-                                comments: `${departments_constant_1.DEPARTMENTS_ERROR_NOT_FOUND} ${dto.departmentName}`,
+                                comments: `${school_year_levels_constant_1.SCHOOL_YEAR_LEVELS_ERROR_NOT_FOUND} ${dto.departmentName}`,
                             });
                             hasWarning = true;
                         }

@@ -121,7 +121,12 @@ let EmployeesService = class EmployeesService {
                 employee.firstName = dto.firstName;
                 employee.middleInitial = dto.middleInitial;
                 employee.lastName = dto.lastName;
-                employee.fullName = `${dto.firstName} ${dto.middleInitial ? dto.middleInitial : ""} ${dto.lastName}`;
+                if (dto.middleInitial && dto.middleInitial !== "") {
+                    employee.fullName = `${dto.firstName} ${dto.middleInitial} ${dto.lastName}`;
+                }
+                else {
+                    employee.fullName = `${dto.firstName} ${dto.lastName}`;
+                }
                 employee.mobileNumber = dto.mobileNumber;
                 employee.cardNumber = dto.cardNumber;
                 employee.orgEmployeeId = dto.orgEmployeeId;
@@ -262,7 +267,12 @@ let EmployeesService = class EmployeesService {
                         employee.firstName = dto.firstName;
                         employee.middleInitial = dto.middleInitial;
                         employee.lastName = dto.lastName;
-                        employee.fullName = `${dto.firstName} ${dto.middleInitial ? dto.middleInitial : ""} ${dto.lastName}`;
+                        if (dto.middleInitial && dto.middleInitial !== "") {
+                            employee.fullName = `${dto.firstName} ${dto.middleInitial} ${dto.lastName}`;
+                        }
+                        else {
+                            employee.fullName = `${dto.firstName} ${dto.lastName}`;
+                        }
                         employee.mobileNumber = dto.mobileNumber;
                         if (dto.cardNumber && dto.cardNumber !== "") {
                             employee.cardNumber = dto.cardNumber;
@@ -451,7 +461,12 @@ let EmployeesService = class EmployeesService {
                 employee.firstName = dto.firstName;
                 employee.middleInitial = dto.middleInitial;
                 employee.lastName = dto.lastName;
-                employee.fullName = `${dto.firstName} ${dto.lastName}`;
+                if (dto.middleInitial && dto.middleInitial !== "") {
+                    employee.fullName = `${dto.firstName} ${dto.middleInitial} ${dto.lastName}`;
+                }
+                else {
+                    employee.fullName = `${dto.firstName} ${dto.lastName}`;
+                }
                 employee.mobileNumber = dto.mobileNumber;
                 employee.cardNumber = dto.cardNumber;
                 employee.orgEmployeeId = dto.orgEmployeeId;
@@ -591,7 +606,12 @@ let EmployeesService = class EmployeesService {
                 employee.firstName = dto.firstName;
                 employee.middleInitial = dto.middleInitial;
                 employee.lastName = dto.lastName;
-                employee.fullName = `${dto.firstName} ${dto.lastName}`;
+                if (dto.middleInitial && dto.middleInitial !== "") {
+                    employee.fullName = `${dto.firstName} ${dto.middleInitial} ${dto.lastName}`;
+                }
+                else {
+                    employee.fullName = `${dto.firstName} ${dto.lastName}`;
+                }
                 employee.mobileNumber = dto.mobileNumber;
                 employee.orgEmployeeId = dto.orgEmployeeId;
                 const timestamp = await entityManager
@@ -701,7 +721,12 @@ let EmployeesService = class EmployeesService {
                 employee.firstName = dto.firstName;
                 employee.middleInitial = dto.middleInitial;
                 employee.lastName = dto.lastName;
-                employee.fullName = `${dto.firstName} ${dto.lastName}`;
+                if (dto.middleInitial && dto.middleInitial !== "") {
+                    employee.fullName = `${dto.firstName} ${dto.middleInitial} ${dto.lastName}`;
+                }
+                else {
+                    employee.fullName = `${dto.firstName} ${dto.lastName}`;
+                }
                 employee.mobileNumber = dto.mobileNumber;
                 employee.cardNumber = dto.cardNumber;
                 employee.orgEmployeeId = dto.orgEmployeeId;
@@ -821,7 +846,12 @@ let EmployeesService = class EmployeesService {
                 employee.firstName = dto.firstName;
                 employee.middleInitial = dto.middleInitial;
                 employee.lastName = dto.lastName;
-                employee.fullName = `${dto.firstName} ${dto.lastName}`;
+                if (dto.middleInitial && dto.middleInitial !== "") {
+                    employee.fullName = `${dto.firstName} ${dto.middleInitial} ${dto.lastName}`;
+                }
+                else {
+                    employee.fullName = `${dto.firstName} ${dto.lastName}`;
+                }
                 employee.mobileNumber = dto.mobileNumber;
                 employee.cardNumber = dto.cardNumber;
                 employee.orgEmployeeId = dto.orgEmployeeId;
