@@ -133,10 +133,12 @@ export class TapLogsController {
       res.data = await this.tapLogsService.createBatch(tapLogsDtos);
       res.success = true;
       res.message = `Batch Tap Logs Completed`;
+      console.log(JSON.stringify(res));
       return res;
     } catch (e) {
       res.success = false;
       res.message = e.message !== undefined ? e.message : e;
+      console.log(JSON.stringify(res));
       return res;
     }
   }
