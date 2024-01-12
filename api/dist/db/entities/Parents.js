@@ -29,14 +29,6 @@ __decorate([
     __metadata("design:type", String)
 ], Parents.prototype, "fullName", void 0);
 __decorate([
-    (0, typeorm_1.Column)("character varying", { name: "Gender" }),
-    __metadata("design:type", String)
-], Parents.prototype, "gender", void 0);
-__decorate([
-    (0, typeorm_1.Column)("date", { name: "BirthDate", nullable: true }),
-    __metadata("design:type", String)
-], Parents.prototype, "birthDate", void 0);
-__decorate([
     (0, typeorm_1.Column)("character varying", { name: "MobileNumber" }),
     __metadata("design:type", String)
 ], Parents.prototype, "mobileNumber", void 0);
@@ -44,10 +36,6 @@ __decorate([
     (0, typeorm_1.Column)("character varying", { name: "Email", nullable: true }),
     __metadata("design:type", String)
 ], Parents.prototype, "email", void 0);
-__decorate([
-    (0, typeorm_1.Column)("character varying", { name: "Address" }),
-    __metadata("design:type", String)
-], Parents.prototype, "address", void 0);
 __decorate([
     (0, typeorm_1.Column)("timestamp with time zone", {
         name: "RegistrationDate",

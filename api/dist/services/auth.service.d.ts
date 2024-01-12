@@ -23,11 +23,8 @@ export declare class AuthService {
         parentId: string;
         parentCode: string;
         fullName: string;
-        gender: string;
-        birthDate: string;
         mobileNumber: string;
         email: string;
-        address: string;
         registrationDate: Date;
         updatedDate: Date;
         active: boolean;
@@ -40,7 +37,7 @@ export declare class AuthService {
     getByCredentials({ userName, password }: {
         userName: any;
         password: any;
-    }): Promise<Operators | Employees | Parents>;
+    }): Promise<Parents | Employees | Operators>;
     getUserById(userId: any): Promise<Users>;
     registerEmployee(dto: RegisterEmployeeUserDto): Promise<Employees>;
     registerParent(dto: RegisterParentUserDto): Promise<Parents>;
