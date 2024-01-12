@@ -13,7 +13,11 @@ export class OneSignalNotificationService {
 
   async sendToSubscriber(
     subscriptionId: string,
-    type,
+    type:
+      | "ANNOUNCEMENT"
+      | "LINK_STUDENT"
+      | "STUDENT_LOGIN_LOGOUT"
+      | "EMPLOYEE_LOGIN_LOGOUT",
     referenceId,
     notificationIds: any[],
     title,
@@ -21,6 +25,32 @@ export class OneSignalNotificationService {
   ) {
     const url = this.config.get<string>("ONE_SIGNAL_NOTIF_URL");
     const apiKey = this.config.get<string>("ONE_SIGNAL_API_KEY");
+    let large_icon;
+    if (type === "ANNOUNCEMENT") {
+      large_icon = this.config.get<string>(
+        "ONE_SIGNAL_NOTIF_IMAGE_ANNOUNCEMENT"
+      );
+    } else if (type === "LINK_STUDENT") {
+      if (title.toLowerCase().includes("approved")) {
+        large_icon = this.config.get<string>(
+          "ONE_SIGNAL_NOTIF_IMAGE_LINK_STUDENT_APPROVED"
+        );
+      } else {
+        large_icon = this.config.get<string>(
+          "ONE_SIGNAL_NOTIF_IMAGE_LINK_STUDENT_REJECTED"
+        );
+      }
+    } else if (type === "STUDENT_LOGIN_LOGOUT") {
+      large_icon = this.config.get<string>(
+        "ONE_SIGNAL_NOTIF_IMAGE_STUDENT_TAP"
+      );
+    } else if (type === "EMPLOYEE_LOGIN_LOGOUT") {
+      large_icon = this.config.get<string>(
+        "ONE_SIGNAL_NOTIF_IMAGE_EMPLOYEE_TAP"
+      );
+    } else {
+      large_icon = this.config.get<string>("ONE_SIGNAL_NOTIF_IMAGE");
+    }
     let result;
     try {
       result = await firstValueFrom(
@@ -35,6 +65,7 @@ export class OneSignalNotificationService {
                 type,
                 referenceId,
               },
+              large_icon: large_icon,
               big_picture: this.config.get<string>("ONE_SIGNAL_NOTIF_IMAGE"),
               headings: {
                 en: title,
@@ -42,12 +73,8 @@ export class OneSignalNotificationService {
               contents: {
                 en: description,
               },
-              large_icon: "ic_stat_onesignal_default",
               android_sound: this.config.get<string>(
                 "ONE_SIGNAL_NOTIF_A_SOUND"
-              ),
-              android_channel_id: this.config.get<string>(
-                "ONE_SIGNAL_NOTIF_A_CHANNEL_ID"
               ),
               existing_android_channel_id: this.config.get<string>(
                 "ONE_SIGNAL_NOTIF_A_EXISTING_CHANNEL_ID"
@@ -94,9 +121,15 @@ export class OneSignalNotificationService {
         "ONE_SIGNAL_NOTIF_IMAGE_ANNOUNCEMENT"
       );
     } else if (type === "LINK_STUDENT") {
-      large_icon = this.config.get<string>(
-        "ONE_SIGNAL_NOTIF_IMAGE_LINK_STUDENT"
-      );
+      if (title.toLowerCase().includes("approved")) {
+        large_icon = this.config.get<string>(
+          "ONE_SIGNAL_NOTIF_IMAGE_LINK_STUDENT_APPROVED"
+        );
+      } else {
+        large_icon = this.config.get<string>(
+          "ONE_SIGNAL_NOTIF_IMAGE_LINK_STUDENT_REJECTED"
+        );
+      }
     } else if (type === "STUDENT_LOGIN_LOGOUT") {
       large_icon = this.config.get<string>(
         "ONE_SIGNAL_NOTIF_IMAGE_STUDENT_TAP"
