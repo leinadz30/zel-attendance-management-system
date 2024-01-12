@@ -33,6 +33,7 @@ let OneSignalNotificationService = class OneSignalNotificationService {
                     type,
                     referenceId,
                 },
+                small_icon: this.config.get("ONE_SIGNAL_NOTIF_IMAGE"),
                 big_picture: this.config.get("ONE_SIGNAL_NOTIF_IMAGE"),
                 headings: {
                     en: title,
@@ -40,6 +41,7 @@ let OneSignalNotificationService = class OneSignalNotificationService {
                 contents: {
                     en: description,
                 },
+                large_icon: "ic_stat_onesignal_default",
                 android_sound: this.config.get("ONE_SIGNAL_NOTIF_A_SOUND"),
                 android_channel_id: this.config.get("ONE_SIGNAL_NOTIF_A_CHANNEL_ID"),
                 existing_android_channel_id: this.config.get("ONE_SIGNAL_NOTIF_A_EXISTING_CHANNEL_ID"),
@@ -74,6 +76,7 @@ let OneSignalNotificationService = class OneSignalNotificationService {
                     type,
                     referenceId,
                 },
+                large_icon: "ic_stat_onesignal_default",
                 big_picture: this.config.get("ONE_SIGNAL_NOTIF_IMAGE"),
                 headings: {
                     en: title,
@@ -81,8 +84,6 @@ let OneSignalNotificationService = class OneSignalNotificationService {
                 contents: {
                     en: description,
                 },
-                android_sound: this.config.get("ONE_SIGNAL_NOTIF_A_SOUND"),
-                android_channel_id: this.config.get("ONE_SIGNAL_NOTIF_A_CHANNEL_ID"),
                 existing_android_channel_id: this.config.get("ONE_SIGNAL_NOTIF_A_EXISTING_CHANNEL_ID"),
             }, {
                 responseType: "json",

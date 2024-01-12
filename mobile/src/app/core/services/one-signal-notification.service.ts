@@ -16,7 +16,15 @@ import { forkJoin } from 'rxjs';
 import { NotificationService } from './notification.service';
 import { RequestInfoPage } from 'src/app/component/request-info/request-info.page';
 import { LinkStudentRequestService } from './link-student-request.service';
-
+import {
+  ActionPerformed,
+  PushNotificationSchema,
+  PushNotifications,
+  Token,
+  PushNotification,
+  PushNotificationActionPerformed,
+  PushNotificationToken,
+} from '@capacitor/push-notifications';
 @Injectable({
   providedIn: 'root'
 })
@@ -44,6 +52,15 @@ export class OneSignalNotificationService {
 
   async registerOneSignal() {
     console.log('calling setAppId');
+    PushNotifications.createChannel({
+     id: 'fcm_default_channel',
+     name: 'ZamsConnect',
+     importance: 5,
+     visibility: 1,
+     lights: true,
+     vibration: true,
+     sound: 'notif_alert'
+   });
     OneSignalPlugin.setAppId(environment.oneSignalAppId);
     OneSignalPlugin.disablePush(true);
     OneSignalPlugin.disablePush(false);
