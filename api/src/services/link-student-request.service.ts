@@ -309,7 +309,7 @@ export class LinkStudentRequestService {
         const pushResult =
           await this.oneSignalNotificationService.sendToExternalUser(
             linkStudentRequest?.requestedByParent?.user?.userName,
-            NOTIF_TYPE.LINK_REQUEST.toString(),
+            NOTIF_TYPE.LINK_REQUEST.toString() as any,
             linkStudentRequest.linkStudentRequestCode,
             notificationIds,
             notifTitle,
@@ -402,7 +402,7 @@ export class LinkStudentRequestService {
         const pushResult =
           await this.oneSignalNotificationService.sendToExternalUser(
             linkStudentRequest?.requestedByParent?.user?.userName,
-            NOTIF_TYPE.LINK_REQUEST.toString(),
+            NOTIF_TYPE.LINK_REQUEST.toString() as any,
             linkStudentRequest.linkStudentRequestCode,
             notificationIds,
             notifTitle,

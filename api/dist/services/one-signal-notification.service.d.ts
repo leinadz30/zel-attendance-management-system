@@ -8,7 +8,7 @@ export declare class OneSignalNotificationService {
         subscriptionId: string;
         success: boolean;
     }>;
-    sendToExternalUser(userId: string, type: any, referenceId: any, notificationIds: any[], title: any, description: any): Promise<{
+    sendToExternalUser(userId: string, type: "ANNOUNCEMENT" | "LINK_STUDENT" | "STUDENT_LOGIN_LOGOUT" | "EMPLOYEE_LOGIN_LOGOUT", referenceId: any, notificationIds: any[], title: any, description: any): Promise<{
         userId: string;
         success: boolean;
     }>;

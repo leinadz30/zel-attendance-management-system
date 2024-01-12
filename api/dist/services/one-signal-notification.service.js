@@ -33,7 +33,6 @@ let OneSignalNotificationService = class OneSignalNotificationService {
                     type,
                     referenceId,
                 },
-                small_icon: this.config.get("ONE_SIGNAL_NOTIF_IMAGE"),
                 big_picture: this.config.get("ONE_SIGNAL_NOTIF_IMAGE"),
                 headings: {
                     en: title,
@@ -65,6 +64,22 @@ let OneSignalNotificationService = class OneSignalNotificationService {
     async sendToExternalUser(userId, type, referenceId, notificationIds, title, description) {
         const url = this.config.get("ONE_SIGNAL_NOTIF_URL");
         const apiKey = this.config.get("ONE_SIGNAL_API_KEY");
+        let large_icon;
+        if (type === "ANNOUNCEMENT") {
+            large_icon = this.config.get("ONE_SIGNAL_NOTIF_IMAGE_ANNOUNCEMENT");
+        }
+        else if (type === "LINK_STUDENT") {
+            large_icon = this.config.get("ONE_SIGNAL_NOTIF_IMAGE_LINK_STUDENT");
+        }
+        else if (type === "STUDENT_LOGIN_LOGOUT") {
+            large_icon = this.config.get("ONE_SIGNAL_NOTIF_IMAGE_STUDENT_TAP");
+        }
+        else if (type === "EMPLOYEE_LOGIN_LOGOUT") {
+            large_icon = this.config.get("ONE_SIGNAL_NOTIF_IMAGE_EMPLOYEE_TAP");
+        }
+        else {
+            large_icon = this.config.get("ONE_SIGNAL_NOTIF_IMAGE");
+        }
         let result;
         try {
             result = await (0, rxjs_1.firstValueFrom)(this.httpService
@@ -76,7 +91,7 @@ let OneSignalNotificationService = class OneSignalNotificationService {
                     type,
                     referenceId,
                 },
-                large_icon: "ic_stat_onesignal_default",
+                large_icon: large_icon,
                 big_picture: this.config.get("ONE_SIGNAL_NOTIF_IMAGE"),
                 headings: {
                     en: title,
@@ -84,6 +99,7 @@ let OneSignalNotificationService = class OneSignalNotificationService {
                 contents: {
                     en: description,
                 },
+                android_sound: this.config.get("ONE_SIGNAL_NOTIF_A_SOUND"),
                 existing_android_channel_id: this.config.get("ONE_SIGNAL_NOTIF_A_EXISTING_CHANNEL_ID"),
             }, {
                 responseType: "json",

@@ -35,7 +35,6 @@ export class OneSignalNotificationService {
                 type,
                 referenceId,
               },
-              small_icon: this.config.get<string>("ONE_SIGNAL_NOTIF_IMAGE"),
               big_picture: this.config.get<string>("ONE_SIGNAL_NOTIF_IMAGE"),
               headings: {
                 en: title,
@@ -77,7 +76,11 @@ export class OneSignalNotificationService {
 
   async sendToExternalUser(
     userId: string,
-    type,
+    type:
+      | "ANNOUNCEMENT"
+      | "LINK_STUDENT"
+      | "STUDENT_LOGIN_LOGOUT"
+      | "EMPLOYEE_LOGIN_LOGOUT",
     referenceId,
     notificationIds: any[],
     title,
@@ -85,6 +88,26 @@ export class OneSignalNotificationService {
   ) {
     const url = this.config.get<string>("ONE_SIGNAL_NOTIF_URL");
     const apiKey = this.config.get<string>("ONE_SIGNAL_API_KEY");
+    let large_icon;
+    if (type === "ANNOUNCEMENT") {
+      large_icon = this.config.get<string>(
+        "ONE_SIGNAL_NOTIF_IMAGE_ANNOUNCEMENT"
+      );
+    } else if (type === "LINK_STUDENT") {
+      large_icon = this.config.get<string>(
+        "ONE_SIGNAL_NOTIF_IMAGE_LINK_STUDENT"
+      );
+    } else if (type === "STUDENT_LOGIN_LOGOUT") {
+      large_icon = this.config.get<string>(
+        "ONE_SIGNAL_NOTIF_IMAGE_STUDENT_TAP"
+      );
+    } else if (type === "EMPLOYEE_LOGIN_LOGOUT") {
+      large_icon = this.config.get<string>(
+        "ONE_SIGNAL_NOTIF_IMAGE_EMPLOYEE_TAP"
+      );
+    } else {
+      large_icon = this.config.get<string>("ONE_SIGNAL_NOTIF_IMAGE");
+    }
     let result;
     try {
       result = await firstValueFrom(
@@ -99,7 +122,7 @@ export class OneSignalNotificationService {
                 type,
                 referenceId,
               },
-              large_icon: "ic_stat_onesignal_default",
+              large_icon: large_icon,
               big_picture: this.config.get<string>("ONE_SIGNAL_NOTIF_IMAGE"),
               headings: {
                 en: title,
