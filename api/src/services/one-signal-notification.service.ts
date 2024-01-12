@@ -66,7 +66,7 @@ export class OneSignalNotificationService {
                 referenceId,
               },
               large_icon: large_icon,
-              big_picture: this.config.get<string>("ONE_SIGNAL_NOTIF_IMAGE"),
+              // big_picture: this.config.get<string>("ONE_SIGNAL_NOTIF_IMAGE"),
               headings: {
                 en: title,
               },
@@ -156,7 +156,7 @@ export class OneSignalNotificationService {
                 referenceId,
               },
               large_icon: large_icon,
-              big_picture: this.config.get<string>("ONE_SIGNAL_NOTIF_IMAGE"),
+              // big_picture: this.config.get<string>("ONE_SIGNAL_NOTIF_IMAGE"),
               headings: {
                 en: title,
               },

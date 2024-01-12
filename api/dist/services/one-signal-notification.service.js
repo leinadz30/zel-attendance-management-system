@@ -55,7 +55,6 @@ let OneSignalNotificationService = class OneSignalNotificationService {
                     referenceId,
                 },
                 large_icon: large_icon,
-                big_picture: this.config.get("ONE_SIGNAL_NOTIF_IMAGE"),
                 headings: {
                     en: title,
                 },
@@ -117,7 +116,6 @@ let OneSignalNotificationService = class OneSignalNotificationService {
                     referenceId,
                 },
                 large_icon: large_icon,
-                big_picture: this.config.get("ONE_SIGNAL_NOTIF_IMAGE"),
                 headings: {
                     en: title,
                 },
