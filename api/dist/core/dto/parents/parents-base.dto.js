@@ -19,30 +19,7 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], DefaultParentUserDto.prototype, "firstName", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", String)
-], DefaultParentUserDto.prototype, "middleInitial", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], DefaultParentUserDto.prototype, "lastName", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsIn)(["MALE", "FEMALE", "OTHERS"]),
-    (0, class_validator_1.IsUppercase)(),
-    __metadata("design:type", String)
-], DefaultParentUserDto.prototype, "gender", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsDateString)({ strict: true }),
-    __metadata("design:type", Date)
-], DefaultParentUserDto.prototype, "birthDate", void 0);
+], DefaultParentUserDto.prototype, "fullName", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsNotEmpty)(),
@@ -52,16 +29,5 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], DefaultParentUserDto.prototype, "mobileNumber", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsEmail)(),
-    __metadata("design:type", String)
-], DefaultParentUserDto.prototype, "email", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], DefaultParentUserDto.prototype, "address", void 0);
 exports.DefaultParentUserDto = DefaultParentUserDto;
 //# sourceMappingURL=parents-base.dto.js.map

@@ -10,8 +10,8 @@ import { Employees } from "./Employees";
 import { EmployeeRoles } from "./EmployeeRoles";
 import { Users } from "./Users";
 
-@Index("u_Employee", ["employeeId"], { unique: true })
 @Index("EmployeeUser_pkey", ["employeeId", "userId"], { unique: true })
+@Index("u_Employee", ["employeeId"], { unique: true })
 @Entity("EmployeeUser", { schema: "dbo" })
 export class EmployeeUser {
   @Column("bigint", { primary: true, name: "EmployeeId" })

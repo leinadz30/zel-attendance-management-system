@@ -1,10 +1,4 @@
 export declare class DefaultParentUserDto {
-    firstName: string;
-    middleInitial: string;
-    lastName: string;
-    gender: "MALE" | "FEMALE" | "OTHERS";
-    birthDate: Date;
+    fullName: string;
     mobileNumber: string;
-    email: string;
-    address: string;
 }

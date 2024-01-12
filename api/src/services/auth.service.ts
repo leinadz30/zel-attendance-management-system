@@ -597,18 +597,8 @@ export class AuthService {
   
           let parent = new Parents();
           parent.user = user;
-          parent.firstName = dto.firstName;
-          parent.middleInitial = dto.middleInitial;
-          parent.lastName = dto.lastName;
-          if (dto.middleInitial && dto.middleInitial !== "") {
-            parent.fullName = `${dto.firstName} ${dto.middleInitial} ${dto.lastName}`;
-          } else {
-            parent.fullName = `${dto.firstName} ${dto.lastName}`;
-          }
+          parent.fullName = dto.fullName;
           parent.mobileNumber = dto.mobileNumber;
-          parent.birthDate = moment(dto.birthDate.toString()).format("YYYY-MM-DD");
-          parent.gender = dto.gender;
-          parent.address = dto.address;
           const timestamp = await entityManager
             .query(CONST_QUERYCURRENT_TIMESTAMP)
             .then((res) => {

@@ -49,8 +49,8 @@ __decorate([
     __metadata("design:type", Users_1.Users)
 ], EmployeeUser.prototype, "user", void 0);
 EmployeeUser = __decorate([
-    (0, typeorm_1.Index)("u_Employee", ["employeeId"], { unique: true }),
     (0, typeorm_1.Index)("EmployeeUser_pkey", ["employeeId", "userId"], { unique: true }),
+    (0, typeorm_1.Index)("u_Employee", ["employeeId"], { unique: true }),
     (0, typeorm_1.Entity)("EmployeeUser", { schema: "dbo" })
 ], EmployeeUser);
 exports.EmployeeUser = EmployeeUser;

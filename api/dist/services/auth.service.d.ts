@@ -22,9 +22,7 @@ export declare class AuthService {
         totalUnreadNotif: number;
         parentId: string;
         parentCode: string;
-        firstName: string;
-        middleInitial: string;
-        lastName: string;
+        fullName: string;
         gender: string;
         birthDate: string;
         mobileNumber: string;
@@ -33,7 +31,6 @@ export declare class AuthService {
         registrationDate: Date;
         updatedDate: Date;
         active: boolean;
-        fullName: string;
         linkStudentRequests: import("../db/entities/LinkStudentRequest").LinkStudentRequest[];
         parentStudents: import("../db/entities/ParentStudent").ParentStudent[];
         registeredByUser: Users;

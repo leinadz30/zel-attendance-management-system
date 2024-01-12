@@ -4,9 +4,7 @@ import { Users } from "./Users";
 export declare class Parents {
     parentId: string;
     parentCode: string | null;
-    firstName: string;
-    middleInitial: string | null;
-    lastName: string;
+    fullName: string;
     gender: string;
     birthDate: string | null;
     mobileNumber: string;
@@ -15,7 +13,6 @@ export declare class Parents {
     registrationDate: Date;
     updatedDate: Date | null;
     active: boolean;
-    fullName: string;
     linkStudentRequests: LinkStudentRequest[];
     parentStudents: ParentStudent[];
     registeredByUser: Users;

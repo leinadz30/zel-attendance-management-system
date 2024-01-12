@@ -157,14 +157,7 @@ ANd ps."Active" = true
         throw Error(PARENTS_ERROR_NOT_FOUND);
       }
 
-      parent.firstName = dto.firstName;
-      parent.middleInitial = dto.middleInitial;
-      parent.lastName = dto.lastName;
-      if (dto.middleInitial && dto.middleInitial !== "") {
-        parent.fullName = `${dto.firstName} ${dto.middleInitial} ${dto.lastName}`;
-      } else {
-        parent.fullName = `${dto.firstName} ${dto.lastName}`;
-      }
+      parent.fullName = dto.fullName;
       parent.mobileNumber = dto.mobileNumber;
       const timestamp = await entityManager
         .query(CONST_QUERYCURRENT_TIMESTAMP)

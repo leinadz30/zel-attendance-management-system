@@ -118,7 +118,6 @@ __decorate([
     __metadata("design:type", Array)
 ], Employees.prototype, "sections", void 0);
 Employees = __decorate([
-    (0, typeorm_1.Index)("u_employees_card", ["active", "cardNumber"], { unique: true }),
     (0, typeorm_1.Index)("Employees_pkey", ["employeeId"], { unique: true }),
     (0, typeorm_1.Entity)("Employees", { schema: "dbo" })
 ], Employees);

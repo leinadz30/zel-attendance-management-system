@@ -15,7 +15,6 @@ import { EmployeeTitles } from "./EmployeeTitles";
 import { Schools } from "./Schools";
 import { Sections } from "./Sections";
 
-@Index("u_employees_card", ["active", "cardNumber"], { unique: true })
 @Index("Employees_pkey", ["employeeId"], { unique: true })
 @Entity("Employees", { schema: "dbo" })
 export class Employees {

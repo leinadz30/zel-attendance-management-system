@@ -25,17 +25,9 @@ __decorate([
     __metadata("design:type", String)
 ], Parents.prototype, "parentCode", void 0);
 __decorate([
-    (0, typeorm_1.Column)("character varying", { name: "FirstName" }),
+    (0, typeorm_1.Column)("character varying", { name: "FullName", default: () => "''" }),
     __metadata("design:type", String)
-], Parents.prototype, "firstName", void 0);
-__decorate([
-    (0, typeorm_1.Column)("character varying", { name: "MiddleInitial", nullable: true }),
-    __metadata("design:type", String)
-], Parents.prototype, "middleInitial", void 0);
-__decorate([
-    (0, typeorm_1.Column)("character varying", { name: "LastName" }),
-    __metadata("design:type", String)
-], Parents.prototype, "lastName", void 0);
+], Parents.prototype, "fullName", void 0);
 __decorate([
     (0, typeorm_1.Column)("character varying", { name: "Gender" }),
     __metadata("design:type", String)
@@ -71,10 +63,6 @@ __decorate([
     (0, typeorm_1.Column)("boolean", { name: "Active", default: () => "true" }),
     __metadata("design:type", Boolean)
 ], Parents.prototype, "active", void 0);
-__decorate([
-    (0, typeorm_1.Column)("character varying", { name: "FullName", default: () => "''" }),
-    __metadata("design:type", String)
-], Parents.prototype, "fullName", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => LinkStudentRequest_1.LinkStudentRequest, (linkStudentRequest) => linkStudentRequest.requestedByParent),
     __metadata("design:type", Array)

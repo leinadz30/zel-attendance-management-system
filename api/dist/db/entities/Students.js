@@ -43,11 +43,11 @@ __decorate([
     __metadata("design:type", String)
 ], Students.prototype, "lastName", void 0);
 __decorate([
-    (0, typeorm_1.Column)("character varying", { name: "CardNumber" }),
+    (0, typeorm_1.Column)("character varying", { name: "CardNumber", nullable: true }),
     __metadata("design:type", String)
 ], Students.prototype, "cardNumber", void 0);
 __decorate([
-    (0, typeorm_1.Column)("character varying", { name: "MobileNumber" }),
+    (0, typeorm_1.Column)("character varying", { name: "MobileNumber", nullable: true }),
     __metadata("design:type", String)
 ], Students.prototype, "mobileNumber", void 0);
 __decorate([
@@ -82,15 +82,15 @@ __decorate([
     __metadata("design:type", Boolean)
 ], Students.prototype, "active", void 0);
 __decorate([
-    (0, typeorm_1.Column)("bigint", { name: "SchoolId" }),
-    __metadata("design:type", String)
-], Students.prototype, "schoolId", void 0);
-__decorate([
     (0, typeorm_1.Column)("character varying", { name: "FullName", default: () => "''" }),
     __metadata("design:type", String)
 ], Students.prototype, "fullName", void 0);
 __decorate([
-    (0, typeorm_1.Column)("character varying", { name: "OrgStudentId", default: () => "''" }),
+    (0, typeorm_1.Column)("character varying", {
+        name: "OrgStudentId",
+        nullable: true,
+        default: () => "''",
+    }),
     __metadata("design:type", String)
 ], Students.prototype, "orgStudentId", void 0);
 __decorate([
@@ -141,12 +141,6 @@ __decorate([
     __metadata("design:type", Users_1.Users)
 ], Students.prototype, "updatedByUser", void 0);
 Students = __decorate([
-    (0, typeorm_1.Index)("u_students_number", ["active", "mobileNumber"], { unique: true }),
-    (0, typeorm_1.Index)("u_students_card", ["active", "cardNumber"], { unique: true }),
-    (0, typeorm_1.Index)("u_student_orgstudentid", ["active", "orgStudentId", "schoolId"], {
-        unique: true,
-    }),
-    (0, typeorm_1.Index)("u_students_email", ["active", "email"], { unique: true }),
     (0, typeorm_1.Index)("Students_pkey", ["studentId"], { unique: true }),
     (0, typeorm_1.Entity)("Students", { schema: "dbo" })
 ], Students);

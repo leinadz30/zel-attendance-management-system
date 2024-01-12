@@ -18,29 +18,11 @@
           </mat-form-field>
           <mat-form-field
             appearance="outline">
-            <mat-label>First Name &nbsp;&nbsp;</mat-label>
+            <mat-label>Full Name &nbsp;&nbsp;</mat-label>
             <input
               matInput
-              placeholder="First Name"
-              formControlName="firstName"/>
-          </mat-form-field>
-          <mat-form-field
-            appearance="outline">
-            <mat-label>Middle Initial &nbsp;&nbsp;</mat-label>
-            <input
-              matInput
-              value="{{parent?.middleInitial && parent?.middleInitial !== '' ? 'Middle Initial' : ' '}}"
-              formControlName="middleInitial"
-            />
-          </mat-form-field>
-          <mat-form-field
-            appearance="outline">
-            <mat-label>Last Name &nbsp;&nbsp;</mat-label>
-            <input
-              matInput
-              placeholder="Last Name"
-              formControlName="lastName"
-            />
+              placeholder="Full Name"
+              formControlName="fullName"/>
           </mat-form-field>
           <mat-form-field
             appearance="outline">
@@ -50,41 +32,6 @@
               placeholder="Mobile number"
               formControlName="mobileNumber"
             />
-          </mat-form-field>
-          <mat-form-field
-            appearance="outline">
-            <mat-label>Email &nbsp;&nbsp;</mat-label>
-            <input
-              matInput
-              placeholder="Email"
-              formControlName="email"
-            />
-          </mat-form-field>
-          <mat-form-field
-            appearance="outline">
-            <mat-label>Gender &nbsp;&nbsp;</mat-label>
-            <input
-              matInput
-              placeholder="Gender"
-              formControlName="gender"
-            />
-          </mat-form-field>
-          <mat-form-field
-            appearance="outline">
-            <mat-label>Birthdate &nbsp;&nbsp;</mat-label>
-            <input
-              matInput
-              placeholder="Birthdate"
-              [value]="parent?.birthDate | date: 'MMMM dd, yyyy'"
-            />
-          </mat-form-field>
-          <mat-form-field
-            appearance="outline">
-            <mat-label>Address &nbsp;&nbsp;</mat-label>
-            <textarea
-              matInput
-              placeholder="Address"
-              formControlName="address"></textarea>
           </mat-form-field>
         </div>
       </fieldset>

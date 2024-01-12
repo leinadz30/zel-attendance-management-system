@@ -11,9 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
@@ -21,7 +18,6 @@ const jwt_1 = require("@nestjs/jwt");
 const utils_1 = require("../common/utils/utils");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
-const moment_1 = __importDefault(require("moment"));
 const Users_1 = require("../db/entities/Users");
 const auth_error_constant_1 = require("../common/constant/auth-error.constant");
 const Employees_1 = require("../db/entities/Employees");
@@ -443,19 +439,8 @@ let AuthService = class AuthService {
                 user = await entityManager.save(Users_1.Users, user);
                 let parent = new Parents_1.Parents();
                 parent.user = user;
-                parent.firstName = dto.firstName;
-                parent.middleInitial = dto.middleInitial;
-                parent.lastName = dto.lastName;
-                if (dto.middleInitial && dto.middleInitial !== "") {
-                    parent.fullName = `${dto.firstName} ${dto.middleInitial} ${dto.lastName}`;
-                }
-                else {
-                    parent.fullName = `${dto.firstName} ${dto.lastName}`;
-                }
+                parent.fullName = dto.fullName;
                 parent.mobileNumber = dto.mobileNumber;
-                parent.birthDate = (0, moment_1.default)(dto.birthDate.toString()).format("YYYY-MM-DD");
-                parent.gender = dto.gender;
-                parent.address = dto.address;
                 const timestamp = await entityManager
                     .query(timestamp_constant_1.CONST_QUERYCURRENT_TIMESTAMP)
                     .then((res) => {

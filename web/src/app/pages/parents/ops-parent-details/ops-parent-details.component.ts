@@ -40,14 +40,8 @@ export class OpsParentDetailsComponent {
       this.parentForm = this.formBuilder.group(
         {
           userName: new FormControl(null),
-          firstName: new FormControl(null),
-          middleInitial: new FormControl(null),
-          lastName: new FormControl(null),
+          fullName: new FormControl(null),
           mobileNumber: new FormControl(null),
-          email: new FormControl(null),
-          gender: new FormControl(null),
-          birthDate: new FormControl(null),
-          address: new FormControl(null),
         }
       );
   }
@@ -74,14 +68,8 @@ export class OpsParentDetailsComponent {
           this.parent = parent.data;
           this.parentForm.patchValue({
             userName: parent.data.user.userName,
-            firstName: parent.data.firstName,
-            middleInitial: parent.data.middleInitial,
-            lastName: parent.data.lastName,
+            fullName: parent.data.fullName,
             mobileNumber: parent.data.mobileNumber,
-            email: parent.data?.email ? parent.data?.email : "No Email",
-            gender: parent.data.gender,
-            birthDate: parent.data?.birthDate ? parent.data?.birthDate : "No Birthdate",
-            address: parent.data?.address ? parent.data?.address : "No Address",
           });
           this.parentForm.updateValueAndValidity();
           this.isLoading = false;
