@@ -266,6 +266,11 @@ export class OpsStudentsComponent  {
         this.pageSize = 10;
         return;
       }
+      const filter = this.filter.filter(x=> ![
+        "school.schoolCode",
+        "schoolYearLevel.schoolYearLevelCode",
+        "studentCourse.course.courseCode",
+        "studentStrand.strand.strandCode"].some(a => a.toString().toLowerCase() === x.apiNotation.toString().toLowerCase()));
       this.filter = [];
       this.filter.push({
         apiNotation: "school.schoolCode",
@@ -294,7 +299,7 @@ export class OpsStudentsComponent  {
       this.isLoading = true;
       this.studentsService.getByAdvanceSearch({
         order: this.order,
-        columnDef: this.filter,
+        columnDef: [...this.filter, ...filter],
         pageIndex: this.pageIndex, pageSize: this.pageSize
       })
       .subscribe(async res => {
