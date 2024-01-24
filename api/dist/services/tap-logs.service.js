@@ -20,12 +20,14 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const moment_1 = __importDefault(require("moment"));
 const notifications_constant_1 = require("../common/constant/notifications.constant");
+const schools_constant_1 = require("../common/constant/schools.constant");
 const timestamp_constant_1 = require("../common/constant/timestamp.constant");
 const top_logs_constant_1 = require("../common/constant/top-logs.constant");
 const utils_1 = require("../common/utils/utils");
 const firebase_provider_1 = require("../core/provider/firebase/firebase-provider");
 const Notifications_1 = require("../db/entities/Notifications");
 const ParentStudent_1 = require("../db/entities/ParentStudent");
+const Schools_1 = require("../db/entities/Schools");
 const Students_1 = require("../db/entities/Students");
 const TapLogs_1 = require("../db/entities/TapLogs");
 const typeorm_2 = require("typeorm");
@@ -191,12 +193,36 @@ let TapLogsService = class TapLogsService {
         return await this.tapLogsRepo.manager.transaction(async (entityManager) => {
             const date = (0, moment_1.default)(new Date(dto.date), date_constant_1.DateConstant.DATE_LANGUAGE).format("YYYY-MM-DD");
             const longDate = (0, moment_1.default)(new Date(dto.date), date_constant_1.DateConstant.DATE_LANGUAGE).format("MMM DD, YYYY");
-            const { cardNumber, status, time, sender } = dto;
+            const { cardNumber, status, time, sender, orgSchoolCode } = dto;
+            const school = await entityManager.findOne(Schools_1.Schools, {
+                where: {
+                    orgSchoolCode,
+                    active: true,
+                },
+            });
+            if (!school) {
+                throw Error(schools_constant_1.SCHOOLS_ERROR_NOT_FOUND);
+            }
+            const machine = await entityManager.findOne(Machines_1.Machines, {
+                where: {
+                    school: {
+                        schoolId: school.schoolId,
+                    },
+                    description: sender,
+                    active: true,
+                },
+            });
+            if (!machine) {
+                throw Error(machines_constant_1.MACHINES_ERROR_NOT_FOUND);
+            }
             let tapLog;
             tapLog = await entityManager.findOne(TapLogs_1.TapLogs, {
                 where: {
                     date,
                     cardNumber,
+                    machine: {
+                        machineId: machine.machineId,
+                    },
                     status,
                     time: time.toUpperCase(),
                 },
@@ -208,15 +234,6 @@ let TapLogsService = class TapLogsService {
                 tapLog.time = dto.time;
                 tapLog.status = dto.status;
                 tapLog.type = dto.userType;
-                const machine = await entityManager.findOne(Machines_1.Machines, {
-                    where: {
-                        description: sender,
-                        active: true,
-                    },
-                });
-                if (!machine) {
-                    throw Error(machines_constant_1.MACHINES_ERROR_NOT_FOUND);
-                }
                 tapLog.machine = machine;
                 tapLog = await entityManager.save(TapLogs_1.TapLogs, tapLog);
                 const userToNotify = [];
@@ -305,7 +322,25 @@ let TapLogsService = class TapLogsService {
                     try {
                         const date = (0, moment_1.default)(new Date(dto.date), date_constant_1.DateConstant.DATE_LANGUAGE).format("YYYY-MM-DD");
                         const longDate = (0, moment_1.default)(new Date(dto.date), date_constant_1.DateConstant.DATE_LANGUAGE).format("MMM DD, YYYY");
-                        const { cardNumber, status, time, sender } = dto;
+                        const { cardNumber, status, time, sender, orgSchoolCode } = dto;
+                        const school = await entityManager.findOne(Schools_1.Schools, {
+                            where: {
+                                orgSchoolCode,
+                                active: true,
+                            },
+                        });
+                        if (!school) {
+                            throw Error(schools_constant_1.SCHOOLS_ERROR_NOT_FOUND);
+                        }
+                        const machine = await entityManager.findOne(Machines_1.Machines, {
+                            where: {
+                                description: sender,
+                                active: true,
+                            },
+                        });
+                        if (!machine) {
+                            throw Error(machines_constant_1.MACHINES_ERROR_NOT_FOUND);
+                        }
                         let tapLog;
                         tapLog = await entityManager.findOne(TapLogs_1.TapLogs, {
                             where: {
@@ -322,15 +357,6 @@ let TapLogsService = class TapLogsService {
                             tapLog.time = dto.time;
                             tapLog.status = dto.status;
                             tapLog.type = dto.userType;
-                            const machine = await entityManager.findOne(Machines_1.Machines, {
-                                where: {
-                                    description: sender,
-                                    active: true,
-                                },
-                            });
-                            if (!machine) {
-                                throw Error(machines_constant_1.MACHINES_ERROR_NOT_FOUND);
-                            }
                             tapLog.machine = machine;
                             tapLog = await entityManager.save(TapLogs_1.TapLogs, tapLog);
                             const userToNotify = [];
