@@ -19,11 +19,6 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], DefaultTapLogDto.prototype, "orgSchoolCode", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
 ], DefaultTapLogDto.prototype, "sender", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
