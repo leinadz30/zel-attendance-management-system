@@ -267,6 +267,10 @@ export class TapLogsService {
             where: { cardNumber },
           });
 
+          if (!student) {
+            throw Error(STUDENTS_ERROR_NOT_FOUND);
+          }
+
           const { studentId, fullName } = student;
           title = fullName;
           desc =
@@ -313,6 +317,9 @@ export class TapLogsService {
               },
             },
           });
+          if (!employee) {
+            throw Error(EMPLOYEEROLES_ERROR_NOT_FOUND);
+          }
           const { employeeUser, fullName } = employee;
           title = fullName;
           desc =
@@ -426,6 +433,10 @@ export class TapLogsService {
                     where: { cardNumber },
                   });
 
+                  if (!student) {
+                    throw Error(STUDENTS_ERROR_NOT_FOUND);
+                  }
+
                   const { studentId, fullName } = student;
                   title = fullName;
                   desc =
@@ -474,6 +485,9 @@ export class TapLogsService {
                       },
                     },
                   });
+                  if (!employee) {
+                    throw Error(EMPLOYEEROLES_ERROR_NOT_FOUND);
+                  }
                   const { employeeUser, fullName } = employee;
                   title = fullName;
                   desc =

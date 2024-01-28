@@ -21,6 +21,7 @@ const typeorm_1 = require("@nestjs/typeorm");
 const moment_1 = __importDefault(require("moment"));
 const notifications_constant_1 = require("../common/constant/notifications.constant");
 const schools_constant_1 = require("../common/constant/schools.constant");
+const students_constant_1 = require("../common/constant/students.constant");
 const timestamp_constant_1 = require("../common/constant/timestamp.constant");
 const top_logs_constant_1 = require("../common/constant/top-logs.constant");
 const utils_1 = require("../common/utils/utils");
@@ -38,6 +39,7 @@ const firebase_cloud_messaging_service_1 = require("./firebase-cloud-messaging.s
 const date_constant_1 = require("../common/constant/date.constant");
 const one_signal_notification_service_1 = require("./one-signal-notification.service");
 const Employees_1 = require("../db/entities/Employees");
+const employees_roles_constant_1 = require("../common/constant/employees-roles.constant");
 let TapLogsService = class TapLogsService {
     constructor(tapLogsRepo, pusherService, firebaseProvoder, firebaseCloudMessagingService, oneSignalNotificationService) {
         this.tapLogsRepo = tapLogsRepo;
@@ -244,6 +246,9 @@ let TapLogsService = class TapLogsService {
                     const student = await entityManager.findOne(Students_1.Students, {
                         where: { cardNumber },
                     });
+                    if (!student) {
+                        throw Error(students_constant_1.STUDENTS_ERROR_NOT_FOUND);
+                    }
                     const { studentId, fullName } = student;
                     title = fullName;
                     desc =
@@ -284,6 +289,9 @@ let TapLogsService = class TapLogsService {
                             },
                         },
                     });
+                    if (!employee) {
+                        throw Error(employees_roles_constant_1.EMPLOYEEROLES_ERROR_NOT_FOUND);
+                    }
                     const { employeeUser, fullName } = employee;
                     title = fullName;
                     desc =
@@ -367,6 +375,9 @@ let TapLogsService = class TapLogsService {
                                 const student = await entityManager.findOne(Students_1.Students, {
                                     where: { cardNumber },
                                 });
+                                if (!student) {
+                                    throw Error(students_constant_1.STUDENTS_ERROR_NOT_FOUND);
+                                }
                                 const { studentId, fullName } = student;
                                 title = fullName;
                                 desc =
@@ -406,6 +417,9 @@ let TapLogsService = class TapLogsService {
                                         },
                                     },
                                 });
+                                if (!employee) {
+                                    throw Error(employees_roles_constant_1.EMPLOYEEROLES_ERROR_NOT_FOUND);
+                                }
                                 const { employeeUser, fullName } = employee;
                                 title = fullName;
                                 desc =
