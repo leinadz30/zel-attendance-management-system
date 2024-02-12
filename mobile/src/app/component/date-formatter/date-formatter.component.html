@@ -1,3 +1,5 @@
 {{
+  enableUTC ?
+  (date | date: format: 'utc') :
   (date | date: format: 'en_PH')
 }}

@@ -148,8 +148,15 @@ export class OneSignalNotificationService {
 
     OneSignalPlugin.setNotificationWillShowInForegroundHandler(res=> {
       console.log('Nofication received data ', JSON.stringify(res.getNotification().additionalData));
-      const { notificationIds } = res.getNotification().additionalData as any;
-      this.storageService.saveReceivedNotification(notificationIds);
+      const { notificationIds, inAppData } = res.getNotification().additionalData as any;
+      if(notificationIds) {
+        this.storageService.saveReceivedNotification(notificationIds);
+      }
+      if(inAppData) {
+        // OneSignalPlugin.removeTriggerForKey('in_app_type');
+        const { name } = inAppData;
+        OneSignalPlugin.addTrigger('in_app_type', name);
+      }
     });
   }
 

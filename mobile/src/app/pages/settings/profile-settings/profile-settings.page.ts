@@ -40,13 +40,8 @@ export class ProfileSettingsPage implements OnInit {
 
   get isFormDirty() {
     return (
-      this.currentUser.firstName !== this.formData.firstName ||
-      this.currentUser.middleName !== this.formData.middleName ||
-      this.currentUser.lastName !== this.formData.lastName ||
-      this.currentUser.mobileNumber !== this.formData.mobileNumber ||
-      moment(this.currentUser.birthDate).format('YYYY-MM-DD') !== moment(this.formData.birthDate).format('YYYY-MM-DD') ||
-      this.currentUser.gender !== this.formData.gender ||
-      this.currentUser.address !== this.formData.address
+      this.currentUser.fullName !== this.formData.fullName ||
+      this.currentUser.mobileNumber !== this.formData.mobileNumber
     );
   }
 
@@ -56,13 +51,8 @@ export class ProfileSettingsPage implements OnInit {
 
   ngOnInit() {
     this.editProfileForm = this.formBuilder.group({
-      firstName: new FormControl(this.currentUser.firstName, Validators.required),
-      middleName: new FormControl(this.currentUser.middleName),
-      lastName: new FormControl(this.currentUser.lastName,Validators.required),
+      fullName: new FormControl(this.currentUser.fullName, Validators.required),
       mobileNumber: new FormControl(this.currentUser.mobileNumber,Validators.required),
-      birthDate: [new Date(this.currentUser.birthDate).toISOString(), Validators.required],
-      gender:new FormControl(this.currentUser.gender,Validators.required),
-      address:new FormControl(this.currentUser.address,Validators.required),
     });
   }
 
@@ -92,22 +82,6 @@ export class ProfileSettingsPage implements OnInit {
         ],
       });
       await updateSheet.present();
-      // await this.presentAlert({
-      //   header: 'Continue?',
-      //   buttons: [
-      //     {
-      //       text: 'CANCEL',
-      //       role: 'cancel',
-      //     },
-      //     {
-      //       text: 'YES',
-      //       role: 'confirm',
-      //       handler: () => {
-      //         this.save(params);
-      //       },
-      //     },
-      //   ],
-      // });
     }
     catch(ex) {
       this.isSubmitting = false;
@@ -133,13 +107,8 @@ export class ProfileSettingsPage implements OnInit {
               buttons: ['OK'],
             });
             this.isSubmitting = false;
-            this.currentUser.firstName = res.data.firstName;
-            this.currentUser.middleName = res.data.middleName;
-            this.currentUser.lastName = res.data.lastName;
             this.currentUser.fullName = res.data.fullName;
             this.currentUser.mobileNumber = res.data.mobileNumber;
-            this.currentUser.birthDate = res.data.birthDate;
-            this.currentUser.gender = res.data.gender;
             this.storageService.saveLoginUser(this.currentUser);
             this.modal.dismiss(res.data, 'confirm');
           } else {

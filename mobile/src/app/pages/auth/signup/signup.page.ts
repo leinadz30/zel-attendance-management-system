@@ -50,12 +50,7 @@ export class SignupPage implements OnInit, AfterViewInit {
       },
       { validators: this.checkPasswords });
       this.personalDetailsForm = this.formBuilder.group({
-        firstName : [null, [Validators.required, Validators.minLength(2)]],
-        middleName: new FormControl(),
-        lastName : [null, [Validators.required, Validators.minLength(2)]],
-        birthDate : [this.defaultDate.toISOString()],
-        gender : [null, Validators.required],
-        address : [null, Validators.required],
+        fullName : [null, [Validators.required, Validators.minLength(2)]],
       });
      }
 

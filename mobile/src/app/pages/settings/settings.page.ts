@@ -253,7 +253,6 @@ export class SettingsPage implements OnInit {
           if (res.success) {
             console.log(res);
             this.isSubmitting = false;
-            this.currentUser.gender = res.data.gender;
             this.currentUser.userProfilePic = res.data.user.userProfilePic.file.url;
             this.storageService.saveLoginUser(this.currentUser);
           } else {
