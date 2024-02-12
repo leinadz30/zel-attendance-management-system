@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const firebaseConfig = __importStar(require("./zams-portal-firebase-adminsdk-7yq9l-9f48f49d63.json"));
+const firebaseConfig = __importStar(require("./zel-attendance-monitoring-firebase-adminsdk-uk2hd-b108fc00ab.json"));
 exports.default = {
     type: firebaseConfig.type,
     projectId: firebaseConfig.project_id,

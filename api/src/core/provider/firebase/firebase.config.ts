@@ -1,4 +1,4 @@
-import * as firebaseConfig from "./zams-portal-firebase-adminsdk-7yq9l-9f48f49d63.json";
+import * as firebaseConfig from "./zel-attendance-monitoring-firebase-adminsdk-uk2hd-b108fc00ab.json";
 
 export default {
   type: firebaseConfig.type,

@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "370396280939",
-    "project_id": "zams-portal",
-    "storage_bucket": "zams-portal.appspot.com"
+    "project_number": "968454300076",
+    "project_id": "zel-attendance-monitoring",
+    "storage_bucket": "zel-attendance-monitoring.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:370396280939:android:20f7c84c51c8bcde8a992e",
+        "mobilesdk_app_id": "1:968454300076:android:3c4a7883e968fde8c75a09",
         "android_client_info": {
-          "package_name": "com.zams.mobile"
+          "package_name": "com.zel.zamsconnect"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAew26SjfFE94fHArs2-VuCqjP9oISx-w0"
+          "current_key": "AIzaSyBq5MaHdFnrcmxHBJxp36MniAQHzJYnlkM"
         }
       ],
       "services": {
