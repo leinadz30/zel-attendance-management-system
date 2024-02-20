@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">ZamsConnect</string>
     <string name="title_activity_main">ZamsConnect</string>
-    <string name="package_name">com.zel.zamsconnect</string>
-    <string name="custom_url_scheme">com.zel.zamsconnect</string>
+    <string name="package_name">com.zelmobile.zamsconnect</string>
+    <string name="custom_url_scheme">com.zelmobile.zamsconnect</string>
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
 </resources>

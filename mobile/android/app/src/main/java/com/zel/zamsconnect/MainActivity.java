@@ -1,4 +1,4 @@
-package com.zel.zamsconnect;
+package com.zelmobile.zamsconnect;
 
 import com.getcapacitor.BridgeActivity;
 
