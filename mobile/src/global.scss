@@ -34,6 +34,10 @@ html, body {
   font-family: 'Poppins-SemiBold'!important;
     background-color: #ffffff!important;
 
+    margin-top: constant(safe-area-inset-top)!important;
+    margin-top: env(safe-area-inset-top)!important;
+    margin-bottom: calc(4px + env(safe-area-inset-top))!important;
+
   }
   h1,h2,h3,h4,h5,h6,
   p,strong,span,label,input,textarea, ion-button {
@@ -205,7 +209,7 @@ ion-alert {
 }
 
 ion-tabs {
-  margin-top: var(--ion-safe-area-top);
+  // margin-top: var(--ion-safe-area-top);
 }
 
 /* Chrome, Safari, Edge, Opera */
