@@ -41,15 +41,18 @@ ion-header::after {
       display: flex;
       flex-grow: 1;
       ion-item {
+        max-height: max-content!important;
         ion-icon {
           font-size: 28px;
         }
         ion-label {
+          max-height: max-content!important;
           white-space: break-spaces!important;
           line-height: 1;
           height: -webkit-fill-available;
           h1 {
             margin: 0!important;
+            line-height: 1;
           }
         }
       }

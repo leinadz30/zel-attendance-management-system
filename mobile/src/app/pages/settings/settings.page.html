@@ -26,15 +26,15 @@
     </div>
     <div class="row" style="display:flex">
       <ion-list lines="none" class="nav-list">
-        <ion-item (click)="onSettingsMenuClick('profile-settings')">
+        <ion-item button="true" (click)="onSettingsMenuClick('profile-settings')">
           <ion-icon slot="start" name="person"></ion-icon>
           <ion-label><h1>Profile Settings</h1></ion-label>
         </ion-item>
-        <ion-item (click)="onSettingsMenuClick('password-and-security')">
+        <ion-item button="true" (click)="onSettingsMenuClick('password-and-security')">
           <ion-icon slot="start" name="shield-checkmark"></ion-icon>
           <ion-label><h1>Password and security</h1></ion-label>
         </ion-item>
-        <ion-item (click)="signout()">
+        <ion-item button="true" (click)="signout()">
           <ion-icon slot="start" name="exit"></ion-icon>
           <ion-label><h1>Sign Out</h1></ion-label>
         </ion-item>
