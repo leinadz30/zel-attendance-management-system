@@ -205,7 +205,11 @@ ion-alert {
 }
 
 ion-tabs,ion-footer {
-  margin-bottom: var(--ion-safe-area-top);
+  margin-bottom: var(--ion-safe-area-bottom);
+}
+
+ion-footer {
+  margin-bottom: var(--ion-safe-area-bottom);
 }
 
 /* Chrome, Safari, Edge, Opera */
