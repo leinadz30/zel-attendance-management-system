@@ -39,7 +39,7 @@ const firebase_cloud_messaging_service_1 = require("./firebase-cloud-messaging.s
 const date_constant_1 = require("../common/constant/date.constant");
 const one_signal_notification_service_1 = require("./one-signal-notification.service");
 const Employees_1 = require("../db/entities/Employees");
-const employees_roles_constant_1 = require("../common/constant/employees-roles.constant");
+const employee_user_role_constant_1 = require("../common/constant/employee-user-role.constant");
 let TapLogsService = class TapLogsService {
     constructor(tapLogsRepo, pusherService, firebaseProvoder, firebaseCloudMessagingService, oneSignalNotificationService) {
         this.tapLogsRepo = tapLogsRepo;
@@ -184,7 +184,7 @@ let TapLogsService = class TapLogsService {
                             employeePosition: true,
                             employeeUser: {
                                 user: true,
-                                employeeRole: true,
+                                employeeUserRole: true,
                             },
                         },
                     }) });
@@ -290,7 +290,7 @@ let TapLogsService = class TapLogsService {
                         },
                     });
                     if (!employee) {
-                        throw Error(employees_roles_constant_1.EMPLOYEEROLES_ERROR_NOT_FOUND);
+                        throw Error(employee_user_role_constant_1.EMPLOYEEUSERROLE_ERROR_NOT_FOUND);
                     }
                     const { employeeUser, fullName } = employee;
                     title = fullName;
@@ -340,12 +340,16 @@ let TapLogsService = class TapLogsService {
                         if (!school) {
                             throw Error(schools_constant_1.SCHOOLS_ERROR_NOT_FOUND);
                         }
-                        const machine = await entityManager.findOne(Machines_1.Machines, {
-                            where: {
-                                description: sender,
-                                active: true,
-                            },
-                        });
+                        const machine = (await entityManager
+                            .createQueryBuilder("Machines", "m")
+                            .leftJoinAndSelect("m.school", "s")
+                            .where("trim(upper(m.description)) = trim(upper(:sender)) AND " +
+                            "s.orgSchoolCode = :orgSchoolCode and m.active = true")
+                            .setParameters({
+                            sender,
+                            orgSchoolCode,
+                        })
+                            .getOne());
                         if (!machine) {
                             throw Error(machines_constant_1.MACHINES_ERROR_NOT_FOUND);
                         }
@@ -418,7 +422,7 @@ let TapLogsService = class TapLogsService {
                                     },
                                 });
                                 if (!employee) {
-                                    throw Error(employees_roles_constant_1.EMPLOYEEROLES_ERROR_NOT_FOUND);
+                                    throw Error(employee_user_role_constant_1.EMPLOYEEUSERROLE_ERROR_NOT_FOUND);
                                 }
                                 const { employeeUser, fullName } = employee;
                                 title = fullName;

@@ -36,7 +36,7 @@ import { DateConstant } from "src/common/constant/date.constant";
 import { UserOneSignalSubscription } from "src/db/entities/UserOneSignalSubscription";
 import { OneSignalNotificationService } from "./one-signal-notification.service";
 import { Employees } from "src/db/entities/Employees";
-import { EMPLOYEEROLES_ERROR_NOT_FOUND } from "src/common/constant/employees-roles.constant";
+import { EMPLOYEEUSERROLE_ERROR_NOT_FOUND } from "src/common/constant/employee-user-role.constant";
 import { User } from "@firebase/auth";
 
 @Injectable()
@@ -193,7 +193,7 @@ export class TapLogsService {
               employeePosition: true,
               employeeUser: {
                 user: true,
-                employeeRole: true,
+                employeeUserRole: true,
               },
             },
           }),
@@ -318,7 +318,7 @@ export class TapLogsService {
             },
           });
           if (!employee) {
-            throw Error(EMPLOYEEROLES_ERROR_NOT_FOUND);
+            throw Error(EMPLOYEEUSERROLE_ERROR_NOT_FOUND);
           }
           const { employeeUser, fullName } = employee;
           title = fullName;
@@ -396,12 +396,24 @@ export class TapLogsService {
                 throw Error(SCHOOLS_ERROR_NOT_FOUND);
               }
 
-              const machine = await entityManager.findOne(Machines, {
-                where: {
-                  description: sender,
-                  active: true,
-                },
-              });
+              // let machine = await entityManager.findOne(Machines, {
+              //   where: {
+              //     description: sender,
+              //     active: true,
+              //   },
+              // });
+              const machine = (await entityManager
+                .createQueryBuilder("Machines", "m")
+                .leftJoinAndSelect("m.school", "s")
+                .where(
+                  "trim(upper(m.description)) = trim(upper(:sender)) AND " +
+                    "s.orgSchoolCode = :orgSchoolCode and m.active = true"
+                )
+                .setParameters({
+                  sender,
+                  orgSchoolCode,
+                })
+                .getOne()) as Machines;
               if (!machine) {
                 throw Error(MACHINES_ERROR_NOT_FOUND);
               }
@@ -486,7 +498,7 @@ export class TapLogsService {
                     },
                   });
                   if (!employee) {
-                    throw Error(EMPLOYEEROLES_ERROR_NOT_FOUND);
+                    throw Error(EMPLOYEEUSERROLE_ERROR_NOT_FOUND);
                   }
                   const { employeeUser, fullName } = employee;
                   title = fullName;
