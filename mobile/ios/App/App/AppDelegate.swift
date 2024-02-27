@@ -1,5 +1,7 @@
 import UIKit
 import Capacitor
+import Firebase
+import OneSignal
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -8,6 +10,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        FirebaseApp.configure()
+        OneSignal.setLogLevel(.LL_VERBOSE, visualLevel: .LL_NONE)
+    
+        OneSignal.initWithLaunchOptions(launchOptions)
+        OneSignal.setAppId("e72b9652-3594-4bd1-8f58-d01fc50d0b11")
+        
+        OneSignal.promptForPushNotifications(userResponse: { accepted in
+            print("User accepted notifications: \(accepted)")
+        })
+
         return true
     }
 
