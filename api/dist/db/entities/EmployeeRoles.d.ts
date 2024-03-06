@@ -1,7 +1,7 @@
 import { Users } from "./Users";
 import { Schools } from "./Schools";
 import { EmployeeUser } from "./EmployeeUser";
-export declare class EmployeeRoles {
+export declare class EmployeeUserRoles {
     employeeRoleId: string;
     employeeRoleCode: string | null;
     name: string;

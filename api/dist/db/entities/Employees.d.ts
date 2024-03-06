@@ -7,16 +7,14 @@ import { Sections } from "./Sections";
 export declare class Employees {
     employeeId: string;
     employeeCode: string | null;
-    firstName: string;
-    middleInitial: string | null;
-    lastName: string;
+    fullName: string;
     createdDate: Date;
     updatedDate: Date | null;
+    schoolId: string;
     active: boolean;
     accessGranted: boolean;
     mobileNumber: string | null;
     cardNumber: string | null;
-    fullName: string;
     orgEmployeeId: string | null;
     employeeUser: EmployeeUser;
     createdByUser: Users;

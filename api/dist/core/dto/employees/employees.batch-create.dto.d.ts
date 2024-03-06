@@ -1,7 +1,5 @@
 export declare class BatchCreateEmployeeDto {
-    firstName: string;
-    middleInitial: string;
-    lastName: string;
+    fullName: string;
     mobileNumber: string;
     orgEmployeeId: string;
     cardNumber: string;

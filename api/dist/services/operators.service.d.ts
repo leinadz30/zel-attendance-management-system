@@ -14,7 +14,6 @@ export declare class OperatorsService {
     }): Promise<{
         results: Operators[];
         total: number;
-        requestingAccess: number;
     }>;
     getByCode(operatorCode: any): Promise<Operators>;
     create(dto: CreateOperatorUserDto): Promise<Operators>;

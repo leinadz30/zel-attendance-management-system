@@ -65,20 +65,6 @@ let EmployeesController = class EmployeesController {
             return res;
         }
     }
-    async createEmployeeUser(employeesDto) {
-        const res = {};
-        try {
-            res.data = await this.employeesService.createEmployeeUser(employeesDto);
-            res.success = true;
-            res.message = `Employee ${api_response_constant_1.SAVING_SUCCESS}`;
-            return res;
-        }
-        catch (e) {
-            res.success = false;
-            res.message = e.message !== undefined ? e.message : e;
-            return res;
-        }
-    }
     async createBatch(employeeDtos) {
         const res = {};
         try {
@@ -97,48 +83,6 @@ let EmployeesController = class EmployeesController {
         const res = {};
         try {
             res.data = await this.employeesService.update(employeeCode, dto);
-            res.success = true;
-            res.message = `Employee ${api_response_constant_1.UPDATE_SUCCESS}`;
-            return res;
-        }
-        catch (e) {
-            res.success = false;
-            res.message = e.message !== undefined ? e.message : e;
-            return res;
-        }
-    }
-    async updateEmployeeUser(employeeCode, dto) {
-        const res = {};
-        try {
-            res.data = await this.employeesService.updateEmployeeUser(employeeCode, dto);
-            res.success = true;
-            res.message = `Employee ${api_response_constant_1.UPDATE_SUCCESS}`;
-            return res;
-        }
-        catch (e) {
-            res.success = false;
-            res.message = e.message !== undefined ? e.message : e;
-            return res;
-        }
-    }
-    async updateProfile(employeeCode, dto) {
-        const res = {};
-        try {
-            res.data = await this.employeesService.updateProfile(employeeCode, dto);
-            res.success = true;
-            res.message = `Employee ${api_response_constant_1.UPDATE_SUCCESS}`;
-            return res;
-        }
-        catch (e) {
-            res.success = false;
-            res.message = e.message !== undefined ? e.message : e;
-            return res;
-        }
-    }
-    async approveAccessRequest(employeeCode) {
-        const res = {};
-        try {
-            res.data = await this.employeesService.approveAccessRequest(employeeCode);
             res.success = true;
             res.message = `Employee ${api_response_constant_1.UPDATE_SUCCESS}`;
             return res;
@@ -186,13 +130,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], EmployeesController.prototype, "create", null);
 __decorate([
-    (0, common_1.Post)("createEmployeeUser"),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [employees_create_dto_1.CreateEmployeeUserDto]),
-    __metadata("design:returntype", Promise)
-], EmployeesController.prototype, "createEmployeeUser", null);
-__decorate([
     (0, swagger_1.ApiBody)({
         isArray: true,
         type: employees_batch_create_dto_1.BatchCreateEmployeeDto,
@@ -211,29 +148,6 @@ __decorate([
     __metadata("design:paramtypes", [String, employees_update_dto_1.UpdateEmployeeDto]),
     __metadata("design:returntype", Promise)
 ], EmployeesController.prototype, "update", null);
-__decorate([
-    (0, common_1.Put)("updateEmployeeUser/:employeeCode"),
-    __param(0, (0, common_1.Param)("employeeCode")),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, employees_update_dto_1.UpdateEmployeeUserDto]),
-    __metadata("design:returntype", Promise)
-], EmployeesController.prototype, "updateEmployeeUser", null);
-__decorate([
-    (0, common_1.Put)("updateProfile/:employeeCode"),
-    __param(0, (0, common_1.Param)("employeeCode")),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, employees_update_dto_1.UpdateEmployeeDto]),
-    __metadata("design:returntype", Promise)
-], EmployeesController.prototype, "updateProfile", null);
-__decorate([
-    (0, common_1.Put)("approveAccessRequest/:employeeCode"),
-    __param(0, (0, common_1.Param)("employeeCode")),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], EmployeesController.prototype, "approveAccessRequest", null);
 __decorate([
     (0, common_1.Delete)("/:employeeCode"),
     __param(0, (0, common_1.Param)("employeeCode")),

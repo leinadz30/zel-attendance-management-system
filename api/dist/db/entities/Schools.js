@@ -14,8 +14,8 @@ const typeorm_1 = require("typeorm");
 const Announcements_1 = require("./Announcements");
 const Courses_1 = require("./Courses");
 const Departments_1 = require("./Departments");
-const EmployeeRoles_1 = require("./EmployeeRoles");
 const EmployeeTitles_1 = require("./EmployeeTitles");
+const EmployeeUserAccess_1 = require("./EmployeeUserAccess");
 const Employees_1 = require("./Employees");
 const LinkStudentRequest_1 = require("./LinkStudentRequest");
 const Machines_1 = require("./Machines");
@@ -137,13 +137,13 @@ __decorate([
     __metadata("design:type", Array)
 ], Schools.prototype, "departments", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => EmployeeRoles_1.EmployeeRoles, (employeeRoles) => employeeRoles.school),
-    __metadata("design:type", Array)
-], Schools.prototype, "employeeRoles", void 0);
-__decorate([
     (0, typeorm_1.OneToMany)(() => EmployeeTitles_1.EmployeeTitles, (employeeTitles) => employeeTitles.school),
     __metadata("design:type", Array)
 ], Schools.prototype, "employeeTitles", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => EmployeeUserAccess_1.EmployeeUserAccess, (employeeUserAccess) => employeeUserAccess.school),
+    __metadata("design:type", Array)
+], Schools.prototype, "employeeUserAccesses", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Employees_1.Employees, (employees) => employees.school),
     __metadata("design:type", Array)

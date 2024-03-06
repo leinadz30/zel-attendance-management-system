@@ -36,7 +36,7 @@ import { DateConstant } from "src/common/constant/date.constant";
 import { UserOneSignalSubscription } from "src/db/entities/UserOneSignalSubscription";
 import { OneSignalNotificationService } from "./one-signal-notification.service";
 import { Employees } from "src/db/entities/Employees";
-import { EMPLOYEEUSERROLE_ERROR_NOT_FOUND } from "src/common/constant/employee-user-role.constant";
+import { EMPLOYEEUSERACCESS_ERROR_NOT_FOUND } from "src/common/constant/employee-user-access.constant";
 import { User } from "@firebase/auth";
 
 @Injectable()
@@ -191,10 +191,6 @@ export class TapLogsService {
               updatedByUser: true,
               school: true,
               employeePosition: true,
-              employeeUser: {
-                user: true,
-                employeeUserRole: true,
-              },
             },
           }),
         };
@@ -318,7 +314,7 @@ export class TapLogsService {
             },
           });
           if (!employee) {
-            throw Error(EMPLOYEEUSERROLE_ERROR_NOT_FOUND);
+            throw Error(EMPLOYEEUSERACCESS_ERROR_NOT_FOUND);
           }
           const { employeeUser, fullName } = employee;
           title = fullName;
@@ -498,7 +494,7 @@ export class TapLogsService {
                     },
                   });
                   if (!employee) {
-                    throw Error(EMPLOYEEUSERROLE_ERROR_NOT_FOUND);
+                    throw Error(EMPLOYEEUSERACCESS_ERROR_NOT_FOUND);
                   }
                   const { employeeUser, fullName } = employee;
                   title = fullName;

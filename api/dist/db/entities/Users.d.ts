@@ -1,9 +1,9 @@
 import { Announcements } from "./Announcements";
 import { Courses } from "./Courses";
 import { Departments } from "./Departments";
-import { EmployeeRoles } from "./EmployeeRoles";
 import { EmployeeTitles } from "./EmployeeTitles";
 import { EmployeeUser } from "./EmployeeUser";
+import { EmployeeUserAccess } from "./EmployeeUserAccess";
 import { Employees } from "./Employees";
 import { LinkStudentRequest } from "./LinkStudentRequest";
 import { Machines } from "./Machines";
@@ -34,11 +34,11 @@ export declare class Users {
     courses2: Courses[];
     departments: Departments[];
     departments2: Departments[];
-    employeeRoles: EmployeeRoles[];
-    employeeRoles2: EmployeeRoles[];
     employeeTitles: EmployeeTitles[];
     employeeTitles2: EmployeeTitles[];
     employeeUsers: EmployeeUser[];
+    employeeUserAccesses: EmployeeUserAccess[];
+    employeeUserAccesses2: EmployeeUserAccess[];
     employees: Employees[];
     employees2: Employees[];
     linkStudentRequests: LinkStudentRequest[];

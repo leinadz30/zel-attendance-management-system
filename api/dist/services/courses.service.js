@@ -139,6 +139,10 @@ let CoursesService = class CoursesService {
                         courseCode,
                         active: true,
                     },
+                    relations: {
+                        createdByUser: true,
+                        updatedByUser: true,
+                    },
                 });
                 if (!courses) {
                     throw Error(courses_constant_1.COURSES_ERROR_NOT_FOUND);
@@ -184,11 +188,15 @@ let CoursesService = class CoursesService {
     }
     async delete(courseCode) {
         return await this.coursesRepo.manager.transaction(async (entityManager) => {
-            var _a;
+            var _a, _b;
             let courses = await entityManager.findOne(Courses_1.Courses, {
                 where: {
                     courseCode,
                     active: true,
+                },
+                relations: {
+                    createdByUser: true,
+                    updatedByUser: true,
                 },
             });
             if (!courses) {
@@ -202,8 +210,8 @@ let CoursesService = class CoursesService {
             });
             courses.updatedDate = timestamp;
             courses = await entityManager.save(Courses_1.Courses, courses);
-            delete courses.createdByUser.password;
-            if ((_a = courses === null || courses === void 0 ? void 0 : courses.updatedByUser) === null || _a === void 0 ? void 0 : _a.password) {
+            (_a = courses.createdByUser) === null || _a === void 0 ? true : delete _a.password;
+            if ((_b = courses === null || courses === void 0 ? void 0 : courses.updatedByUser) === null || _b === void 0 ? void 0 : _b.password) {
                 delete courses.updatedByUser.password;
             }
             return courses;

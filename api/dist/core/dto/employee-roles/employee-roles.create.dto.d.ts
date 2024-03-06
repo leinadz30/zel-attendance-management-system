@@ -1,5 +1,5 @@
-import { DefaultEmployeeRolesDto } from "./employee-roles-base.dto";
-export declare class CreateEmployeeRolesDto extends DefaultEmployeeRolesDto {
+import { DefaultEmployeeUserRolesDto } from "./employee-roles-base.dto";
+export declare class CreateEmployeeUserRolesDto extends DefaultEmployeeUserRolesDto {
     createdByUserId: string;
     schoolId: string;
 }

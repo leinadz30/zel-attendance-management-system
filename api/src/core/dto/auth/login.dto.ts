@@ -12,7 +12,4 @@ export class LogInDto {
 }
 
 export class LogInOrgDto extends LogInDto {
-  @ApiProperty()
-  @IsNotEmpty()
-  schoolCode: string;
 }

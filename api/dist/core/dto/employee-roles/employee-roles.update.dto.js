@@ -9,12 +9,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateEmployeeRolesDto = void 0;
+exports.UpdateEmployeeUserRolesDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 const employee_roles_base_dto_1 = require("./employee-roles-base.dto");
-class UpdateEmployeeRolesDto extends employee_roles_base_dto_1.DefaultEmployeeRolesDto {
+class UpdateEmployeeUserRolesDto extends employee_roles_base_dto_1.DefaultEmployeeUserRolesDto {
 }
 __decorate([
     (0, swagger_1.ApiProperty)(),
@@ -25,6 +25,6 @@ __decorate([
         return (_a = obj[key]) === null || _a === void 0 ? void 0 : _a.toString();
     }),
     __metadata("design:type", String)
-], UpdateEmployeeRolesDto.prototype, "updatedByUserId", void 0);
-exports.UpdateEmployeeRolesDto = UpdateEmployeeRolesDto;
+], UpdateEmployeeUserRolesDto.prototype, "updatedByUserId", void 0);
+exports.UpdateEmployeeUserRolesDto = UpdateEmployeeUserRolesDto;
 //# sourceMappingURL=employee-roles.update.dto.js.map

@@ -6,9 +6,9 @@ describe("AccessService", () => {
     let service;
     beforeEach(async () => {
         const module = await testing_1.Test.createTestingModule({
-            providers: [employees_roles_service_1.EmployeeRolesService],
+            providers: [employees_roles_service_1.EmployeeUserRolesService],
         }).compile();
-        service = module.get(employees_roles_service_1.EmployeeRolesService);
+        service = module.get(employees_roles_service_1.EmployeeUserRolesService);
     });
     it("should be defined", () => {
         expect(service).toBeDefined();

@@ -17,15 +17,7 @@ import {
 export class BatchCreateEmployeeDto {
   @ApiProperty()
   @IsNotEmpty()
-  firstName: string;
-
-  @ApiProperty()
-  @IsOptional()
-  middleInitial: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  lastName: string;
+  fullName: string;
 
   @ApiProperty()
   @IsOptional()

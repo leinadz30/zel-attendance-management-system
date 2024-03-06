@@ -30,7 +30,7 @@ let OperatorsService = class OperatorsService {
         const skip = Number(pageIndex) > 0 ? Number(pageIndex) * Number(pageSize) : 0;
         const take = Number(pageSize);
         const condition = (0, utils_1.columnDefToTypeORMCondition)(columnDef);
-        const [results, total, requestingAccess] = await Promise.all([
+        const [results, total] = await Promise.all([
             this.operatorRepo.find({
                 where: Object.assign(Object.assign({}, condition), { active: true }),
                 relations: {
@@ -43,12 +43,6 @@ let OperatorsService = class OperatorsService {
             this.operatorRepo.count({
                 where: Object.assign(Object.assign({}, condition), { active: true }),
             }),
-            this.operatorRepo.count({
-                where: {
-                    accessGranted: false,
-                    active: true,
-                },
-            }),
         ]);
         return {
             results: results.map((x) => {
@@ -56,7 +50,6 @@ let OperatorsService = class OperatorsService {
                 return x;
             }),
             total,
-            requestingAccess,
         };
     }
     async getByCode(operatorCode) {
@@ -82,10 +75,11 @@ let OperatorsService = class OperatorsService {
             user.userName = dto.userName;
             user.password = await (0, utils_1.hash)(dto.password);
             user = await entityManager.save(Users_1.Users, user);
+            user.userCode = (0, utils_1.generateIndentityCode)(user.userId);
+            user = await entityManager.save(Users_1.Users, user);
             let operator = new Operators_1.Operators();
             operator.user = user;
             operator.name = dto.name;
-            operator.accessGranted = true;
             operator = await entityManager.save(Operators_1.Operators, operator);
             operator.operatorCode = (0, utils_1.generateIndentityCode)(operator.operatorId);
             operator = await entityManager.save(Operators_1.Operators, operator);
@@ -206,7 +200,6 @@ let OperatorsService = class OperatorsService {
             if (!operator) {
                 throw Error(operators_constant_1.OPERATORS_ERROR_NOT_FOUND);
             }
-            operator.accessGranted = true;
             await entityManager.save(Operators_1.Operators, operator);
             operator = await entityManager.findOne(Operators_1.Operators, {
                 where: {

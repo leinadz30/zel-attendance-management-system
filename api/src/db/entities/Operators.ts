@@ -23,9 +23,6 @@ export class Operators {
   @Column("boolean", { name: "Active", default: () => "true" })
   active: boolean;
 
-  @Column("boolean", { name: "AccessGranted", default: () => "false" })
-  accessGranted: boolean;
-
   @ManyToOne(() => Users, (users) => users.operators)
   @JoinColumn([{ name: "UserId", referencedColumnName: "userId" }])
   user: Users;

@@ -1,11 +1,12 @@
 import { Employees } from "./Employees";
-import { EmployeeRoles } from "./EmployeeRoles";
+import { EmployeeUserAccess } from "./EmployeeUserAccess";
 import { Users } from "./Users";
 export declare class EmployeeUser {
     employeeId: string;
     userId: string;
     dateRegistered: Date;
+    active: boolean;
     employee: Employees;
-    employeeRole: EmployeeRoles;
+    employeeUserAccess: EmployeeUserAccess;
     user: Users;
 }

@@ -16,7 +16,6 @@ const config_1 = require("@nestjs/config");
 const common_1 = require("@nestjs/common");
 const Courses_1 = require("../entities/Courses");
 const Departments_1 = require("../entities/Departments");
-const EmployeeRoles_1 = require("../entities/EmployeeRoles");
 const Employees_1 = require("../entities/Employees");
 const EmployeeTitles_1 = require("../entities/EmployeeTitles");
 const Machines_1 = require("../entities/Machines");
@@ -40,6 +39,7 @@ const Strands_1 = require("../entities/Strands");
 const UserProfilePic_1 = require("../entities/UserProfilePic");
 const Files_1 = require("../entities/Files");
 const UserOneSignalSubscription_1 = require("../entities/UserOneSignalSubscription");
+const EmployeeUserAccess_1 = require("../entities/EmployeeUserAccess");
 let TypeOrmConfigService = class TypeOrmConfigService {
     createTypeOrmOptions() {
         const ssl = this.config.get("SSL");
@@ -53,7 +53,7 @@ let TypeOrmConfigService = class TypeOrmConfigService {
             entities: [
                 Courses_1.Courses,
                 Departments_1.Departments,
-                EmployeeRoles_1.EmployeeRoles,
+                EmployeeUserAccess_1.EmployeeUserAccess,
                 Employees_1.Employees,
                 EmployeeTitles_1.EmployeeTitles,
                 Machines_1.Machines,

@@ -1,8 +1,8 @@
 import { Announcements } from "./Announcements";
 import { Courses } from "./Courses";
 import { Departments } from "./Departments";
-import { EmployeeRoles } from "./EmployeeRoles";
 import { EmployeeTitles } from "./EmployeeTitles";
+import { EmployeeUserAccess } from "./EmployeeUserAccess";
 import { Employees } from "./Employees";
 import { LinkStudentRequest } from "./LinkStudentRequest";
 import { Machines } from "./Machines";
@@ -35,8 +35,8 @@ export declare class Schools {
     announcements: Announcements[];
     courses: Courses[];
     departments: Departments[];
-    employeeRoles: EmployeeRoles[];
     employeeTitles: EmployeeTitles[];
+    employeeUserAccesses: EmployeeUserAccess[];
     employees: Employees[];
     linkStudentRequests: LinkStudentRequest[];
     machines: Machines[];

@@ -13,18 +13,10 @@ import {
   ValidateNested,
 } from "class-validator";
 
-export class DefaultEmployeeUserDto {
+export class DefaultEmployeeDto {
   @ApiProperty()
   @IsNotEmpty()
-  firstName: string;
-
-  @ApiProperty()
-  @IsOptional()
-  middleInitial: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  lastName: string;
+  fullName: string;
 
   @ApiProperty()
   @IsOptional()

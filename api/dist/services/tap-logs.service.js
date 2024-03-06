@@ -39,7 +39,7 @@ const firebase_cloud_messaging_service_1 = require("./firebase-cloud-messaging.s
 const date_constant_1 = require("../common/constant/date.constant");
 const one_signal_notification_service_1 = require("./one-signal-notification.service");
 const Employees_1 = require("../db/entities/Employees");
-const employee_user_role_constant_1 = require("../common/constant/employee-user-role.constant");
+const employee_user_access_constant_1 = require("../common/constant/employee-user-access.constant");
 let TapLogsService = class TapLogsService {
     constructor(tapLogsRepo, pusherService, firebaseProvoder, firebaseCloudMessagingService, oneSignalNotificationService) {
         this.tapLogsRepo = tapLogsRepo;
@@ -182,10 +182,6 @@ let TapLogsService = class TapLogsService {
                             updatedByUser: true,
                             school: true,
                             employeePosition: true,
-                            employeeUser: {
-                                user: true,
-                                employeeUserRole: true,
-                            },
                         },
                     }) });
             }
@@ -290,7 +286,7 @@ let TapLogsService = class TapLogsService {
                         },
                     });
                     if (!employee) {
-                        throw Error(employee_user_role_constant_1.EMPLOYEEUSERROLE_ERROR_NOT_FOUND);
+                        throw Error(employee_user_access_constant_1.EMPLOYEEUSERACCESS_ERROR_NOT_FOUND);
                     }
                     const { employeeUser, fullName } = employee;
                     title = fullName;
@@ -422,7 +418,7 @@ let TapLogsService = class TapLogsService {
                                     },
                                 });
                                 if (!employee) {
-                                    throw Error(employee_user_role_constant_1.EMPLOYEEUSERROLE_ERROR_NOT_FOUND);
+                                    throw Error(employee_user_access_constant_1.EMPLOYEEUSERACCESS_ERROR_NOT_FOUND);
                                 }
                                 const { employeeUser, fullName } = employee;
                                 title = fullName;

@@ -31,10 +31,6 @@ __decorate([
     __metadata("design:type", Boolean)
 ], Operators.prototype, "active", void 0);
 __decorate([
-    (0, typeorm_1.Column)("boolean", { name: "AccessGranted", default: () => "false" }),
-    __metadata("design:type", Boolean)
-], Operators.prototype, "accessGranted", void 0);
-__decorate([
     (0, typeorm_1.ManyToOne)(() => Users_1.Users, (users) => users.operators),
     (0, typeorm_1.JoinColumn)([{ name: "UserId", referencedColumnName: "userId" }]),
     __metadata("design:type", Users_1.Users)

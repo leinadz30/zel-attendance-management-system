@@ -1,7 +1,6 @@
-import { UpdateUserResetPasswordDto } from "src/core/dto/auth/reset-password.dto";
 import { BatchCreateEmployeeDto } from "src/core/dto/employees/employees.batch-create.dto";
-import { CreateEmployeeDto, CreateEmployeeUserDto } from "src/core/dto/employees/employees.create.dto";
-import { UpdateEmployeeDto, UpdateEmployeeUserDto } from "src/core/dto/employees/employees.update.dto";
+import { CreateEmployeeDto } from "src/core/dto/employees/employees.create.dto";
+import { UpdateEmployeeDto } from "src/core/dto/employees/employees.update.dto";
 import { Employees } from "src/db/entities/Employees";
 import { Repository } from "typeorm";
 export declare class EmployeesService {
@@ -23,11 +22,6 @@ export declare class EmployeesService {
         warning: any[];
         failed: any[];
     }>;
-    createEmployeeUser(dto: CreateEmployeeUserDto): Promise<Employees>;
-    updateProfile(employeeCode: any, dto: UpdateEmployeeDto): Promise<Employees>;
     update(employeeCode: any, dto: UpdateEmployeeDto): Promise<Employees>;
-    updateEmployeeUser(employeeCode: any, dto: UpdateEmployeeUserDto): Promise<Employees>;
-    resetPassword(employeeCode: any, dto: UpdateUserResetPasswordDto): Promise<Employees>;
     delete(employeeCode: any): Promise<Employees>;
-    approveAccessRequest(employeeCode: any): Promise<Employees>;
 }

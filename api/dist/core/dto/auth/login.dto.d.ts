@@ -3,5 +3,4 @@ export declare class LogInDto {
     password: string;
 }
 export declare class LogInOrgDto extends LogInDto {
-    schoolCode: string;
 }

@@ -28,17 +28,9 @@ __decorate([
     __metadata("design:type", String)
 ], Employees.prototype, "employeeCode", void 0);
 __decorate([
-    (0, typeorm_1.Column)("character varying", { name: "FirstName" }),
+    (0, typeorm_1.Column)("character varying", { name: "FullName" }),
     __metadata("design:type", String)
-], Employees.prototype, "firstName", void 0);
-__decorate([
-    (0, typeorm_1.Column)("character varying", { name: "MiddleInitial", nullable: true }),
-    __metadata("design:type", String)
-], Employees.prototype, "middleInitial", void 0);
-__decorate([
-    (0, typeorm_1.Column)("character varying", { name: "LastName" }),
-    __metadata("design:type", String)
-], Employees.prototype, "lastName", void 0);
+], Employees.prototype, "fullName", void 0);
 __decorate([
     (0, typeorm_1.Column)("timestamp with time zone", {
         name: "CreatedDate",
@@ -50,6 +42,10 @@ __decorate([
     (0, typeorm_1.Column)("timestamp with time zone", { name: "UpdatedDate", nullable: true }),
     __metadata("design:type", Date)
 ], Employees.prototype, "updatedDate", void 0);
+__decorate([
+    (0, typeorm_1.Column)("bigint", { name: "SchoolId" }),
+    __metadata("design:type", String)
+], Employees.prototype, "schoolId", void 0);
 __decorate([
     (0, typeorm_1.Column)("boolean", { name: "Active", default: () => "true" }),
     __metadata("design:type", Boolean)
@@ -70,10 +66,6 @@ __decorate([
     (0, typeorm_1.Column)("character varying", { name: "CardNumber", nullable: true }),
     __metadata("design:type", String)
 ], Employees.prototype, "cardNumber", void 0);
-__decorate([
-    (0, typeorm_1.Column)("character varying", { name: "FullName", default: () => "''" }),
-    __metadata("design:type", String)
-], Employees.prototype, "fullName", void 0);
 __decorate([
     (0, typeorm_1.Column)("character varying", {
         name: "OrgEmployeeId",
@@ -118,6 +110,12 @@ __decorate([
     __metadata("design:type", Array)
 ], Employees.prototype, "sections", void 0);
 Employees = __decorate([
+    (0, typeorm_1.Index)("u_employees_orgemployeeid", ["active", "orgEmployeeId", "schoolId"], {
+        unique: true,
+    }),
+    (0, typeorm_1.Index)("u_employees_number", ["active", "mobileNumber", "schoolId"], {
+        unique: true,
+    }),
     (0, typeorm_1.Index)("Employees_pkey", ["employeeId"], { unique: true }),
     (0, typeorm_1.Entity)("Employees", { schema: "dbo" })
 ], Employees);

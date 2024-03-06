@@ -1,7 +1,5 @@
-export declare class DefaultEmployeeUserDto {
-    firstName: string;
-    middleInitial: string;
-    lastName: string;
+export declare class DefaultEmployeeDto {
+    fullName: string;
     mobileNumber: string;
     cardNumber: string;
     departmentId: string;

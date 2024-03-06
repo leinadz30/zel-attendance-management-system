@@ -13,8 +13,8 @@ exports.RegisterEmployeeUserDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
-const employees_base_dto_1 = require("../employees/employees-base.dto");
-class RegisterEmployeeUserDto extends employees_base_dto_1.DefaultEmployeeUserDto {
+const employee_user_base_dto_1 = require("../employee-user/employee-user-base.dto");
+class RegisterEmployeeUserDto extends employee_user_base_dto_1.DefaultEmployeeUserDto {
 }
 __decorate([
     (0, swagger_1.ApiProperty)(),

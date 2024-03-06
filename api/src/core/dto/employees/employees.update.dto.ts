@@ -14,10 +14,10 @@ import {
   IsUppercase,
   Matches,
 } from "class-validator";
-import { DefaultEmployeeUserDto } from "./employees-base.dto";
+import { DefaultEmployeeDto } from "./employees-base.dto";
 
 
-export class UpdateEmployeeDto extends DefaultEmployeeUserDto {
+export class UpdateEmployeeDto extends DefaultEmployeeDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsNumberString()
@@ -25,27 +25,4 @@ export class UpdateEmployeeDto extends DefaultEmployeeUserDto {
     return obj[key]?.toString();
   })
   updatedByUserId: string;
-}
-
-
-export class UpdateEmployeeUserDto extends DefaultEmployeeUserDto {
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsNumberString()
-  @Transform(({ obj, key }) => {
-    return obj[key]?.toString();
-  })
-  updatedByUserId: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsNumberString()
-  @Transform(({ obj, key }) => {
-    return obj[key]?.toString();
-  })
-  employeeRoleId: string;
-}
-
-
-export class UpdateEmployeeUserProfileDto extends DefaultEmployeeUserDto {
 }

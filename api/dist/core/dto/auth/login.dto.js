@@ -27,10 +27,5 @@ __decorate([
 exports.LogInDto = LogInDto;
 class LogInOrgDto extends LogInDto {
 }
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], LogInOrgDto.prototype, "schoolCode", void 0);
 exports.LogInOrgDto = LogInOrgDto;
 //# sourceMappingURL=login.dto.js.map

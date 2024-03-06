@@ -57,25 +57,28 @@ let AuthService = class AuthService {
         if (!passwordMatch) {
             throw Error(auth_error_constant_1.LOGIN_ERROR_PASSWORD_INCORRECT);
         }
-        if (!operator.accessGranted) {
-            throw Error(auth_error_constant_1.LOGIN_ERROR_PENDING_ACCESS_REQUEST);
-        }
         delete operator.user.password;
         return operator;
     }
-    async getEmployeesByCredentials({ userName, password, schoolCode }) {
+    async getEmployeeUserByCredentials({ userName, password }) {
         let employeeUser = await this.userRepo.manager.findOne(EmployeeUser_1.EmployeeUser, {
-            where: {
-                user: {
-                    userName,
-                    active: true,
-                },
-                employee: {
-                    school: {
-                        schoolCode
-                    }
-                }
-            },
+            where: [{
+                    employee: {
+                        active: true,
+                    },
+                    user: {
+                        userName,
+                        active: true,
+                    },
+                }, {
+                    user: {
+                        active: true,
+                    },
+                    employee: {
+                        orgEmployeeId: userName,
+                        active: true,
+                    },
+                }],
             relations: {
                 user: true,
                 employee: {
@@ -86,12 +89,13 @@ let AuthService = class AuthService {
                     employeePosition: true,
                     employeeUser: {
                         user: true,
-                        employeeRole: true,
+                        employeeUserAccess: true,
                     },
                 },
+                employeeUserAccess: true,
             }
         });
-        if (!employeeUser) {
+        if (!employeeUser && !(employeeUser === null || employeeUser === void 0 ? void 0 : employeeUser.employee)) {
             throw Error(auth_error_constant_1.LOGIN_ERROR_USER_NOT_FOUND);
         }
         const passwordMatch = await (0, utils_1.compare)(employeeUser.user.password, password);
@@ -198,7 +202,7 @@ let AuthService = class AuthService {
                         school: true,
                         updatedByUser: true,
                         employeeUser: {
-                            employeeRole: true,
+                            employeeUserAccess: true,
                             user: true
                         },
                     }
@@ -224,9 +228,6 @@ let AuthService = class AuthService {
                         user: true,
                     }
                 });
-                if (!operator.accessGranted) {
-                    throw Error(auth_error_constant_1.LOGIN_ERROR_PENDING_ACCESS_REQUEST);
-                }
                 delete operator.user.password;
                 return operator;
             }
@@ -266,7 +267,7 @@ let AuthService = class AuthService {
                         updatedByUser: true,
                         employeeUser: {
                             user: true,
-                            employeeRole: true,
+                            employeeUserAccess: true,
                         },
                     }
                 });
@@ -308,9 +309,6 @@ let AuthService = class AuthService {
                         user: true,
                     }
                 });
-                if (!operator.accessGranted) {
-                    throw Error(auth_error_constant_1.LOGIN_ERROR_PENDING_ACCESS_REQUEST);
-                }
                 delete operator.user.password;
                 return operator.user;
             }
@@ -337,18 +335,12 @@ let AuthService = class AuthService {
                 user.userName = dto.userName;
                 user.password = await (0, utils_1.hash)(dto.password);
                 user = await entityManager.save(Users_1.Users, user);
+                user.userCode = (0, utils_1.generateIndentityCode)(user.userId);
+                user = await entityManager.save(Users_1.Users, user);
                 let employee = new Employees_1.Employees();
                 employee.school = school;
                 employee.accessGranted = false;
-                employee.firstName = dto.firstName;
-                employee.middleInitial = dto.middleInitial;
-                employee.lastName = dto.lastName;
-                if (dto.middleInitial && dto.middleInitial !== "") {
-                    employee.fullName = `${dto.firstName} ${dto.middleInitial} ${dto.lastName}`;
-                }
-                else {
-                    employee.fullName = `${dto.firstName} ${dto.lastName}`;
-                }
+                employee.fullName = dto.fullName;
                 employee.mobileNumber = dto.mobileNumber;
                 employee.cardNumber = dto.cardNumber;
                 employee.orgEmployeeId = dto.orgEmployeeId;
@@ -406,7 +398,7 @@ let AuthService = class AuthService {
                         employeePosition: true,
                         employeeUser: {
                             user: true,
-                            employeeRole: true,
+                            employeeUserAccess: true,
                         },
                     },
                 });
@@ -480,48 +472,6 @@ let AuthService = class AuthService {
                     ex["message"].includes("violates unique constraint")) &&
                 ex["message"].includes("u_parents_number")) {
                 throw Error("Number already used!");
-            }
-            else {
-                throw ex;
-            }
-        }
-    }
-    async registerOperator(dto) {
-        try {
-            return await this.userRepo.manager.transaction(async (entityManager) => {
-                let user = new Users_1.Users();
-                user.userType = user_type_constant_1.USER_TYPE.OPERATOR;
-                user.userName = dto.userName;
-                user.password = await (0, utils_1.hash)(dto.password);
-                user = await entityManager.save(Users_1.Users, user);
-                user.userCode = (0, utils_1.generateIndentityCode)(user.userId);
-                user = await entityManager.save(Users_1.Users, user);
-                let operator = new Operators_1.Operators();
-                operator.user = user;
-                operator.accessGranted = false;
-                operator.name = dto.name;
-                operator = await entityManager.save(Operators_1.Operators, operator);
-                operator.operatorCode = (0, utils_1.generateIndentityCode)(operator.operatorId);
-                operator = await entityManager.save(Operators_1.Operators, operator);
-                operator = await entityManager.findOne(Operators_1.Operators, {
-                    where: {
-                        operatorCode: operator.operatorCode,
-                        active: true,
-                    },
-                    relations: {
-                        user: true,
-                    },
-                });
-                delete operator.user.password;
-                return operator;
-            });
-        }
-        catch (ex) {
-            if (ex["message"] &&
-                (ex["message"].includes("duplicate key") ||
-                    ex["message"].includes("violates unique constraint")) &&
-                ex["message"].includes("u_user")) {
-                throw Error("Username already used!");
             }
             else {
                 throw ex;

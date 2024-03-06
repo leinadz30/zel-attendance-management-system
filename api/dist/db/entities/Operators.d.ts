@@ -4,6 +4,5 @@ export declare class Operators {
     operatorCode: string | null;
     name: string;
     active: boolean;
-    accessGranted: boolean;
     user: Users;
 }

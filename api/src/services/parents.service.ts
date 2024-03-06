@@ -1,8 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { extname } from "path";
-import { DEPARTMENTS_ERROR_NOT_FOUND } from "src/common/constant/departments.constant";
-import { EMPLOYEEROLES_ERROR_NOT_FOUND } from "src/common/constant/employees-roles.constant";
+import { DEPARTMENTS_ERROR_NOT_FOUND } from "src/common/constant/departments.constant";;
 import { PARENTS_ERROR_NOT_FOUND } from "src/common/constant/parents.constant";
 import { SCHOOL_YEAR_LEVELS_ERROR_NOT_FOUND } from "src/common/constant/school-year-levels.constant";
 import { SCHOOLS_ERROR_NOT_FOUND } from "src/common/constant/schools.constant";
@@ -138,6 +137,7 @@ ANd ps."Active" = true
     `);
     return res;
   }
+
   async updateProfile(parentCode, dto: UpdateParentUserProfileDto) {
     return await this.parentRepo.manager.transaction(async (entityManager) => {
       let parent = await entityManager.findOne(Parents, {

@@ -6,7 +6,6 @@ import { ConfigModule } from "@nestjs/config";
 import { AuthModule } from "./controller/auth/auth.module";
 import * as Joi from "@hapi/joi";
 import { getEnvPath } from "./common/utils/utils";
-import { EmployeeRolesModule } from "./controller/employees-roles/employees-roles.module";
 import { SchoolsModule } from "./controller/schools/schools.module";
 import { DepartmentsModule } from "./controller/departments/departments.module";
 import { CoursesModule } from "./controller/courses/courses.module";
@@ -25,6 +24,8 @@ import { StrandsModule } from "./controller/strands/strands.module";
 import { NotificationsModule } from "./controller/notifications/notifications.module";
 import { UserOneSignalSubscriptionModule } from "./controller/user-one-signal-subscription/user-one-signal-subscription.module";
 import { AnnouncementsModule } from "./controller/announcements/announcements.module";
+import { EmployeeUserModule } from "./controller/employee-user/employee-user.module";
+import { EmployeeUserAccessModule } from "./controller/employee-user-access/employee-user-access.module";
 const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
 
 @Module({
@@ -39,7 +40,7 @@ const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
     TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService }),
     AuthModule,
     SchoolsModule,
-    EmployeeRolesModule,
+    EmployeeUserAccessModule,
     EmployeeTitlesModule,
     DepartmentsModule,
     CoursesModule,
@@ -47,6 +48,7 @@ const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
     SectionsModule,
     OperatorsModule,
     EmployeesModule,
+    EmployeeUserModule,
     StudentsModule,
     ParentsModule,
     LinkStudentRequestModule,

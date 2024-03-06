@@ -28,7 +28,7 @@ export class OperatorsService {
       Number(pageIndex) > 0 ? Number(pageIndex) * Number(pageSize) : 0;
     const take = Number(pageSize);
     const condition = columnDefToTypeORMCondition(columnDef);
-    const [results, total, requestingAccess] = await Promise.all([
+    const [results, total] = await Promise.all([
       this.operatorRepo.find({
         where: {
           ...condition,
@@ -47,12 +47,6 @@ export class OperatorsService {
           active: true,
         },
       }),
-      this.operatorRepo.count({
-        where: {
-          accessGranted: false,
-          active: true,
-        },
-      }),
     ]);
     return {
       results: results.map((x) => {
@@ -60,7 +54,6 @@ export class OperatorsService {
         return x;
       }),
       total,
-      requestingAccess,
     };
   }
 
@@ -90,11 +83,12 @@ export class OperatorsService {
         user.userName = dto.userName;
         user.password = await hash(dto.password);
         user = await entityManager.save(Users, user);
+        user.userCode = generateIndentityCode(user.userId);
+        user = await entityManager.save(Users, user);
 
         let operator = new Operators();
         operator.user = user;
         operator.name = dto.name;
-        operator.accessGranted = true;
         operator = await entityManager.save(Operators, operator);
         operator.operatorCode = generateIndentityCode(operator.operatorId);
         operator = await entityManager.save(Operators, operator);
@@ -235,7 +229,6 @@ export class OperatorsService {
           throw Error(OPERATORS_ERROR_NOT_FOUND);
         }
 
-        operator.accessGranted = true;
         await entityManager.save(Operators, operator);
         operator = await entityManager.findOne(Operators, {
           where: {

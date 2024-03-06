@@ -1,10 +1,4 @@
-import { DefaultEmployeeUserDto } from "./employees-base.dto";
-export declare class UpdateEmployeeDto extends DefaultEmployeeUserDto {
+import { DefaultEmployeeDto } from "./employees-base.dto";
+export declare class UpdateEmployeeDto extends DefaultEmployeeDto {
     updatedByUserId: string;
-}
-export declare class UpdateEmployeeUserDto extends DefaultEmployeeUserDto {
-    updatedByUserId: string;
-    employeeRoleId: string;
-}
-export declare class UpdateEmployeeUserProfileDto extends DefaultEmployeeUserDto {
 }

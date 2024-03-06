@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.EmployeeUser = void 0;
 const typeorm_1 = require("typeorm");
 const Employees_1 = require("./Employees");
-const EmployeeRoles_1 = require("./EmployeeRoles");
+const EmployeeUserAccess_1 = require("./EmployeeUserAccess");
 const Users_1 = require("./Users");
 let EmployeeUser = class EmployeeUser {
 };
@@ -32,17 +32,24 @@ __decorate([
     __metadata("design:type", Date)
 ], EmployeeUser.prototype, "dateRegistered", void 0);
 __decorate([
+    (0, typeorm_1.Column)("boolean", { name: "Active", default: () => "true" }),
+    __metadata("design:type", Boolean)
+], EmployeeUser.prototype, "active", void 0);
+__decorate([
     (0, typeorm_1.OneToOne)(() => Employees_1.Employees, (employees) => employees.employeeUser),
     (0, typeorm_1.JoinColumn)([{ name: "EmployeeId", referencedColumnName: "employeeId" }]),
     __metadata("design:type", Employees_1.Employees)
 ], EmployeeUser.prototype, "employee", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => EmployeeRoles_1.EmployeeRoles, (employeeRoles) => employeeRoles.employeeUsers),
+    (0, typeorm_1.ManyToOne)(() => EmployeeUserAccess_1.EmployeeUserAccess, (employeeUserAccess) => employeeUserAccess.employeeUsers),
     (0, typeorm_1.JoinColumn)([
-        { name: "EmployeeRoleId", referencedColumnName: "employeeRoleId" },
+        {
+            name: "EmployeeUserAccessId",
+            referencedColumnName: "employeeUserAccessId",
+        },
     ]),
-    __metadata("design:type", EmployeeRoles_1.EmployeeRoles)
-], EmployeeUser.prototype, "employeeRole", void 0);
+    __metadata("design:type", EmployeeUserAccess_1.EmployeeUserAccess)
+], EmployeeUser.prototype, "employeeUserAccess", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Users_1.Users, (users) => users.employeeUsers),
     (0, typeorm_1.JoinColumn)([{ name: "UserId", referencedColumnName: "userId" }]),

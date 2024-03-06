@@ -12,7 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EmployeeRolesService = void 0;
+exports.EmployeeUserRolesService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const employees_roles_constant_1 = require("../common/constant/employees-roles.constant");
@@ -20,15 +20,15 @@ const schools_constant_1 = require("../common/constant/schools.constant");
 const timestamp_constant_1 = require("../common/constant/timestamp.constant");
 const user_error_constant_1 = require("../common/constant/user-error.constant");
 const utils_1 = require("../common/utils/utils");
-const EmployeeRoles_1 = require("../db/entities/EmployeeRoles");
+const EmployeeUserRoles_1 = require("src/db/entities/EmployeeUserRoles");
 const Schools_1 = require("../db/entities/Schools");
 const Users_1 = require("../db/entities/Users");
 const typeorm_2 = require("typeorm");
-let EmployeeRolesService = class EmployeeRolesService {
+let EmployeeUserRolesService = class EmployeeUserRolesService {
     constructor(employeeRolesRepo) {
         this.employeeRolesRepo = employeeRolesRepo;
     }
-    async getEmployeeRolesPagination({ pageSize, pageIndex, order, columnDef }) {
+    async getEmployeeUserRolesPagination({ pageSize, pageIndex, order, columnDef }) {
         const skip = Number(pageIndex) > 0 ? Number(pageIndex) * Number(pageSize) : 0;
         const take = Number(pageSize);
         const condition = (0, utils_1.columnDefToTypeORMCondition)(columnDef);
@@ -86,7 +86,7 @@ let EmployeeRolesService = class EmployeeRolesService {
     }
     async create(dto) {
         return await this.employeeRolesRepo.manager.transaction(async (entityManager) => {
-            let employeeRoles = new EmployeeRoles_1.EmployeeRoles();
+            let employeeRoles = new EmployeeUserRoles_1.EmployeeUserRoles();
             employeeRoles.name = dto.name;
             employeeRoles.employeeRoleAccess = dto.employeeRoleAccess;
             const school = await entityManager.findOne(Schools_1.Schools, {
@@ -117,7 +117,7 @@ let EmployeeRolesService = class EmployeeRolesService {
             employeeRoles.createdByUser = createdByUser;
             employeeRoles = await entityManager.save(employeeRoles);
             employeeRoles.employeeRoleCode = (0, utils_1.generateIndentityCode)(employeeRoles.employeeRoleId);
-            employeeRoles = await entityManager.save(EmployeeRoles_1.EmployeeRoles, employeeRoles);
+            employeeRoles = await entityManager.save(EmployeeUserRoles_1.EmployeeUserRoles, employeeRoles);
             delete employeeRoles.createdByUser.password;
             return employeeRoles;
         });
@@ -125,7 +125,7 @@ let EmployeeRolesService = class EmployeeRolesService {
     async update(employeeRoleCode, dto) {
         return await this.employeeRolesRepo.manager.transaction(async (entityManager) => {
             var _a, _b;
-            let employeeRoles = await entityManager.findOne(EmployeeRoles_1.EmployeeRoles, {
+            let employeeRoles = await entityManager.findOne(EmployeeUserRoles_1.EmployeeUserRoles, {
                 where: {
                     employeeRoleCode,
                     active: true,
@@ -152,7 +152,7 @@ let EmployeeRolesService = class EmployeeRolesService {
                 return res[0]["timestamp"];
             });
             employeeRoles.updatedDate = timestamp;
-            employeeRoles = await entityManager.save(EmployeeRoles_1.EmployeeRoles, employeeRoles);
+            employeeRoles = await entityManager.save(EmployeeUserRoles_1.EmployeeUserRoles, employeeRoles);
             if ((_a = employeeRoles === null || employeeRoles === void 0 ? void 0 : employeeRoles.createdByUser) === null || _a === void 0 ? void 0 : _a.password) {
                 delete employeeRoles.createdByUser.password;
             }
@@ -165,7 +165,7 @@ let EmployeeRolesService = class EmployeeRolesService {
     async delete(employeeRoleCode) {
         return await this.employeeRolesRepo.manager.transaction(async (entityManager) => {
             var _a, _b;
-            let employeeRoles = await entityManager.findOne(EmployeeRoles_1.EmployeeRoles, {
+            let employeeRoles = await entityManager.findOne(EmployeeUserRoles_1.EmployeeUserRoles, {
                 where: {
                     employeeRoleCode,
                     active: true,
@@ -181,7 +181,7 @@ let EmployeeRolesService = class EmployeeRolesService {
                 return res[0]["timestamp"];
             });
             employeeRoles.updatedDate = timestamp;
-            employeeRoles = await entityManager.save(EmployeeRoles_1.EmployeeRoles, employeeRoles);
+            employeeRoles = await entityManager.save(EmployeeUserRoles_1.EmployeeUserRoles, employeeRoles);
             if ((_a = employeeRoles === null || employeeRoles === void 0 ? void 0 : employeeRoles.createdByUser) === null || _a === void 0 ? void 0 : _a.password) {
                 delete employeeRoles.createdByUser.password;
             }
@@ -192,10 +192,10 @@ let EmployeeRolesService = class EmployeeRolesService {
         });
     }
 };
-EmployeeRolesService = __decorate([
+EmployeeUserRolesService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, typeorm_1.InjectRepository)(EmployeeRoles_1.EmployeeRoles)),
+    __param(0, (0, typeorm_1.InjectRepository)(EmployeeUserRoles_1.EmployeeUserRoles)),
     __metadata("design:paramtypes", [typeorm_2.Repository])
-], EmployeeRolesService);
-exports.EmployeeRolesService = EmployeeRolesService;
+], EmployeeUserRolesService);
+exports.EmployeeUserRolesService = EmployeeUserRolesService;
 //# sourceMappingURL=employees-roles.service.js.map

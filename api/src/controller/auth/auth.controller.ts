@@ -71,26 +71,6 @@ export class AuthController {
     }
   }
 
-  @Post("register/operator")
-  public async registerOperator(
-    @Body()
-    dto: RegisterOperatorUserDto
-  ) {
-    const res: ApiResponseModel<any> = {} as any;
-    try {
-      res.data = await this.authService.registerOperator(
-        dto as RegisterOperatorUserDto
-      );
-      res.success = true;
-      res.message = `${REGISTER_SUCCESS}`;
-      return res;
-    } catch (e) {
-      res.success = false;
-      res.message = e.message !== undefined ? e.message : e;
-      return res;
-    }
-  }
-
   @Post("register/parent")
   public async registerParent(
     @Body()
@@ -129,7 +109,7 @@ export class AuthController {
   public async loginEmployeeUser(@Body() loginUserDto: LogInOrgDto) {
     const res: ApiResponseModel<any> = {} as ApiResponseModel<any>;
     try {
-      res.data = await this.authService.getEmployeesByCredentials(loginUserDto);
+      res.data = await this.authService.getEmployeeUserByCredentials(loginUserDto);
       res.success = true;
       return res;
     } catch (e) {

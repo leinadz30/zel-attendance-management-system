@@ -147,6 +147,10 @@ export class CoursesService {
               courseCode,
               active: true,
             },
+            relations: {
+              createdByUser: true,
+              updatedByUser: true,
+            },
           });
           if (!courses) {
             throw Error(COURSES_ERROR_NOT_FOUND);
@@ -200,6 +204,10 @@ export class CoursesService {
           courseCode,
           active: true,
         },
+        relations: {
+          createdByUser: true,
+          updatedByUser: true,
+        },
       });
       if (!courses) {
         throw Error(COURSES_ERROR_NOT_FOUND);
@@ -212,7 +220,7 @@ export class CoursesService {
         });
       courses.updatedDate = timestamp;
       courses = await entityManager.save(Courses, courses);
-      delete courses.createdByUser.password;
+      delete courses.createdByUser?.password;
       if (courses?.updatedByUser?.password) {
         delete courses.updatedByUser.password;
       }

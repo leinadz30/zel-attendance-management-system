@@ -1,4 +1,4 @@
-import { DefaultEmployeeUserDto } from "../employees/employees-base.dto";
+import { DefaultEmployeeUserDto } from "../employee-user/employee-user-base.dto";
 export declare class RegisterEmployeeUserDto extends DefaultEmployeeUserDto {
     userName: string;
     password: string;

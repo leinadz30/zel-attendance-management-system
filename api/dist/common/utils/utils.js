@@ -142,7 +142,7 @@ const columnDefToTypeORMCondition = (columnDef) => {
                 ["yes", "no"].some((x) => x.toString().toLowerCase() ===
                     col.filter.toString().toLowerCase().trim())) {
                 const value = col.filter.toString().toLowerCase().trim() === "yes";
-                conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, value));
+                conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, (0, typeorm_1.In)([value])));
             }
         }
         else if (col.type === "number-range") {
@@ -153,7 +153,13 @@ const columnDefToTypeORMCondition = (columnDef) => {
             conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, col.filter));
         }
         else if (col.type === "not" || col.type === "except") {
-            conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, (0, typeorm_1.ArrayOverlap)(col.filter)));
+            conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, (0, typeorm_1.Not)(col.filter)));
+        }
+        else if (col.type === "in" || col.type === "includes") {
+            conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, (0, typeorm_1.In)(col.filter)));
+        }
+        else if (col.type === "null") {
+            conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, (0, typeorm_1.IsNull)()));
         }
         else {
             conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, (0, typeorm_1.ILike)(`%${col.filter}%`)));

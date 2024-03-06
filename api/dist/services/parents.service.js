@@ -16,6 +16,7 @@ exports.ParentsService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const path_1 = require("path");
+;
 const parents_constant_1 = require("../common/constant/parents.constant");
 const timestamp_constant_1 = require("../common/constant/timestamp.constant");
 const user_error_constant_1 = require("../common/constant/user-error.constant");

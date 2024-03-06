@@ -19,7 +19,6 @@ const login_dto_1 = require("../../core/dto/auth/login.dto");
 const swagger_1 = require("@nestjs/swagger");
 const api_response_constant_1 = require("../../common/constant/api-response.constant");
 const register_employee_dto_1 = require("../../core/dto/auth/register-employee.dto");
-const register_operator_dto_1 = require("../../core/dto/auth/register-operator.dto");
 const register_parent_dto_1 = require("../../core/dto/auth/register-parent.dto");
 let AuthController = class AuthController {
     constructor(authService) {
@@ -29,20 +28,6 @@ let AuthController = class AuthController {
         const res = {};
         try {
             res.data = await this.authService.registerEmployee(dto);
-            res.success = true;
-            res.message = `${api_response_constant_1.REGISTER_SUCCESS}`;
-            return res;
-        }
-        catch (e) {
-            res.success = false;
-            res.message = e.message !== undefined ? e.message : e;
-            return res;
-        }
-    }
-    async registerOperator(dto) {
-        const res = {};
-        try {
-            res.data = await this.authService.registerOperator(dto);
             res.success = true;
             res.message = `${api_response_constant_1.REGISTER_SUCCESS}`;
             return res;
@@ -83,7 +68,7 @@ let AuthController = class AuthController {
     async loginEmployeeUser(loginUserDto) {
         const res = {};
         try {
-            res.data = await this.authService.getEmployeesByCredentials(loginUserDto);
+            res.data = await this.authService.getEmployeeUserByCredentials(loginUserDto);
             res.success = true;
             return res;
         }
@@ -114,13 +99,6 @@ __decorate([
     __metadata("design:paramtypes", [register_employee_dto_1.RegisterEmployeeUserDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "registerEmployee", null);
-__decorate([
-    (0, common_1.Post)("register/operator"),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [register_operator_dto_1.RegisterOperatorUserDto]),
-    __metadata("design:returntype", Promise)
-], AuthController.prototype, "registerOperator", null);
 __decorate([
     (0, common_1.Post)("register/parent"),
     __param(0, (0, common_1.Body)()),

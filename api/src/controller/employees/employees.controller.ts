@@ -14,15 +14,8 @@ import {
   UPDATE_SUCCESS,
 } from "src/common/constant/api-response.constant";
 import { BatchCreateEmployeeDto } from "src/core/dto/employees/employees.batch-create.dto";
-import {
-  CreateEmployeeDto,
-  CreateEmployeeUserDto,
-} from "src/core/dto/employees/employees.create.dto";
-import {
-  UpdateEmployeeDto,
-  UpdateEmployeeUserDto,
-  UpdateEmployeeUserProfileDto,
-} from "src/core/dto/employees/employees.update.dto";
+import { CreateEmployeeDto } from "src/core/dto/employees/employees.create.dto";
+import { UpdateEmployeeDto } from "src/core/dto/employees/employees.update.dto";
 import { PaginationParamsDto } from "src/core/dto/pagination-params.dto";
 import { ApiResponseModel } from "src/core/models/api-response.model";
 import { Employees } from "src/db/entities/Employees";
@@ -80,22 +73,6 @@ export class EmployeesController {
     }
   }
 
-  @Post("createEmployeeUser")
-  //   @UseGuards(JwtAuthGuard)
-  async createEmployeeUser(@Body() employeesDto: CreateEmployeeUserDto) {
-    const res: ApiResponseModel<Employees> = {} as any;
-    try {
-      res.data = await this.employeesService.createEmployeeUser(employeesDto);
-      res.success = true;
-      res.message = `Employee ${SAVING_SUCCESS}`;
-      return res;
-    } catch (e) {
-      res.success = false;
-      res.message = e.message !== undefined ? e.message : e;
-      return res;
-    }
-  }
-
   @ApiBody({
     isArray: true,
     type: BatchCreateEmployeeDto,
@@ -129,63 +106,6 @@ export class EmployeesController {
     const res: ApiResponseModel<Employees> = {} as any;
     try {
       res.data = await this.employeesService.update(employeeCode, dto);
-      res.success = true;
-      res.message = `Employee ${UPDATE_SUCCESS}`;
-      return res;
-    } catch (e) {
-      res.success = false;
-      res.message = e.message !== undefined ? e.message : e;
-      return res;
-    }
-  }
-
-  @Put("updateEmployeeUser/:employeeCode")
-  //   @UseGuards(JwtAuthGuard)
-  async updateEmployeeUser(
-    @Param("employeeCode") employeeCode: string,
-    @Body() dto: UpdateEmployeeUserDto
-  ) {
-    const res: ApiResponseModel<Employees> = {} as any;
-    try {
-      res.data = await this.employeesService.updateEmployeeUser(
-        employeeCode,
-        dto
-      );
-      res.success = true;
-      res.message = `Employee ${UPDATE_SUCCESS}`;
-      return res;
-    } catch (e) {
-      res.success = false;
-      res.message = e.message !== undefined ? e.message : e;
-      return res;
-    }
-  }
-
-  @Put("updateProfile/:employeeCode")
-  //   @UseGuards(JwtAuthGuard)
-  async updateProfile(
-    @Param("employeeCode") employeeCode: string,
-    @Body() dto: UpdateEmployeeDto
-  ) {
-    const res: ApiResponseModel<Employees> = {} as any;
-    try {
-      res.data = await this.employeesService.updateProfile(employeeCode, dto);
-      res.success = true;
-      res.message = `Employee ${UPDATE_SUCCESS}`;
-      return res;
-    } catch (e) {
-      res.success = false;
-      res.message = e.message !== undefined ? e.message : e;
-      return res;
-    }
-  }
-
-  @Put("approveAccessRequest/:employeeCode")
-  //   @UseGuards(JwtAuthGuard)
-  async approveAccessRequest(@Param("employeeCode") employeeCode: string) {
-    const res: ApiResponseModel<Employees> = {} as any;
-    try {
-      res.data = await this.employeesService.approveAccessRequest(employeeCode);
       res.success = true;
       res.message = `Employee ${UPDATE_SUCCESS}`;
       return res;
