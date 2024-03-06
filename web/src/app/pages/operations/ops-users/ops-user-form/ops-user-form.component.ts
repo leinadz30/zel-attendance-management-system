@@ -16,7 +16,7 @@ import { MyErrorStateMatcher } from 'src/app/shared/form-validation/error-state.
   styleUrls: ['./ops-user-form.component.scss']
 })
 export class OpsUserFormComponent {
-  currentOperatorCode;
+  currentUserId;
   operatorCode;
   isNew = false;
   error;

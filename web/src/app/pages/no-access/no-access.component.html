@@ -3,7 +3,7 @@
         <img id="banner" routerLink="/ops" src="../../../assets/img/banner.png">
         <span id="title" routerLink="/ops">ZAMS</span>
         <span class="toolbar-item-spacer"></span>
-        <span [style.cursor]="'pointer'" routerLink="/auth">Login</span>
+        <span [style.cursor]="'pointer'" (click)="login()">Login</span>
     </mat-toolbar>
 </div>
 

@@ -1,4 +1,3 @@
-import { OpsHomeModule } from './pages/operations/ops-home/ops-home.module';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
@@ -10,6 +9,7 @@ import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.com
 import { NoAccessComponent } from './pages/no-access/no-access.component';
 import { OrgComponent } from './pages/organization/organization.component';
 import { OpsComponent } from './pages/operations/operations.component';
+import { CONST_USER_MODE } from './shared/constant/mode';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'org/dashboard' },
@@ -35,124 +35,142 @@ const routes: Routes = [
       {
         path: 'dashboard',
         canActivate: [OpsAuthGuard],
-        data: { ops: true, title: 'Dashboard' },
+        data: { mode: CONST_USER_MODE.OPERATION, title: 'Dashboard' },
         loadChildren: () =>
-          import('./pages/operations/ops-home/ops-home.module').then(
-            (m) => m.OpsHomeModule
+          import('./pages/common/common-home/common-home.module').then(
+            (m) => m.CommonHomeModule
           ),
       },
       {
         path: 'school-management',
         canActivate: [OpsAuthGuard],
-        data: { ops: true, title: 'Schools' },
+        data: { mode: CONST_USER_MODE.OPERATION, title: 'Schools' },
         loadChildren: () =>
-          import('./pages/operations/ops-school-management/ops-school-management.module').then(
-            (m) => m.OpsSchoolManagementModule
+          import('./pages/common/common-school-management/common-school-management.module').then(
+            (m) => m.CommonSchoolManagementModule
           ),
       },
       {
         path: 'departments',
         canActivate: [OpsAuthGuard],
-        data: { ops: true, title: 'Departments' },
+        data: { mode: CONST_USER_MODE.OPERATION, title: 'Departments' },
         loadChildren: () =>
-          import('./pages/operations/ops-departments/ops-departments.module').then(
-            (m) => m.OpsDepartmentsModule
+          import('./pages/common/common-departments/common-departments.module').then(
+            (m) => m.CommonDepartmentsModule
           ),
       },
       {
         path: 'school-year-levels',
         canActivate: [OpsAuthGuard],
-        data: { ops: true, title: 'School Year Levels' },
+        data: { mode: CONST_USER_MODE.OPERATION, title: 'School Year Levels' },
         loadChildren: () =>
-          import('./pages/operations/ops-school-year-levels/ops-school-year-levels.module').then(
-            (m) => m.OpsSchoolYearLevelsModule
+          import('./pages/common/common-school-year-levels/common-school-year-levels.module').then(
+            (m) => m.CommonSchoolYearLevelsModule
           ),
       },
       {
         path: 'courses',
         canActivate: [OpsAuthGuard],
-        data: { ops: true, title: 'Courses' },
+        data: { mode: CONST_USER_MODE.OPERATION, title: 'Courses' },
         loadChildren: () =>
-          import('./pages/operations/ops-courses/ops-courses.module').then(
-            (m) => m.OpsCoursesModule
+          import('./pages/common/common-courses/common-courses.module').then(
+            (m) => m.CommonCoursesModule
           ),
       },
       {
         path: 'strands',
         canActivate: [OpsAuthGuard],
-        data: { ops: true, title: 'Strands' },
+        data: { mode: CONST_USER_MODE.OPERATION, title: 'Strands' },
         loadChildren: () =>
-          import('./pages/operations/ops-strands/ops-strands.module').then(
-            (m) => m.OpsStrandsModule
+          import('./pages/common/common-strands/common-strands.module').then(
+            (m) => m.CommonStrandsModule
           ),
       },
       {
         path: 'employee-titles',
         canActivate: [OpsAuthGuard],
-        data: { ops: true, title: 'Employee Titles' },
+        data: { mode: CONST_USER_MODE.OPERATION, title: 'Employee Titles' },
         loadChildren: () =>
-          import('./pages/operations/ops-employee-titles/ops-employee-titles.module').then(
-            (m) => m.OpsEmployeeTitlesModule
+          import('./pages/common/common-employee-titles/common-employee-titles.module').then(
+            (m) => m.CommonEmployeeTitlesModule
           ),
       },
       {
         path: 'sections',
         canActivate: [OpsAuthGuard],
-        data: { ops: true, title: 'Sections' },
+        data: { mode: CONST_USER_MODE.OPERATION, title: 'Sections' },
         loadChildren: () =>
-          import('./pages/operations/ops-sections/ops-sections.module').then(
-            (m) => m.OpsSectionsModule
+          import('./pages/common/common-sections/common-sections.module').then(
+            (m) => m.CommonSectionsModule
           ),
       },
       {
         path: 'employees',
         canActivate: [OpsAuthGuard],
-        data: { ops: true, title: 'Employees' },
+        data: { mode: CONST_USER_MODE.OPERATION, title: 'Employees' },
         loadChildren: () =>
-          import('./pages/operations/ops-employees/ops-employees.module').then(
-            (m) => m.OpsEmployeesModule
+          import('./pages/common/common-employees/common-employees.module').then(
+            (m) => m.CommonEmployeesModule
           ),
       },
       {
         path: 'students',
         canActivate: [OpsAuthGuard],
-        data: { ops: true, title: 'Students' },
+        data: { mode: CONST_USER_MODE.OPERATION, title: 'Students' },
         loadChildren: () =>
-          import('./pages/operations/ops-students/ops-students.module').then(
-            (m) => m.OpsStudentsModule
+          import('./pages/common/common-students/common-students.module').then(
+            (m) => m.CommonStudentsModule
           ),
       },
       {
         path: 'link-student-request',
         canActivate: [OpsAuthGuard],
-        data: { ops: true, title: 'Link Student Request' },
+        data: { mode: CONST_USER_MODE.OPERATION, title: 'Link Student Request' },
         loadChildren: () =>
-          import('./pages/operations/ops-link-student-request/ops-link-student-request.module').then(
-            (m) => m.OpsLinkStudentRequestModule
+          import('./pages/common/common-link-student-request/common-link-student-request.module').then(
+            (m) => m.CommonLinkStudentRequestModule
           ),
       },
       {
         path: 'machines',
         canActivate: [OpsAuthGuard],
-        data: { ops: true, title: 'Link Student Request' },
+        data: { mode: CONST_USER_MODE.OPERATION, title: 'Link Student Request' },
         loadChildren: () =>
-          import('./pages/operations/ops-machines/ops-machines.module').then(
-            (m) => m.OpsMachinesModule
+          import('./pages/common/common-machines/common-machines.module').then(
+            (m) => m.CommonMachinesModule
           ),
       },
       {
         path: 'parents',
         canActivate: [OpsAuthGuard],
-        data: { ops: true, title: 'Parents' },
+        data: { mode: CONST_USER_MODE.OPERATION, title: 'Parents' },
         loadChildren: () =>
-          import('./pages/parents/parents.module').then(
-            (m) => m.ParentsModule
+          import('./pages/common/common-parents/common-parents.module').then(
+            (m) => m.CommonParentsModule
+          ),
+      },
+      {
+        path: 'employee-user-access',
+        canActivate: [OpsAuthGuard],
+        data: { mode: CONST_USER_MODE.OPERATION, title: 'Employee User Access' },
+        loadChildren: () =>
+          import('./pages/common/common-employee-user-access/common-employee-user-access.module').then(
+            (m) => m.CommonEmployeeUserAccessModule
+          ),
+      },
+      {
+        path: 'employee-user',
+        canActivate: [OpsAuthGuard],
+        data: { mode: CONST_USER_MODE.OPERATION, title: 'Employee User' },
+        loadChildren: () =>
+          import('./pages/common/common-employee-user/common-employee-user.module').then(
+            (m) => m.CommonEmployeeUserModule
           ),
       },
       {
         path: 'users',
         canActivate: [OpsAuthGuard],
-        data: { ops: true, title: 'Users' },
+        data: { mode: CONST_USER_MODE.OPERATION, title: 'Users' },
         loadChildren: () =>
           import('./pages/operations/ops-users/ops-users.module').then(
             (m) => m.OpsUsersModule
@@ -160,6 +178,7 @@ const routes: Routes = [
       },
     ],
   },
+
   {
     path: 'org',
     component: OrgComponent,
@@ -168,11 +187,138 @@ const routes: Routes = [
       {
         path: 'dashboard',
         canActivate: [OrgAuthGuard],
+        data: { mode: CONST_USER_MODE.ORGANIZATION, title: 'Dashboard' },
         loadChildren: () =>
-          import('./pages/organization/org-home/org-home.module').then(
-            (m) => m.OrgHomeModule
+          import('./pages/common/common-home/common-home.module').then(
+            (m) => m.CommonHomeModule
           ),
       },
+      {
+        path: 'school-settings',
+        canActivate: [OrgAuthGuard],
+        data: { mode: CONST_USER_MODE.ORGANIZATION, title: 'School Settings' },
+        loadChildren: () =>
+          import('./pages/organization/organization-settings/organization-settings.module').then(
+            (m) => m.OrganizationSettingsModule
+          ),
+      },
+      {
+        path: 'departments',
+        canActivate: [OrgAuthGuard],
+        data: { mode: CONST_USER_MODE.ORGANIZATION, title: 'Departments' },
+        loadChildren: () =>
+          import('./pages/common/common-departments/common-departments.module').then(
+            (m) => m.CommonDepartmentsModule
+          ),
+      },
+      {
+        path: 'school-year-levels',
+        canActivate: [OrgAuthGuard],
+        data: { mode: CONST_USER_MODE.ORGANIZATION, title: 'School Year Levels' },
+        loadChildren: () =>
+          import('./pages/common/common-school-year-levels/common-school-year-levels.module').then(
+            (m) => m.CommonSchoolYearLevelsModule
+          ),
+      },
+      {
+        path: 'courses',
+        canActivate: [OrgAuthGuard],
+        data: { mode: CONST_USER_MODE.ORGANIZATION, title: 'Courses' },
+        loadChildren: () =>
+          import('./pages/common/common-courses/common-courses.module').then(
+            (m) => m.CommonCoursesModule
+          ),
+      },
+      {
+        path: 'strands',
+        canActivate: [OrgAuthGuard],
+        data: { mode: CONST_USER_MODE.ORGANIZATION, title: 'Strands' },
+        loadChildren: () =>
+          import('./pages/common/common-strands/common-strands.module').then(
+            (m) => m.CommonStrandsModule
+          ),
+      },
+      {
+        path: 'employee-titles',
+        canActivate: [OrgAuthGuard],
+        data: { mode: CONST_USER_MODE.ORGANIZATION, title: 'Employee Titles' },
+        loadChildren: () =>
+          import('./pages/common/common-employee-titles/common-employee-titles.module').then(
+            (m) => m.CommonEmployeeTitlesModule
+          ),
+      },
+      {
+        path: 'sections',
+        canActivate: [OrgAuthGuard],
+        data: { mode: CONST_USER_MODE.ORGANIZATION, title: 'Sections' },
+        loadChildren: () =>
+          import('./pages/common/common-sections/common-sections.module').then(
+            (m) => m.CommonSectionsModule
+          ),
+      },
+      {
+        path: 'employees',
+        canActivate: [OrgAuthGuard],
+        data: { mode: CONST_USER_MODE.ORGANIZATION, title: 'Employees' },
+        loadChildren: () =>
+          import('./pages/common/common-employees/common-employees.module').then(
+            (m) => m.CommonEmployeesModule
+          ),
+      },
+      {
+        path: 'students',
+        canActivate: [OrgAuthGuard],
+        data: { mode: CONST_USER_MODE.ORGANIZATION, title: 'Students' },
+        loadChildren: () =>
+          import('./pages/common/common-students/common-students.module').then(
+            (m) => m.CommonStudentsModule
+          ),
+      },
+      {
+        path: 'link-student-request',
+        canActivate: [OrgAuthGuard],
+        data: { mode: CONST_USER_MODE.ORGANIZATION, title: 'Link Student Request' },
+        loadChildren: () =>
+          import('./pages/common/common-link-student-request/common-link-student-request.module').then(
+            (m) => m.CommonLinkStudentRequestModule
+          ),
+      },
+      {
+        path: 'machines',
+        canActivate: [OrgAuthGuard],
+        data: { mode: CONST_USER_MODE.ORGANIZATION, title: 'Link Student Request' },
+        loadChildren: () =>
+          import('./pages/common/common-machines/common-machines.module').then(
+            (m) => m.CommonMachinesModule
+          ),
+      },
+      {
+        path: 'parents',
+        canActivate: [OrgAuthGuard],
+        data: { mode: CONST_USER_MODE.ORGANIZATION, title: 'Parents' },
+        loadChildren: () =>
+          import('./pages/common/common-parents/common-parents.module').then(
+            (m) => m.CommonParentsModule
+          ),
+      },
+      {
+        path: 'employee-user-access',
+        canActivate: [OrgAuthGuard],
+        data: { mode: CONST_USER_MODE.ORGANIZATION, title: 'Employee User Access' },
+        loadChildren: () =>
+          import('./pages/common/common-employee-user-access/common-employee-user-access.module').then(
+            (m) => m.CommonEmployeeUserAccessModule
+          ),
+      },
+      {
+        path: 'employee-user',
+        canActivate: [OrgAuthGuard],
+        data: { mode: CONST_USER_MODE.ORGANIZATION, title: 'Employee User' },
+        loadChildren: () =>
+          import('./pages/common/common-employee-user/common-employee-user.module').then(
+            (m) => m.CommonEmployeeUserModule
+          ),
+      }
     ],
   },
   {
@@ -198,17 +344,17 @@ const routes: Routes = [
   {
     path: 'auth/ops',
     component: AuthComponent,
-    data: { ops: true },
+    data: { mode: CONST_USER_MODE.OPERATION },
     children: [
       {
         path: 'login',
-        data: { ops: true, title: 'Login' },
+        data: { mode: CONST_USER_MODE.OPERATION, title: 'Login' },
         loadChildren: () =>
           import('./auth/login/login.module').then((m) => m.LoginModule),
       },
       {
         path: 'register',
-        data: { ops: true, title: 'Register' },
+        data: { mode: CONST_USER_MODE.OPERATION, title: 'Register' },
         loadChildren: () =>
           import('./auth/register/register.module').then(
             (m) => m.RegisterModule

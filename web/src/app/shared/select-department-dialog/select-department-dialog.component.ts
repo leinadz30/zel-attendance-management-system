@@ -7,9 +7,9 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { SpinnerVisibilityService } from 'ng-http-loader';
 import { DepartmentsService } from 'src/app/services/departments.service';
-import { OpsDepartmentsTableColumn } from '../utility/table';
+import { CommonDepartmentsTableColumn } from '../utility/table';
 
-export class SelectDepartmentDialogTableColumn extends OpsDepartmentsTableColumn {
+export class SelectDepartmentDialogTableColumn extends CommonDepartmentsTableColumn {
   selected?: boolean;
 }
 
@@ -18,7 +18,7 @@ export class SelectDepartmentDialogTableColumn extends OpsDepartmentsTableColumn
   templateUrl: './select-department-dialog.component.html',
   styleUrls: ['./select-department-dialog.component.scss']
 })
-export class  SelectDepartmentDialogComponent {
+export class SelectDepartmentDialogComponent {
   displayedColumns = ["selected", "departmentName" ]
   dataSource = new MatTableDataSource<SelectDepartmentDialogTableColumn>();
   selected: SelectDepartmentDialogTableColumn;
@@ -85,9 +85,13 @@ export class  SelectDepartmentDialogComponent {
           }
         }));
         this.total = res.data.total;
+        if(this.total === 0) {
+          this.selected = null;
+        }
       });
     }catch(ex) {
-
+      this.selected = null;
+      this.snackBar.open(ex.message, 'close', {panelClass: ['style-error']});
     }
   }
 
@@ -117,14 +121,18 @@ export class  SelectDepartmentDialogComponent {
 
   async doneSelection() {
     try {
-      this.spinner.show();
-      const res = await this.departmentsService.getByCode(this.selected.departmentCode).toPromise();
-      this.spinner.hide();
-      if(res.success) {
-        this.dialogRef.close(res.data);
+      if(this.selected && this.selected?.departmentCode) {
+        this.spinner.show();
+        const res = await this.departmentsService.getByCode(this.selected.departmentCode).toPromise();
+        this.spinner.hide();
+        if(res.success) {
+          this.dialogRef.close(res.data);
+        } else {
+          const error = Array.isArray(res.message) ? res.message[0] : res.message;
+          this.snackBar.open(error, 'close', {panelClass: ['style-error']});
+        }
       } else {
-        const error = Array.isArray(res.message) ? res.message[0] : res.message;
-        this.snackBar.open(error, 'close', {panelClass: ['style-error']});
+        this.dialogRef.close(null);
       }
     } catch(ex) {
       const error = Array.isArray(ex.message) ? ex.message[0] : ex.message;

@@ -1,0 +1,121 @@
+<mat-toolbar color="#fff" class="mat-elevation-z4">
+  <span id="title">Students</span>
+  <span class="toolbar-item-spacer"></span>
+  <div class="toolbar-action">
+  </div>
+</mat-toolbar>
+<div class="component-floating-actions vertical-actions">
+  <button mat-fab color="primary" aria-label="New student" *ngIf="selectedSchool && selectedSchool?.schoolCode && selectedSchool?.schoolName" matTooltip="New student" (click)="newStudentDialog()">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
+<div class="content">
+  <div class="inner-content">
+    <mat-card [ngClass]="{ 'hidden': isLoading }">
+        <mat-card-content fxLayout="column" >
+          <div fxLayout="column" [ngStyle]="{ 'margin-left': '16px'}">
+            <div fxFlex="100" fxLayout="row wrap" *ngIf="mode === 'OPERATION'">
+              <mat-form-field
+                fxFlex="row"
+                fxFlex.gt-xs="33.33%"
+                fxFlex.gt-xs="column"
+                appearance="outline"
+                (dblclick)="showSelectSchoolDialog()">
+                <mat-label>School</mat-label>
+                <input
+                  matInput
+                  readonly
+                  [value]="selectedSchool?.schoolName ? selectedSchool?.schoolName : ''"
+                  placeholder="Search School"/>
+                  <mat-icon
+                    class="icon-right"
+                    style="cursor: pointer;"
+                    matSuffix
+                    matTooltip="Search School"
+                    (click)="showSelectSchoolDialog()">
+                    search
+                  </mat-icon>
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxLayout="row wrap" *ngIf="selectedSchool?.schoolCode && selectedSchool?.schoolCode !== ''">
+              <mat-form-field
+                fxFlex="row"
+                fxFlex.gt-xs="33.33%"
+                fxFlex.gt-xs="column"
+                appearance="outline"
+                (dblclick)="showSelectSchoolYearLevelDialog()">
+                <mat-label>School Year Level</mat-label>
+                <input
+                  matInput
+                  readonly
+                  [value]="selectedSchoolYearLevel?.name ? selectedSchoolYearLevel?.name : ''"
+                  placeholder="Search School Year Level"/>
+                  <mat-icon
+                    class="icon-right"
+                    style="cursor: pointer;"
+                    matSuffix
+                    matTooltip="Search School Year Level"
+                    (click)="showSelectSchoolYearLevelDialog()">
+                    search
+                  </mat-icon>
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxLayout="row wrap" *ngIf="selectedSchoolYearLevel?.schoolYearLevelCode && selectedSchoolYearLevel?.schoolYearLevelCode !== '' && selectedSchoolYearLevel?.educationalStage === 'COLLEGE'">
+              <mat-form-field
+                fxFlex="50%"
+                fxFlex.gt-xs="column"
+                appearance="outline"
+                (dblclick)="showSelectCourseDialog()">
+                <mat-label>Course</mat-label>
+                <input
+                  matInput
+                  readonly
+                  [value]="selectedCourse?.name ? selectedCourse?.name : ''"
+                  placeholder="Search Course"/>
+                  <mat-icon
+                    class="icon-right"
+                    style="cursor: pointer;"
+                    matSuffix
+                    matTooltip="Search Course"
+                    (click)="showSelectCourseDialog()">
+                    search
+                  </mat-icon>
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxLayout="row wrap" *ngIf="selectedSchoolYearLevel?.schoolYearLevelCode && selectedSchoolYearLevel?.schoolYearLevelCode !== '' && selectedSchoolYearLevel?.educationalStage === 'SENIOR'">
+              <mat-form-field
+                fxFlex="50%"
+                fxFlex.gt-xs="column"
+                appearance="outline"
+                (dblclick)="showSelectStrandDialog()">
+                <mat-label>Strand</mat-label>
+                <input
+                  matInput
+                  readonly
+                  [value]="selectedStrand?.name ? selectedStrand?.name : ''"
+                  placeholder="Search Strand"/>
+                  <mat-icon
+                    class="icon-right"
+                    style="cursor: pointer;"
+                    matSuffix
+                    matTooltip="Search Strand"
+                    (click)="showSelectStrandDialog()">
+                    search
+                  </mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+          <app-data-table
+            [isLoading]="isLoading"
+            [dataSource]="dataSource"
+            [columnDefs]="columnDefs"
+            [total]="total"
+            (pageChange)="pageChange($event)"
+            (sortChange)="sortChange($event)"
+            (filterChange)="filterChange($event)"
+            (controlMenuItemSelected)="controlMenuItemSelected($event?.type, $event?.data)"
+          ></app-data-table>
+        </mat-card-content>
+    </mat-card>
+  </div>
+</div>

@@ -7,9 +7,9 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { SpinnerVisibilityService } from 'ng-http-loader';
 import { EmployeeTitlesService } from 'src/app/services/employee-titles.service';
-import { OpsEmployeeTitlesTableColumn } from '../utility/table';
+import { CommonEmployeeTitlesTableColumn } from '../utility/table';
 
-export class SelectEmployeeTitleDialogTableColumn extends OpsEmployeeTitlesTableColumn {
+export class SelectEmployeeTitleDialogTableColumn extends CommonEmployeeTitlesTableColumn {
   selected?: boolean;
 }
 
@@ -18,7 +18,7 @@ export class SelectEmployeeTitleDialogTableColumn extends OpsEmployeeTitlesTable
   templateUrl: './select-employee-title-dialog.component.html',
   styleUrls: ['./select-employee-title-dialog.component.scss']
 })
-export class  SelectEmployeeTitleDialogComponent {
+export class SelectEmployeeTitleDialogComponent {
   displayedColumns = ["selected", "name" ]
   dataSource = new MatTableDataSource<SelectEmployeeTitleDialogTableColumn>();
   selected: SelectEmployeeTitleDialogTableColumn;
@@ -85,9 +85,13 @@ export class  SelectEmployeeTitleDialogComponent {
           }
         }));
         this.total = res.data.total;
+        if(this.total === 0) {
+          this.selected = null;
+        }
       });
     }catch(ex) {
-
+      this.selected = null;
+      this.snackBar.open(ex.message, 'close', {panelClass: ['style-error']});
     }
   }
 
@@ -117,14 +121,18 @@ export class  SelectEmployeeTitleDialogComponent {
 
   async doneSelection() {
     try {
-      this.spinner.show();
-      const res = await this.employeeTitlesService.getByCode(this.selected.employeeTitleCode).toPromise();
-      this.spinner.hide();
-      if(res.success) {
-        this.dialogRef.close(res.data);
+      if(this.selected && this.selected.employeeTitleCode) {
+        this.spinner.show();
+        const res = await this.employeeTitlesService.getByCode(this.selected.employeeTitleCode).toPromise();
+        this.spinner.hide();
+        if(res.success) {
+          this.dialogRef.close(res.data);
+        } else {
+          const error = Array.isArray(res.message) ? res.message[0] : res.message;
+          this.snackBar.open(error, 'close', {panelClass: ['style-error']});
+        }
       } else {
-        const error = Array.isArray(res.message) ? res.message[0] : res.message;
-        this.snackBar.open(error, 'close', {panelClass: ['style-error']});
+        this.dialogRef.close(null);
       }
     } catch(ex) {
       const error = Array.isArray(ex.message) ? ex.message[0] : ex.message;

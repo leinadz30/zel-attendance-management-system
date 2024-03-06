@@ -7,9 +7,9 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { SpinnerVisibilityService } from 'ng-http-loader';
 import { SchoolYearLevelsService } from 'src/app/services/school-year-levels.service';
-import { OpsSchoolYearLevelsTableColumn } from '../utility/table';
+import { CommonSchoolYearLevelsTableColumn } from '../utility/table';
 
-export class SelectSchoolYearLevelDialogTableColumn extends OpsSchoolYearLevelsTableColumn {
+export class SelectSchoolYearLevelDialogTableColumn extends CommonSchoolYearLevelsTableColumn {
   selected?: boolean;
 }
 
@@ -85,9 +85,13 @@ export class SelectSchoolYearLevelDialogComponent {
           }
         }));
         this.total = res.data.total;
+        if(this.total === 0) {
+          this.selected = null;
+        }
       });
     }catch(ex) {
-
+      this.selected = null;
+      this.snackBar.open(ex.message, 'close', {panelClass: ['style-error']});
     }
   }
 
@@ -117,14 +121,18 @@ export class SelectSchoolYearLevelDialogComponent {
 
   async doneSelection() {
     try {
-      this.spinner.show();
-      const res = await this.schoolsService.getByCode(this.selected.schoolYearLevelCode).toPromise();
-      this.spinner.hide();
-      if(res.success) {
-        this.dialogRef.close(res.data);
+      if(this.selected && this.selected?.schoolYearLevelCode) {
+        this.spinner.show();
+        const res = await this.schoolsService.getByCode(this.selected.schoolYearLevelCode).toPromise();
+        this.spinner.hide();
+        if(res.success) {
+          this.dialogRef.close(res.data);
+        } else {
+          const error = Array.isArray(res.message) ? res.message[0] : res.message;
+          this.snackBar.open(error, 'close', {panelClass: ['style-error']});
+        }
       } else {
-        const error = Array.isArray(res.message) ? res.message[0] : res.message;
-        this.snackBar.open(error, 'close', {panelClass: ['style-error']});
+        this.dialogRef.close(null);
       }
     } catch(ex) {
       const error = Array.isArray(ex.message) ? ex.message[0] : ex.message;

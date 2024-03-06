@@ -7,9 +7,10 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { SpinnerVisibilityService } from 'ng-http-loader';
 import { SchoolsService } from 'src/app/services/schools.service';
-import { OpsSchoolsTableColumn } from '../utility/table';
+import { CommonSchoolsTableColumn } from '../utility/table';
+import { StorageService } from 'src/app/services/storage.service';
 
-export class SelectSchoolDialogTableColumn extends OpsSchoolsTableColumn {
+export class SelectSchoolDialogTableColumn extends CommonSchoolsTableColumn {
   selected?: boolean;
 }
 
@@ -36,6 +37,7 @@ export class SelectSchoolDialogComponent {
     private schoolsService: SchoolsService,
     private spinner: SpinnerVisibilityService,
     private snackBar: MatSnackBar,
+    private storageService: StorageService,
     public dialogRef: MatDialogRef<SelectSchoolDialogComponent>
     ) {
   }
@@ -87,9 +89,14 @@ export class SelectSchoolDialogComponent {
           }
         }));
         this.total = res.data.total;
+        if(this.total === 0) {
+          this.selected = null;
+          this.storageService.saveOpsRecentSchool(null);
+        }
       });
     }catch(ex) {
-
+      this.selected = null;
+      this.snackBar.open(ex.message, 'close', {panelClass: ['style-error']});
     }
   }
 

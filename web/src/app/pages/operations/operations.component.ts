@@ -5,6 +5,7 @@ import { Router, ResolveEnd, ActivatedRouteSnapshot, RouterEvent, NavigationStar
 import { Spinkit } from 'ng-http-loader';
 import { filter } from 'rxjs';
 import { Employees } from 'src/app/model/employees';
+import { EmployeeUser } from 'src/app/model/employee-user';
 import { Operators } from 'src/app/model/operators';
 import { AppConfigService } from 'src/app/services/app-config.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -25,7 +26,7 @@ export class OpsComponent {
   loading = false;
   drawerDefaultOpened = false;
   details = false;
-  profile: Operators | Employees;
+  profile: Operators | EmployeeUser;
   currentGroup;
   disableGroupAnimation = true;
   constructor(

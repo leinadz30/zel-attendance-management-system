@@ -8,7 +8,7 @@
       <form [formGroup]="logInForm" (ngSubmit)="onSubmit()" class="form">
           <fieldset [disabled]="isProcessing" class="fieldset">
             <h4>Login</h4>
-              <mat-form-field *ngIf="!isOps" appearance="outline">
+              <!-- <mat-form-field *ngIf="mode !== 'OPERATION'" appearance="outline">
                   <mat-label>Schoo Code</mat-label>
                   <input
                   matInput
@@ -17,15 +17,15 @@
                   <mat-error *ngIf="logInForm.controls['schoolCode'].errors !== (null || undefined)">{{
                       (logInForm.controls.schoolCode.errors && logInForm.controls.schoolCode.errors['required'] ? 'Please enter your school code' : '')
                   }}</mat-error>
-              </mat-form-field>
+              </mat-form-field> -->
               <mat-form-field appearance="outline">
-                  <mat-label>Username</mat-label>
+                  <mat-label>{{mode === 'OPERATION' ? 'Enter your Username' : 'Enter your Id or Username'}}</mat-label>
                   <input
                   matInput
-                  placeholder="Username"
+                  placeholder="{{mode === 'OPERATION' ? 'Enter your Username' : 'Enter your Id or Username'}}"
                   formControlName="userName">
                   <mat-error *ngIf="logInForm.controls['userName'].errors !== (null || undefined)">{{
-                      (logInForm.controls.userName.errors && logInForm.controls.userName.errors['required'] ? 'Please enter your username' : '')
+                      (logInForm.controls.userName.errors && logInForm.controls.userName.errors['required'] ? (mode === 'OPERATION' ? 'Please enter your Username' : 'Please enter your Id or Username') : '')
                   }}</mat-error>
               </mat-form-field>
               <mat-form-field appearance="outline">
@@ -42,7 +42,7 @@
                   style="cursor: pointer;"
                   matSuffix>{{ password.type === 'password' ? 'visibility' : 'visibility_off' }}</mat-icon>
                   <mat-error *ngIf="logInForm.controls['password'].errors !== (null || undefined)">{{
-                      (logInForm.controls.password.errors && logInForm.controls.password.errors['required'] ? 'Please enter your password' : '')
+                      (logInForm.controls.password.errors && logInForm.controls.password.errors['required'] ? 'Please enter your Password' : '')
                   }}</mat-error>
               </mat-form-field>
               <div class="forgot-password">

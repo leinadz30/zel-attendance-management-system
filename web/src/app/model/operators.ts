@@ -5,6 +5,5 @@ export class Operators {
   operatorCode: string;
   name: string;
   active: boolean;
-  accessGranted: boolean;
   user: Users;
 }

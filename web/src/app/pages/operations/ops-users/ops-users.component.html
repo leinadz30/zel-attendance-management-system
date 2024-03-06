@@ -1,40 +1,8 @@
 <mat-toolbar color="#fff" class="mat-elevation-z4">
-  <button
-    *ngIf="viewRequest"
-    style="margin-right: 10px!important;"
-    mat-icon-button
-    matTooltip="Back"
-    routerLink="/ops/users">
-    <mat-icon>keyboard_arrow_left</mat-icon>
-  </button>
-  <span id="title">{{!viewRequest ? 'Operator Users' : 'Requesting access'}}</span>
-  <span class="toolbar-item-spacer"></span>
-  <div class="toolbar-action">
-
-    <button
-      matBadge="{{requestingAccess}}"
-      *ngIf="!viewRequest && requestingAccess > 0; else noBadge"
-      matBadgeColor="danger"
-      mat-flat-button
-      matTooltip="View Requesting Access"
-      routerLink="/ops/users/requesting-access">
-      View all request
-    </button>
-    <ng-template #noBadge>
-      <button
-        matBadgeColor="danger"
-        *ngIf="!viewRequest"
-        mat-flat-button
-        matTooltip="View Requesting Access"
-        routerLink="/ops/users/requesting-access">
-        View all request
-      </button>
-    </ng-template>
-
-  </div>
+  <span id="title">Operator Users</span>
 </mat-toolbar>
 <div class="component-floating-actions vertical-actions">
-<button mat-fab color="primary" aria-label="New user" *ngIf="!viewRequest" matTooltip="New operator" (click)="newOperatorDialog()">
+<button mat-fab color="primary" aria-label="New user" matTooltip="New operator" (click)="newOperatorDialog()">
   <mat-icon>add</mat-icon>
 </button>
 </div>

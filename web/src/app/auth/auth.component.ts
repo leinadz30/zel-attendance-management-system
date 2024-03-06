@@ -7,8 +7,9 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent {
-  ops = false;
+  mode;
+CONST_USER_MODE: any;
   constructor(private route: ActivatedRoute) {
-    this.ops = this.route.snapshot.data && route.snapshot.data["ops"];
+    this.mode = this.route.snapshot.data && route.snapshot.data["mode"];
   }
 }
