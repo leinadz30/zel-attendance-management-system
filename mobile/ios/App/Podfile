@@ -27,11 +27,16 @@ def capacitor_pods
   pod 'CordovaPluginsStatic', :path => '../capacitor-cordova-ios-plugins'
 end
 
-target 'App' do
+target 'ZamsConnect' do
   capacitor_pods
   # Add your Pods here
+  pod 'Firebase/Messaging'
 end
 
 post_install do |installer|
   assertDeploymentTarget(installer)
+end
+
+target 'OneSignalNotificationServiceExtension' do
+  pod 'OneSignalXCFramework', '>= 3.0.0', '< 4.0'
 end
