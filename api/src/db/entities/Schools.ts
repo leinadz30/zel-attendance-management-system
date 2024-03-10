@@ -7,10 +7,11 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Announcements } from "./Announcements";
 import { Courses } from "./Courses";
 import { Departments } from "./Departments";
-import { EmployeeRoles } from "./EmployeeRoles";
 import { EmployeeTitles } from "./EmployeeTitles";
+import { EmployeeUserAccess } from "./EmployeeUserAccess";
 import { Employees } from "./Employees";
 import { LinkStudentRequest } from "./LinkStudentRequest";
 import { Machines } from "./Machines";
@@ -102,17 +103,23 @@ export class Schools {
   @Column("character varying", { name: "OrgSchoolCode", default: () => "''" })
   orgSchoolCode: string;
 
+  @OneToMany(() => Announcements, (announcements) => announcements.school)
+  announcements: Announcements[];
+
   @OneToMany(() => Courses, (courses) => courses.school)
   courses: Courses[];
 
   @OneToMany(() => Departments, (departments) => departments.school)
   departments: Departments[];
 
-  @OneToMany(() => EmployeeRoles, (employeeRoles) => employeeRoles.school)
-  employeeRoles: EmployeeRoles[];
-
   @OneToMany(() => EmployeeTitles, (employeeTitles) => employeeTitles.school)
   employeeTitles: EmployeeTitles[];
+
+  @OneToMany(
+    () => EmployeeUserAccess,
+    (employeeUserAccess) => employeeUserAccess.school
+  )
+  employeeUserAccesses: EmployeeUserAccess[];
 
   @OneToMany(() => Employees, (employees) => employees.school)
   employees: Employees[];

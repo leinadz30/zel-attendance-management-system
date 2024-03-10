@@ -16,6 +16,10 @@ import {
 export class DefaultTapLogDto {
   @ApiProperty()
   @IsNotEmpty()
+  orgSchoolCode: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
   sender: string;
 
   @ApiProperty()

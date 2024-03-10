@@ -20,3 +20,22 @@ export class CreateEmployeeTitleDto extends DefaultEmployeeTitleDto {
   })
   schoolId: string;
 }
+
+export class BatchCreateEmployeeTitleDto extends DefaultEmployeeTitleDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumberString()
+  @Transform(({ obj, key }) => {
+    return obj[key]?.toString();
+  })
+  createdByUserId: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  orgSchoolCode: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  refId: string;
+}
+

@@ -15,8 +15,12 @@ import { EmployeeTitles } from "./EmployeeTitles";
 import { Schools } from "./Schools";
 import { Sections } from "./Sections";
 
-@Index("u_employees_number", ["active", "mobileNumber"], { unique: true })
-@Index("u_employees_card", ["active", "cardNumber"], { unique: true })
+@Index("u_employees_orgemployeeid", ["active", "orgEmployeeId", "schoolId"], {
+  unique: true,
+})
+@Index("u_employees_number", ["active", "mobileNumber", "schoolId"], {
+  unique: true,
+})
 @Index("Employees_pkey", ["employeeId"], { unique: true })
 @Entity("Employees", { schema: "dbo" })
 export class Employees {
@@ -26,14 +30,8 @@ export class Employees {
   @Column("character varying", { name: "EmployeeCode", nullable: true })
   employeeCode: string | null;
 
-  @Column("character varying", { name: "FirstName" })
-  firstName: string;
-
-  @Column("character varying", { name: "MiddleInitial", nullable: true })
-  middleInitial: string | null;
-
-  @Column("character varying", { name: "LastName" })
-  lastName: string;
+  @Column("character varying", { name: "FullName" })
+  fullName: string;
 
   @Column("timestamp with time zone", {
     name: "CreatedDate",
@@ -44,20 +42,31 @@ export class Employees {
   @Column("timestamp with time zone", { name: "UpdatedDate", nullable: true })
   updatedDate: Date | null;
 
+  @Column("bigint", { name: "SchoolId" })
+  schoolId: string;
+
   @Column("boolean", { name: "Active", default: () => "true" })
   active: boolean;
 
   @Column("boolean", { name: "AccessGranted", default: () => "false" })
   accessGranted: boolean;
 
-  @Column("character varying", { name: "MobileNumber" })
-  mobileNumber: string;
+  @Column("character varying", {
+    name: "MobileNumber",
+    nullable: true,
+    default: () => "0",
+  })
+  mobileNumber: string | null;
 
-  @Column("character varying", { name: "CardNumber" })
-  cardNumber: string;
+  @Column("character varying", { name: "CardNumber", nullable: true })
+  cardNumber: string | null;
 
-  @Column("character varying", { name: "FullName", default: () => "''" })
-  fullName: string;
+  @Column("character varying", {
+    name: "OrgEmployeeId",
+    nullable: true,
+    default: () => "''",
+  })
+  orgEmployeeId: string | null;
 
   @OneToOne(() => EmployeeUser, (employeeUser) => employeeUser.employee)
   employeeUser: EmployeeUser;

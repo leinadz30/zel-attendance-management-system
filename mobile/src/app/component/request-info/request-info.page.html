@@ -1,0 +1,46 @@
+
+<ion-header no-border no-shadow>
+  <ion-toolbar mode="md">
+    <ion-buttons slot="start">
+      <ion-button (click)="close()" >
+        <ion-icon name="arrow-back-sharp" color="primary" style="font-size: 2em!important;"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center"></ion-title>
+    <div slot="end" style="width: 48px"></div>
+  </ion-toolbar>
+</ion-header>
+<ion-content mode="md">
+  <div class="ion-padding">
+    <h2>{{request?.dateRequested | date: 'MMM dd, yyyy'}}</h2>
+    <ion-item lines="none" detail="false">
+      <ion-icon aria-hidden="true" color="primary" name="checkmark-circle" slot="start" *ngIf="request?.status === 'APPROVED'; else currentNotApproved"></ion-icon>
+      <ng-template #currentNotApproved>
+        <ion-icon aria-hidden="true" color="warning" name="time" slot="start" *ngIf="request?.status === 'PENDING'; else currentClosed"></ion-icon>
+      </ng-template>
+      <ng-template #currentClosed>
+        <ion-icon aria-hidden="true" color="danger" name="close-circle" slot="start"></ion-icon>
+      </ng-template>
+      <ion-label>
+        <h2 style="opacity: 0.7;"><strong>Status</strong></h2>
+        <h1>{{request?.status}}</h1>
+      </ion-label>
+    </ion-item>
+    <ion-item [button]="request?.status === 'APPROVED'" lines="none" detail="false">
+      <ion-icon aria-hidden="true" color="primary" name="person" slot="start"></ion-icon>
+      <ion-label>
+        <h2 style="opacity: 0.7;"><strong>Student</strong></h2>
+        <h2><strong>123445</strong></h2>
+        <h1>{{request?.student?.fullName}}</h1>
+      </ion-label>
+    </ion-item>
+    <ion-item [button]="request?.status === 'APPROVED'" lines="none" detail="false">
+      <ion-icon aria-hidden="true" color="primary" name="business" slot="start"></ion-icon>
+      <ion-label>
+        <h2 style="opacity: 0.7;"><strong>School</strong></h2>
+        <h1>{{request?.school?.schoolName}}</h1>
+        <h2>{{request?.school?.schoolAddress}}</h2>
+      </ion-label>
+    </ion-item>
+  </div>
+</ion-content>

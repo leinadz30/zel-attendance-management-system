@@ -4,7 +4,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import * as moment from 'moment';
-import { APP_DATE_FORMATS } from 'src/app/constant/date';
+import { APP_DATE_FORMATS } from 'src/app/shared/constant/date';
 import { ColumnDefinition } from 'src/app/shared/utility/table';
 
 @Component({

@@ -1,0 +1,20 @@
+
+<ion-tabs mode="md" (ionTabsWillChange)="onTabsWillChange($event)">
+  <ion-tab-bar mode="md" slot="bottom">
+    <ion-tab-button tab="home" mode="md">
+      <ion-icon name="grid{{ active === 'home' ? '' : '-outline' }}"></ion-icon>
+      <ion-label>Home</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="my-students" mode="md">
+      <ion-icon name="people{{ active === 'my-students' ? '' : '-outline' }}"></ion-icon>
+      <ion-label>Students</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="notification" mode="md">
+      <ion-icon name="notifications{{ active === 'notification' ? '' : '-outline' }}"></ion-icon>
+      <ion-label>Notification</ion-label>
+      <ion-badge *ngIf="totalUnreadNotification > 0">{{totalUnreadNotification}}</ion-badge>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

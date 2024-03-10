@@ -20,3 +20,21 @@ export class CreateSchoolYearLevelDto extends DefaultSchoolYearLevelDto {
   })
   schoolId: string;
 }
+
+export class BatchCreateSchoolYearLevelDto extends DefaultSchoolYearLevelDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumberString()
+  @Transform(({ obj, key }) => {
+    return obj[key]?.toString();
+  })
+  createdByUserId: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  orgSchoolCode: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  refId: string;
+}

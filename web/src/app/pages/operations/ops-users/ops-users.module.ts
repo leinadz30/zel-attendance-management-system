@@ -6,9 +6,9 @@ import { Routes, RouterModule } from '@angular/router';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { MaterialModule } from 'src/app/shared/material/material.module';
 import { DataTableModule } from 'src/app/shared/data-table/data-table.module';
-import { OpsChangePasswordComponent } from './change-password/ops-change-password.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { OpsUserFormComponent } from './ops-user-form/ops-user-form.component';
+import { OpsChangePasswordComponent } from './ops-change-password/ops-change-password.component';
 
 
 export const routes: Routes = [
@@ -17,13 +17,7 @@ export const routes: Routes = [
     component: OpsUsersComponent,
     pathMatch: 'full',
     data: { title: "Operator Users" }
-  },
-  {
-    path: 'requesting-access',
-    component: OpsUsersComponent,
-    pathMatch: 'full',
-    data: { title: "Requesting access", viewRequest: true }
-  },
+  }
 ];
 
 @NgModule({

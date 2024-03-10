@@ -17,11 +17,7 @@ import { Departments } from "./Departments";
 import { Users } from "./Users";
 import { Schools } from "./Schools";
 import { SchoolYearLevels } from "./SchoolYearLevels";
-import { TapLogs } from "./TapLogs";
 
-@Index("u_students_email", ["active", "email"], { unique: true })
-@Index("u_students_number", ["active", "mobileNumber"], { unique: true })
-@Index("u_students_card", ["active", "cardNumber"], { unique: true })
 @Index("Students_pkey", ["studentId"], { unique: true })
 @Entity("Students", { schema: "dbo" })
 export class Students {
@@ -40,11 +36,11 @@ export class Students {
   @Column("character varying", { name: "LastName" })
   lastName: string;
 
-  @Column("character varying", { name: "CardNumber" })
-  cardNumber: string;
+  @Column("character varying", { name: "CardNumber", nullable: true })
+  cardNumber: string | null;
 
-  @Column("character varying", { name: "MobileNumber" })
-  mobileNumber: string;
+  @Column("character varying", { name: "MobileNumber", nullable: true })
+  mobileNumber: string | null;
 
   @Column("character varying", { name: "Email", nullable: true })
   email: string | null;
@@ -74,8 +70,12 @@ export class Students {
   @Column("character varying", { name: "FullName", default: () => "''" })
   fullName: string;
 
-  @Column("character varying", { name: "OrgStudentId", default: () => "''" })
-  orgStudentId: string;
+  @Column("character varying", {
+    name: "OrgStudentId",
+    nullable: true,
+    default: () => "''",
+  })
+  orgStudentId: string | null;
 
   @OneToMany(
     () => LinkStudentRequest,
@@ -119,7 +119,4 @@ export class Students {
   @ManyToOne(() => Users, (users) => users.students2)
   @JoinColumn([{ name: "UpdatedByUserId", referencedColumnName: "userId" }])
   updatedByUser: Users;
-
-  @OneToMany(() => TapLogs, (tapLogs) => tapLogs.student)
-  tapLogs: TapLogs[];
 }

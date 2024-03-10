@@ -6,11 +6,12 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Announcements } from "./Announcements";
 import { Courses } from "./Courses";
 import { Departments } from "./Departments";
-import { EmployeeRoles } from "./EmployeeRoles";
 import { EmployeeTitles } from "./EmployeeTitles";
 import { EmployeeUser } from "./EmployeeUser";
+import { EmployeeUserAccess } from "./EmployeeUserAccess";
 import { Employees } from "./Employees";
 import { LinkStudentRequest } from "./LinkStudentRequest";
 import { Machines } from "./Machines";
@@ -58,6 +59,18 @@ export class Users {
   @Column("boolean", { name: "Active", default: () => "true" })
   active: boolean;
 
+  @OneToMany(
+    () => Announcements,
+    (announcements) => announcements.createdByUser
+  )
+  announcements: Announcements[];
+
+  @OneToMany(
+    () => Announcements,
+    (announcements) => announcements.updatedByUser
+  )
+  announcements2: Announcements[];
+
   @OneToMany(() => Courses, (courses) => courses.createdByUser)
   courses: Courses[];
 
@@ -69,18 +82,6 @@ export class Users {
 
   @OneToMany(() => Departments, (departments) => departments.updatedByUser)
   departments2: Departments[];
-
-  @OneToMany(
-    () => EmployeeRoles,
-    (employeeRoles) => employeeRoles.createdByUser
-  )
-  employeeRoles: EmployeeRoles[];
-
-  @OneToMany(
-    () => EmployeeRoles,
-    (employeeRoles) => employeeRoles.updatedByUser
-  )
-  employeeRoles2: EmployeeRoles[];
 
   @OneToMany(
     () => EmployeeTitles,
@@ -96,6 +97,18 @@ export class Users {
 
   @OneToMany(() => EmployeeUser, (employeeUser) => employeeUser.user)
   employeeUsers: EmployeeUser[];
+
+  @OneToMany(
+    () => EmployeeUserAccess,
+    (employeeUserAccess) => employeeUserAccess.createdByUser
+  )
+  employeeUserAccesses: EmployeeUserAccess[];
+
+  @OneToMany(
+    () => EmployeeUserAccess,
+    (employeeUserAccess) => employeeUserAccess.updatedByUser
+  )
+  employeeUserAccesses2: EmployeeUserAccess[];
 
   @OneToMany(() => Employees, (employees) => employees.createdByUser)
   employees: Employees[];

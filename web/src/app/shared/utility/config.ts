@@ -14,6 +14,7 @@ export interface AppConfig {
     };
     tableColumns: {
       employees: ColumnDefinition[];
+      employeeUser: ColumnDefinition[];
       parents: ColumnDefinition[];
       students: ColumnDefinition[];
       operators: ColumnDefinition[];
@@ -22,6 +23,7 @@ export interface AppConfig {
       schoolYearLevels: ColumnDefinition[];
       sections: ColumnDefinition[];
       employeeTitles: ColumnDefinition[];
+      employeeUserAccess: ColumnDefinition[];
       courses: ColumnDefinition[];
       strands: ColumnDefinition[];
       linkStudentRequest: ColumnDefinition[];
@@ -31,7 +33,7 @@ export interface AppConfig {
       sessionTimeout: string;
     };
     lookup: {
-      access: {
+      accessPages: {
         page: string;
         view: boolean;
         modify: boolean;
@@ -88,6 +90,17 @@ export interface AppConfig {
         update: string;
         delete: string;
       },
+      employeeUser: {
+        getByAdvanceSearch: string;
+        getByCode: string;
+        create: string;
+        createFromEmployee: string;
+        update: string;
+        updatePassword: string;
+        updateProfile: string;
+        delete: string;
+        approveAccessRequest: string;
+      },
       students: {
         getByAdvanceSearch: string;
         getByCode: string;
@@ -97,6 +110,13 @@ export interface AppConfig {
         delete: string;
       },
       employeeTitles: {
+        getByAdvanceSearch: string;
+        getByCode: string;
+        create: string;
+        update: string;
+        delete: string;
+      },
+      employeeUserAccess: {
         getByAdvanceSearch: string;
         getByCode: string;
         create: string;

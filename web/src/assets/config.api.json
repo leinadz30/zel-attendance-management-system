@@ -1,0 +1,122 @@
+{
+  "apiEndPoints": {
+    "auth": {
+      "loginOperator": "/auth/login/operator",
+      "loginEmployeeUser": "/auth/login/employeeUser"
+    },
+    "operators": {
+      "getByAdvanceSearch": "/operators/page/",
+      "getByCode": "/operators/",
+      "create": "/operators/",
+      "update": "/operators/",
+      "resetPassword": "/operators/resetPassword/",
+      "approveAccessRequest": "/operators/approveAccessRequest/",
+      "delete": "/operators/"
+    },
+    "schools": {
+      "getByAdvanceSearch": "/schools/page/",
+      "getByCode": "/schools/",
+      "getByOrgCode": "/schools/getByOrgCode/",
+      "create": "/schools/",
+      "update": "/schools/",
+      "delete": "/schools/"
+    },
+    "departments": {
+      "getByAdvanceSearch": "/departments/page/",
+      "getByCode": "/departments/",
+      "create": "/departments/",
+      "update": "/departments/",
+      "delete": "/departments/"
+    },
+    "schoolYearLevels": {
+      "getByAdvanceSearch": "/schoolYearLevels/page/",
+      "getByCode": "/schoolYearLevels/",
+      "create": "/schoolYearLevels/",
+      "update": "/schoolYearLevels/",
+      "delete": "/schoolYearLevels/"
+    },
+    "sections": {
+      "getByAdvanceSearch": "/sections/page/",
+      "getByCode": "/sections/",
+      "create": "/sections/",
+      "update": "/sections/",
+      "delete": "/sections/"
+    },
+    "employees": {
+      "getByAdvanceSearch": "/employees/page/",
+      "getByCode": "/employees/",
+      "create": "/employees/",
+      "update": "/employees/",
+      "delete": "/employees/"
+    },
+    "employeeUser": {
+      "getByAdvanceSearch": "/employee-user/page/",
+      "getByCode": "/employee-user/",
+      "create": "/employee-user/",
+      "createFromEmployee": "/employee-user/createFromEmployee/",
+      "update": "/employee-user/",
+      "updatePassword": "/employee-user/updatePassword/",
+      "updateProfile": "/employee-user/updateProfile/",
+      "delete": "/employee-user/",
+      "approveAccessRequest": "/employee-user/approveAccessRequest/"
+    },
+    "employeeTitles": {
+      "getByAdvanceSearch": "/employeeTitles/page/",
+      "getByCode": "/employeeTitles/",
+      "create": "/employeeTitles/",
+      "update": "/employeeTitles/",
+      "delete": "/employeeTitles/"
+    },
+    "employeeUserAccess": {
+      "getByAdvanceSearch": "/employeeUserAccess/page/",
+      "getByCode": "/employeeUserAccess/",
+      "create": "/employeeUserAccess/",
+      "update": "/employeeUserAccess/",
+      "delete": "/employeeUserAccess/"
+    },
+    "students": {
+      "getByAdvanceSearch": "/students/page/",
+      "getByCode": "/students/",
+      "getByOrgStudentId": "/students/getByOrgStudentId/",
+      "create": "/students/",
+      "update": "/students/",
+      "delete": "/students/"
+    },
+    "courses": {
+      "getByAdvanceSearch": "/courses/page/",
+      "getByCode": "/courses/",
+      "create": "/courses/",
+      "update": "/courses/",
+      "delete": "/courses/"
+    },
+    "strands": {
+      "getByAdvanceSearch": "/strands/page/",
+      "getByCode": "/strands/",
+      "create": "/strands/",
+      "update": "/strands/",
+      "delete": "/strands/"
+    },
+    "parents": {
+      "getByAdvanceSearch": "/parents/page/",
+      "getByCode": "/parents/",
+      "create": "/parents/",
+      "update": "/parents/",
+      "delete": "/parents/"
+    },
+    "linkStudentRequest": {
+      "getByAdvanceSearch": "/link-student-request/page/",
+      "getByCode": "/link-student-request/",
+      "create": "/link-student-request/",
+      "approve": "/link-student-request/approve/",
+      "reject": "/link-student-request/reject/",
+      "cancel": "/link-student-request/cancel/"
+    },
+    "machines": {
+      "getByAdvanceSearch": "/machines/page/",
+      "getByCode": "/machines/",
+      "create": "/machines/",
+      "update": "/machines/",
+      "delete": "/machines/"
+    }
+  }
+}

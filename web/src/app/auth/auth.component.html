@@ -1,6 +1,6 @@
 <mat-toolbar color="primary" class="mat-elevation-z5" >
     <img id="banner" src="../assets/img/banner.png">
-    <span id="title" [routerLink]="ops ? '/ops' : '/'">ZAMS</span>
+    <span id="title" [routerLink]="mode === 'OPERATION' ? '/ops' : '/'">ZAMS</span>
     <span class="toolbar-item-spacer"></span>
 </mat-toolbar>
 <div class="page-wrapper">

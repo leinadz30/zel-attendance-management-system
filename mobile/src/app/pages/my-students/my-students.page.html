@@ -1,0 +1,79 @@
+<ion-header no-border no-shadow>
+  <ion-toolbar mode="md">
+    <div slot="start" style="width: 48px"></div>
+    <ion-title class="ion-text-center"></ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="onShowMyRequests()">
+        <ion-icon name="document" style="font-size: 2rem!important;" color="primary"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content mode="md">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh()" class="refresher-custom">
+    <ion-refresher-content >
+    </ion-refresher-content>
+  </ion-refresher>
+  <div class="content">
+      <div class="title">
+        <h1>My Students</h1>
+      </div>
+    <div class="students ion-padding" >
+      <ng-container *ngIf="!isLoading; else loadingTemplate">
+        <ng-container *ngIf="myStudents.length > 0; else noStudentTemplate">
+          <div class="row" *ngFor="let item of myStudents">
+            <ion-card mode="ios" class="student-card">
+              <ion-card-content>
+                <ion-item button lines="none" (click)="onShowStudentDetails(item)">
+                  <ion-avatar slot="start" style="width: 70px;height: 70px;">
+                    <img alt="{{item.fullName}}'s profile" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+                  </ion-avatar>
+                  <ion-label>
+                    <h1><strong>{{item.fullName}}</strong></h1>
+                    <h2 class="desc">{{
+                    item.schoolYearLevel.educationalStage === 'COLLEGE' ?
+                     item?.studentCourse?.course?.name :
+                     item.schoolYearLevel.educationalStage === 'SENIOR' ?
+                    item?.studentStrand?.strand?.name : item?.schoolYearLevel?.name
+                    }}</h2>
+                  </ion-label>
+                </ion-item>
+              </ion-card-content>
+            </ion-card>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="onShowNewRequest()">
+      <ion-icon name="person-add-sharp"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ng-template #noStudentTemplate>
+    <div class="no-result">
+      <ion-icon name="people-outline"></ion-icon>
+      <h1>No Student to show</h1>
+    </div>
+  </ng-template>
+
+  <ng-template #loadingTemplate>
+    <div class="row">
+      <ion-card mode="ios" class="student-card">
+        <ion-card-content>
+          <ion-item [button]="false" lines="none" [detail]="false" >
+            <ion-avatar slot="start" style="width: 70px;height: 70px;">
+              <img alt="temp profile" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+            </ion-avatar>
+            <ion-label>
+              <h1><strong><ion-skeleton-text style="height: 50px;" [animated]="true"></ion-skeleton-text></strong></h1>
+            </ion-label>
+          </ion-item>
+          <h2><ion-skeleton-text style="height: 30px;" [animated]="true"></ion-skeleton-text></h2>
+          <h2><ion-skeleton-text style="height: 30px;" [animated]="true"></ion-skeleton-text></h2>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </ng-template>
+</ion-content>

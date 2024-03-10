@@ -299,51 +299,25 @@ export class LinkStudentRequestService {
           "Request to Link Student " +
           linkStudentRequest.student?.fullName +
           " was approved!";
-
-        // const userFireBase = await entityManager.find(UserFirebaseToken, {
-        //   where: {
-        //     user: {
-        //       userId: linkStudentRequest?.requestedByParent?.user?.userId,
-        //     },
-        //   },
-        // });
-        // userFireBase.forEach(async (x) => {
-        //   if (x.firebaseToken && x.firebaseToken !== "") {
-        //     const res = await this.firebaseSendToDevice(
-        //       x.firebaseToken,
-        //       notifTitle,
-        //       notifDesc
-        //     );
-        //     console.log(res);
-        //   }
-        // });
-
-        const subscriptions = await this.linkStudentRequestRepo.manager.find(
-          UserOneSignalSubscription,
-          {
-            where: {
-              user: {
-                userId: linkStudentRequest?.requestedByParent?.user?.userId,
-              },
-            },
-          }
-        );
-        await this.oneSignalNotificationService.sendToSubscriber(
-          subscriptions.map((x) => x.subscriptionId),
-          NOTIF_TYPE.LINK_REQUEST.toString(),
-          linkStudentRequest.linkStudentRequestCode,
-          notifTitle,
-          notifDesc
-        );
-        delete linkStudentRequest.requestedByParent.user.password;
-        delete linkStudentRequest.updatedByUser.password;
-        await this.logNotification(
+        const notificationIds = await this.logNotification(
           linkStudentRequest.requestedByParent.user,
           linkStudentRequest.linkStudentRequestCode,
           entityManager,
           notifTitle,
           notifDesc
         );
+        const pushResult =
+          await this.oneSignalNotificationService.sendToExternalUser(
+            linkStudentRequest?.requestedByParent?.user?.userName,
+            NOTIF_TYPE.LINK_REQUEST.toString() as any,
+            linkStudentRequest.linkStudentRequestCode,
+            notificationIds,
+            notifTitle,
+            notifDesc
+          );
+        console.log(pushResult);
+        delete linkStudentRequest.requestedByParent.user.password;
+        delete linkStudentRequest.updatedByUser.password;
         return linkStudentRequest;
       }
     );
@@ -418,49 +392,25 @@ export class LinkStudentRequestService {
           "Request to Link Student " +
           linkStudentRequest.student?.fullName +
           " was rejected!";
-        // const userFireBase = await entityManager.find(UserFirebaseToken, {
-        //   where: {
-        //     user: {
-        //       userId: linkStudentRequest?.requestedByParent?.user?.userId,
-        //     },
-        //   },
-        // });
-        // userFireBase.forEach(async (x) => {
-        //   if (x.firebaseToken && x.firebaseToken !== "") {
-        //     const res = await this.firebaseSendToDevice(
-        //       x.firebaseToken,
-        //       notifTitle,
-        //       notifDesc
-        //     );
-        //     console.log(res);
-        //   }
-        // });
-        const subscriptions = await this.linkStudentRequestRepo.manager.find(
-          UserOneSignalSubscription,
-          {
-            where: {
-              user: {
-                userId: linkStudentRequest?.requestedByParent?.user?.userId,
-              },
-            },
-          }
-        );
-        await this.oneSignalNotificationService.sendToSubscriber(
-          subscriptions,
-          NOTIF_TYPE.LINK_REQUEST.toString(),
-          linkStudentRequest.linkStudentRequestCode,
-          notifTitle,
-          notifDesc
-        );
-        delete linkStudentRequest.requestedByParent.user.password;
-        delete linkStudentRequest.updatedByUser.password;
-        await this.logNotification(
+        const notificationIds = await this.logNotification(
           linkStudentRequest.requestedByParent.user,
           linkStudentRequest.linkStudentRequestCode,
           entityManager,
           notifTitle,
           notifDesc
         );
+        const pushResult =
+          await this.oneSignalNotificationService.sendToExternalUser(
+            linkStudentRequest?.requestedByParent?.user?.userName,
+            NOTIF_TYPE.LINK_REQUEST.toString() as any,
+            linkStudentRequest.linkStudentRequestCode,
+            notificationIds,
+            notifTitle,
+            notifDesc
+          );
+        console.log(pushResult);
+        delete linkStudentRequest.requestedByParent.user.password;
+        delete linkStudentRequest.updatedByUser.password;
         return linkStudentRequest;
       }
     );
@@ -549,8 +499,17 @@ export class LinkStudentRequestService {
       isRead: false,
       forUser: user,
     };
-    await entityManager.save(Notifications, notifcation);
-    await this.pusherService.sendNotif([user.userId], title, description);
+    const res: any = await entityManager.save(Notifications, notifcation);
+    const notifcationIds = [res.notificationId];
+    await this.pusherService.sendNotif(
+      [user.userId],
+      notifcationIds,
+      referenceId,
+      NOTIF_TYPE.LINK_REQUEST.toString() as any,
+      title,
+      description
+    );
+    return notifcationIds;
   }
 
   // async firebaseSendToDevice(token, title, description) {

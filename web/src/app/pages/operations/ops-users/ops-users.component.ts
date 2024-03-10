@@ -9,9 +9,10 @@ import { StorageService } from 'src/app/services/storage.service';
 import { OpsUsersTableColumn } from 'src/app/shared/utility/table';
 import { convertNotationToObject } from 'src/app/shared/utility/utility';
 import { OpsUserFormComponent } from './ops-user-form/ops-user-form.component';
-import { OpsChangePasswordComponent } from './change-password/ops-change-password.component';
 import { AlertDialogComponent } from 'src/app/shared/alert-dialog/alert-dialog.component';
 import { AlertDialogModel } from 'src/app/shared/alert-dialog/alert-dialog-model';
+import { OpsChangePasswordComponent } from './ops-change-password/ops-change-password.component';
+import { SpinnerVisibilityService } from 'ng-http-loader';
 
 @Component({
   selector: 'app-ops-users',
@@ -22,7 +23,7 @@ import { AlertDialogModel } from 'src/app/shared/alert-dialog/alert-dialog-model
   }
 })
 export class OpsUsersComponent {
-  currentOperatorCode:string;
+  currentUserId:string;
   error:string;
   dataSource = new MatTableDataSource<OpsUsersTableColumn>();
   columnDefs = [];
@@ -40,10 +41,8 @@ export class OpsUsersComponent {
     name?: string;
     type: string;
   }[] = [];
-
-  viewRequest = false;
-  requestingAccess = 0;
   constructor(
+    private spinner: SpinnerVisibilityService,
     private operatorsService: OperatorsService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
@@ -51,9 +50,10 @@ export class OpsUsersComponent {
     private storageService: StorageService,
     private route: ActivatedRoute,
     public router: Router) {
+      const currentProfile = this.storageService.getLoginProfile();
+      this.currentUserId = currentProfile?.user?.userId;
       this.dataSource = new MatTableDataSource([]);
       if(this.route.snapshot.data) {
-        this.viewRequest = this.route.snapshot.data["viewRequest"];
       }
       this.appConfig.config.tableColumns.operators.forEach(x=> {
         if(x.name === "menu") {
@@ -67,12 +67,6 @@ export class OpsUsersComponent {
             "name": "change-password",
             "label": "Chagne Password"
           }];
-          if(this.viewRequest) {
-            menu.push({
-              "name": "approval",
-              "label": "Approve"
-            })
-          };
           x["controlsMenu"] = menu;
         }
         this.columnDefs.push(x)
@@ -80,8 +74,6 @@ export class OpsUsersComponent {
     }
 
   ngOnInit(): void {
-    const profile = this.storageService.getLoginProfile();
-    this.currentOperatorCode = profile["operatorCode"];
   }
 
   ngAfterViewInit() {
@@ -114,17 +106,17 @@ export class OpsUsersComponent {
 
   getUsersPaginated(){
     try{
-      let findIndex = this.filter.findIndex(x=>x.apiNotation === "accessGranted");
+      let findIndex = this.filter.findIndex(x=>x.apiNotation === "active");
       if(findIndex >= 0) {
         this.filter[findIndex] = {
-          apiNotation: "accessGranted",
-          filter: this.viewRequest ? "no" : "yes",
+          apiNotation: "active",
+          filter: "yes",
           type: "option-yes-no"
         };
       } else {
         this.filter.push({
-          apiNotation: "accessGranted",
-          filter: this.viewRequest ? "no" : "yes",
+          apiNotation: "active",
+          filter: "yes",
           type: "option-yes-no"
         });
       }
@@ -132,17 +124,18 @@ export class OpsUsersComponent {
       if(findIndex >= 0) {
         this.filter[findIndex] = {
           apiNotation: "operatorCode",
-          filter: this.currentOperatorCode,
+          filter: this.currentUserId,
           type: "not"
         };
       } else {
         this.filter.push({
           apiNotation: "operatorCode",
-          filter: this.currentOperatorCode,
+          filter: this.currentUserId,
           type: "not"
         });
       }
       this.isLoading = true;
+      this.spinner.show();
       this.operatorsService.getByAdvanceSearch({
         order: this.order,
         columnDef: this.filter,
@@ -155,28 +148,31 @@ export class OpsUsersComponent {
               operatorCode: d.operatorCode,
               name: d.name,
               userName: d.user.userName,
-              accessGranted: d.accessGranted,
             } as OpsUsersTableColumn
           });
           this.total = res.data.total;
-          this.requestingAccess = res.data.requestingAccess;
           this.dataSource = new MatTableDataSource(data);
           this.isLoading = false;
+          this.spinner.hide();
         }
         else{
           this.error = Array.isArray(res.message) ? res.message[0] : res.message;
           this.snackBar.open(this.error, 'close', {panelClass: ['style-error']});
           this.isLoading = false;
+          this.spinner.hide();
         }
       }, async (err) => {
         this.error = Array.isArray(err.message) ? err.message[0] : err.message;
         this.snackBar.open(this.error, 'close', {panelClass: ['style-error']});
         this.isLoading = false;
+        this.spinner.hide();
       });
     }
     catch(e){
       this.error = Array.isArray(e.message) ? e.message[0] : e.message;
       this.snackBar.open(this.error, 'close', {panelClass: ['style-error']});
+      this.isLoading = false;
+      this.spinner.hide();
     }
 
   }
@@ -221,7 +217,7 @@ export class OpsUsersComponent {
   }
 
   onDelete(operatorCode: string) {
-    if(this.currentOperatorCode === operatorCode) {
+    if(this.currentUserId === operatorCode) {
       this.snackBar.open('You are not allowed to delete this operator user!', 'close', {
         panelClass: ['style-success'],
       });

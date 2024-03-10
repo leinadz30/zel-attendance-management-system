@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
 import { IsNotEmpty, IsNumberString } from "class-validator";
-import { DefaultEmployeeUserDto } from "../employees/employees-base.dto";
+import { DefaultEmployeeUserDto } from "../employee-user/employee-user-base.dto";
 export class RegisterEmployeeUserDto extends DefaultEmployeeUserDto {
   @ApiProperty()
   @IsNotEmpty()

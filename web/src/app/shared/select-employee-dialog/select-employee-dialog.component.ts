@@ -7,9 +7,9 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { SpinnerVisibilityService } from 'ng-http-loader';
 import { EmployeesService } from 'src/app/services/employees.service';
-import { OpsEmployeesTableColumn } from '../utility/table';
+import { CommonEmployeesTableColumn } from '../utility/table';
 
-export class SelectEmployeeDialogTableColumn extends OpsEmployeesTableColumn {
+export class SelectEmployeeDialogTableColumn extends CommonEmployeesTableColumn {
   selected?: boolean;
 }
 
@@ -18,7 +18,7 @@ export class SelectEmployeeDialogTableColumn extends OpsEmployeesTableColumn {
   templateUrl: './select-employee-dialog.component.html',
   styleUrls: ['./select-employee-dialog.component.scss']
 })
-export class  SelectEmployeeDialogComponent {
+export class SelectEmployeeDialogComponent {
   title;
   displayedColumns = ["selected", "fullName" ]
   dataSource = new MatTableDataSource<SelectEmployeeDialogTableColumn>();
@@ -31,6 +31,7 @@ export class  SelectEmployeeDialogComponent {
   filterFullName = "";
   schoolCode;
   departmentCode;
+  includeEmployeeWithUserAccount = true;
   @ViewChild('paginator', {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -62,20 +63,30 @@ export class  SelectEmployeeDialogComponent {
   }
 
   init() {
-    const filter: any[] = [
+    let filter: any[] = [
       {
         apiNotation: "school.schoolCode",
         filter: this.schoolCode
-      },
-      {
-        apiNotation: "department.departmentCode",
-        filter: this.departmentCode
       },
       {
         apiNotation: "fullName",
         filter: this.filterFullName,
       },
     ];
+    if(this.departmentCode && this.departmentCode !== '') {
+      filter = [...filter,
+        {
+          apiNotation: "department.departmentCode",
+          filter: this.departmentCode
+        }]
+    }
+    if(!this.includeEmployeeWithUserAccount) {
+      filter = [...filter,
+        {
+          apiNotation: "employeeUser.active",
+          type: "null"
+        }]
+    }
     try {
       this.employeesService.getByAdvanceSearch({
         order: this.order,
@@ -91,9 +102,13 @@ export class  SelectEmployeeDialogComponent {
           }
         }));
         this.total = res.data.total;
+        if(this.total === 0) {
+          this.selected = null;
+        }
       });
     }catch(ex) {
-
+      this.selected = null;
+      this.snackBar.open(ex.message, 'close', {panelClass: ['style-error']});
     }
   }
 

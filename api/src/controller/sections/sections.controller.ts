@@ -7,13 +7,16 @@ import {
   Post,
   Put,
 } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiTags } from "@nestjs/swagger";
 import {
   DELETE_SUCCESS,
   SAVING_SUCCESS,
   UPDATE_SUCCESS,
 } from "src/common/constant/api-response.constant";
-import { CreateSectionDto } from "src/core/dto/sections/sections.create.dto";
+import {
+  BatchCreateSectionDto,
+  CreateSectionDto,
+} from "src/core/dto/sections/sections.create.dto";
 import { UpdateSectionDto } from "src/core/dto/sections/sections.update.dto";
 import { PaginationParamsDto } from "src/core/dto/pagination-params.dto";
 import { ApiResponseModel } from "src/core/models/api-response.model";
@@ -64,6 +67,30 @@ export class SectionsController {
       res.data = await this.sectionsService.create(sectionsDto);
       res.success = true;
       res.message = `Sections ${SAVING_SUCCESS}`;
+      return res;
+    } catch (e) {
+      res.success = false;
+      res.message = e.message !== undefined ? e.message : e;
+      return res;
+    }
+  }
+
+  @ApiBody({
+    isArray: true,
+    type: BatchCreateSectionDto,
+  })
+  @Post("createBatch")
+  //   @UseGuards(JwtAuthGuard)
+  async batchCreate(@Body() dtos: BatchCreateSectionDto[]) {
+    const res: ApiResponseModel<{
+      success: any[];
+      failed: any[];
+      warning: any[];
+    }> = {} as any;
+    try {
+      res.data = await this.sectionsService.batchCreate(dtos);
+      res.success = true;
+      res.message = `Sections Batch Create Complete`;
       return res;
     } catch (e) {
       res.success = false;

@@ -13,7 +13,10 @@ import {
   SAVING_SUCCESS,
   UPDATE_SUCCESS,
 } from "src/common/constant/api-response.constant";
-import { CreateSchoolYearLevelDto } from "src/core/dto/school-year-levels/school-year-levels.create.dto";
+import {
+  BatchCreateSchoolYearLevelDto,
+  CreateSchoolYearLevelDto,
+} from "src/core/dto/school-year-levels/school-year-levels.create.dto";
 import { UpdateSchoolYearLevelDto } from "src/core/dto/school-year-levels/school-year-levels.update.dto";
 import { PaginationParamsDto } from "src/core/dto/pagination-params.dto";
 import { ApiResponseModel } from "src/core/models/api-response.model";
@@ -73,6 +76,26 @@ export class SchoolYearLevelsController {
       res.data = await this.schoolYearLevelsService.create(schoolYearLevelsDto);
       res.success = true;
       res.message = `School Year Levels ${SAVING_SUCCESS}`;
+      return res;
+    } catch (e) {
+      res.success = false;
+      res.message = e.message !== undefined ? e.message : e;
+      return res;
+    }
+  }
+
+  @Post("createBatch")
+  //   @UseGuards(JwtAuthGuard)
+  async batchCreate(@Body() dtos: BatchCreateSchoolYearLevelDto[]) {
+    const res: ApiResponseModel<{
+      success: any[];
+      failed: any[];
+      warning: any[];
+    }> = {} as any;
+    try {
+      res.data = await this.schoolYearLevelsService.batchCreate(dtos);
+      res.success = true;
+      res.message = `School year level Batch Create Complete`;
       return res;
     } catch (e) {
       res.success = false;

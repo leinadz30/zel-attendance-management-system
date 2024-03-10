@@ -17,7 +17,6 @@ export class AppComponent {
   public spinkit = Spinkit;
   title;
   grantNotif = false;
-  isLoaded = false;
   constructor(
     private titleService:Title,
     private spinner: SpinnerVisibilityService,
@@ -27,9 +26,6 @@ export class AppComponent {
     private storageService: StorageService,
     private routeService: RouteService,
     private pusher: PusherService) {
-      window.onload = (event) => {
-        this.isLoaded = true;
-      }
       if(this.storageService.getLoginProfile()?.userId) {
         const { userId } = this.storageService.getLoginProfile();
         const channel = this.pusher.init(userId);

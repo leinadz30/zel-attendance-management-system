@@ -1,0 +1,16 @@
+ion-header::after {
+  background-image: none;
+}
+
+h1,h2,h3 {
+  margin: 0!important;
+}
+ion-item {
+  ion-icon {
+    font-size: 2rem!important;
+  }
+  ion-label {
+    white-space: normal!important;
+    overflow: visible;
+  }
+}

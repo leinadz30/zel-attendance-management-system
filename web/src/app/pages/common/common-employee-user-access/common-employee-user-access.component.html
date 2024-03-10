@@ -1,0 +1,84 @@
+<mat-toolbar color="#fff" class="mat-elevation-z4">
+  <span id="title">User access</span>
+  <span class="toolbar-item-spacer"></span>
+</mat-toolbar>
+<div class="component-floating-actions vertical-actions">
+  <button mat-fab color="primary" aria-label="New User group" matTooltip="New User group" (click)="showAddDialog()">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
+<div class="content">
+<div class="inner-content">
+  <mat-card [ngClass]="{ 'hidden': isLoading }">
+      <mat-card-content fxLayout="column" >
+        <div fxLayout="column" [ngStyle]="{ 'margin-left': '16px'}" *ngIf="mode === 'OPERATION'">
+          <div fxFlex="100" fxLayout="row wrap" style="row-gap: 16px">
+            <mat-form-field
+              fxFlex="row"
+              fxFlex.gt-xs="33.33%"
+              fxFlex.gt-xs="column"
+              appearance="outline"
+              (dblclick)="showSelectSchoolDialog()">
+              <mat-label>School</mat-label>
+              <input
+                matInput
+                readonly
+                [value]="selectedSchool?.schoolName ? selectedSchool?.schoolName : ''"
+                placeholder="Search School"/>
+                <mat-icon
+                  class="icon-right"
+                  style="cursor: pointer;"
+                  matSuffix
+                  matTooltip="Search School"
+                  (click)="showSelectSchoolDialog()">
+                  search
+                </mat-icon>
+            </mat-form-field>
+          </div>
+        </div>
+        <app-data-table
+          [isLoading]="isLoading"
+          [dataSource]="dataSource"
+          [columnDefs]="appConfig.config.tableColumns.employeeUserAccess"
+          [total]="total"
+          (pageChange)="pageChange($event)"
+          (sortChange)="sortChange($event)"
+          (filterChange)="filterChange($event)"
+          >
+        </app-data-table>
+      </mat-card-content>
+  </mat-card>
+  </div>
+</div>
+
+<ng-template #employeeUserAccessFormDialog>
+  <h4 mat-dialog-title>New User group</h4>
+
+<div mat-dialog-content>
+  <app-common-employee-user-access-form #employeeUserAccessForm></app-common-employee-user-access-form>
+</div>
+
+<div mat-dialog-actions>
+  <div>
+    <button
+      mat-flat-button
+      cdkFocusInitial
+      (click)="closeNewAccessDialog()"
+    >
+      Cancel
+    </button>
+    <button
+      mat-flat-button
+      [disabled]="!employeeUserAccessForm.valid || !employeeUserAccessForm.ready"
+      color="primary"
+      form="form"
+      type="submit"
+      (click)="saveNewAccess(employeeUserAccessForm.getFormData)"
+    >
+      Save
+    </button>
+  </div>
+</div>
+
+</ng-template>
+

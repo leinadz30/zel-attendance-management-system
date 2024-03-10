@@ -31,16 +31,34 @@ export class PusherService {
       throw ex;
     }
   }
-  async sendNotif(userIds: string[], title: string, description) {
+  async sendNotif(
+    userIds: string[],
+    notificationIds: string[],
+    referenceId,
+    type: "LINK_STUDENT" | "STUDENT_LOGIN_LOGOUT" | "ANNOUNCEMENT",
+    title: string,
+    description
+  ) {
     try {
       if (userIds && userIds.length > 0) {
         for (const userId of userIds) {
           this.pusher.trigger(userId, "notifAdded", {
+            notificationIds,
+            referenceId,
+            type,
             title,
             description,
           });
         }
       }
+    } catch (ex) {
+      throw ex;
+    }
+  }
+
+  async mobileOneSignalScanner() {
+    try {
+      this.pusher.trigger("all", "mobileOneSignalScanner", {});
     } catch (ex) {
       throw ex;
     }

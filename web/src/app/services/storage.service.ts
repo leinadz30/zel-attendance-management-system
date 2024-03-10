@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Operators } from '../model/operators';
 import { Employees } from '../model/employees';
+import { EmployeeUser } from '../model/employee-user';
 
 @Injectable({
   providedIn: 'root'
@@ -16,11 +17,17 @@ export class StorageService {
     }
     else {return null;}
   }
-  saveLoginProfile(value: Operators | Employees){
+  saveLoginProfile(value: Operators | EmployeeUser){
     return this.set('loginProfile', JSON.stringify(value));
   }
   getOpsRecentSchool(){
-    return this.get('OpsRecentSchool');
+    const schoolCode = this.get('OpsRecentSchool');
+    if(schoolCode !== null && schoolCode !== '' && schoolCode !== 'null'){
+      return schoolCode;
+    }
+    else {
+      return null;
+    }
   }
   saveOpsRecentSchool(schoolCode: string){
     return this.set('OpsRecentSchool', schoolCode);

@@ -1,0 +1,36 @@
+import { LinkStudentRequest } from "./LinkStudentRequest";
+import { ParentStudent } from "./ParentStudent";
+import { StudentCourse } from "./StudentCourse";
+import { StudentSection } from "./StudentSection";
+import { StudentStrand } from "./StudentStrand";
+import { Departments } from "./Departments";
+import { Users } from "./Users";
+import { Schools } from "./Schools";
+import { SchoolYearLevels } from "./SchoolYearLevels";
+export declare class Students {
+    studentId: string;
+    studentCode: string | null;
+    firstName: string;
+    middleInitial: string | null;
+    lastName: string;
+    cardNumber: string | null;
+    mobileNumber: string | null;
+    email: string | null;
+    address: string | null;
+    accessGranted: boolean | null;
+    registrationDate: Date;
+    updatedDate: Date | null;
+    active: boolean;
+    fullName: string;
+    orgStudentId: string | null;
+    linkStudentRequests: LinkStudentRequest[];
+    parentStudents: ParentStudent[];
+    studentCourse: StudentCourse;
+    studentSection: StudentSection;
+    studentStrand: StudentStrand;
+    department: Departments;
+    registeredByUser: Users;
+    school: Schools;
+    schoolYearLevel: SchoolYearLevels;
+    updatedByUser: Users;
+}

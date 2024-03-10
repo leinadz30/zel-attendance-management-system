@@ -18,6 +18,7 @@ import { CONST_QUERYCURRENT_TIMESTAMP } from "src/common/constant/timestamp.cons
 import { USER_ERROR_USER_NOT_FOUND } from "src/common/constant/user-error.constant";
 import { USER_TYPE } from "src/common/constant/user-type.constant";
 import { UpdateUserResetPasswordDto } from "src/core/dto/auth/reset-password.dto";
+import { BatchCreateStudentDto } from "src/core/dto/students/students.batch-create.dto";
 import { CreateStudentDto } from "src/core/dto/students/students.create.dto";
 import {
   UpdateStudentUserProfileDto,
@@ -127,6 +128,7 @@ export class StudentsService {
     if (!res) {
       throw Error(USER_ERROR_USER_NOT_FOUND);
     }
+    res.parentStudents = res.parentStudents.filter((x) => x.active);
     delete res.registeredByUser.password;
     if (res?.updatedByUser?.password) {
       delete res.updatedByUser.password;
@@ -164,6 +166,45 @@ export class StudentsService {
     if (!res) {
       throw Error(USER_ERROR_USER_NOT_FOUND);
     }
+    res.parentStudents = res.parentStudents.filter((x) => x.active);
+    delete res.registeredByUser.password;
+    if (res?.updatedByUser?.password) {
+      delete res.updatedByUser.password;
+    }
+    return res;
+  }
+
+  async getByCardNumber(cardNumber) {
+    const res = await this.studentRepo.findOne({
+      where: {
+        cardNumber,
+        active: true,
+      },
+      relations: {
+        parentStudents: {
+          parent: true,
+        },
+        studentCourse: {
+          course: true,
+        },
+        studentStrand: {
+          strand: true,
+        },
+        department: true,
+        registeredByUser: true,
+        updatedByUser: true,
+        school: true,
+        schoolYearLevel: true,
+        studentSection: {
+          section: true,
+        },
+      },
+    });
+
+    if (!res) {
+      throw Error(USER_ERROR_USER_NOT_FOUND);
+    }
+    res.parentStudents = res.parentStudents.filter((x) => x.active);
     delete res.registeredByUser.password;
     if (res?.updatedByUser?.password) {
       delete res.updatedByUser.password;
@@ -190,7 +231,11 @@ export class StudentsService {
           student.firstName = dto.firstName;
           student.middleInitial = dto.middleInitial;
           student.lastName = dto.lastName;
-          student.fullName = `${dto.firstName} ${dto.lastName}`;
+          if (dto.middleInitial && dto.middleInitial !== "") {
+            student.fullName = `${dto.firstName} ${dto.middleInitial} ${dto.lastName}`;
+          } else {
+            student.fullName = `${dto.firstName} ${dto.lastName}`;
+          }
           student.email = dto.email;
           student.mobileNumber = dto.mobileNumber;
           student.cardNumber = dto.cardNumber;
@@ -249,19 +294,21 @@ export class StudentsService {
           student.studentCode = generateIndentityCode(student.studentId);
           student = await entityManager.save(Students, student);
 
-          const studentSection = new StudentSection();
-          studentSection.student = student;
-          const section = await entityManager.findOne(Sections, {
-            where: {
-              sectionId: dto.sectionId,
-              active: true,
-            },
-          });
-          if (!section) {
-            throw Error(SECTIONS_ERROR_NOT_FOUND);
+          if (dto.sectionId && dto.sectionId !== "") {
+            const studentSection = new StudentSection();
+            studentSection.student = student;
+            const section = await entityManager.findOne(Sections, {
+              where: {
+                sectionId: dto.sectionId,
+                active: true,
+              },
+            });
+            if (!section) {
+              throw Error(SECTIONS_ERROR_NOT_FOUND);
+            }
+            studentSection.section = section;
+            await entityManager.save(StudentSection, studentSection);
           }
-          studentSection.section = section;
-          await entityManager.save(StudentSection, studentSection);
 
           if (schoolYearLevel.educationalStage === EDUCATIONAL_STAGE.COLLEGE) {
             const studentCourse = new StudentCourse();
@@ -332,9 +379,397 @@ export class StudentsService {
         ex["message"].includes("u_user")
       ) {
         throw Error("Username already used!");
+      } else if (
+        ex["message"] &&
+        (ex["message"].includes("duplicate key") ||
+          ex["message"].includes("violates unique constraint")) &&
+        ex["message"].includes("u_students_card")
+      ) {
+        throw Error("Student Card Number already used!");
+      } else if (
+        ex["message"] &&
+        (ex["message"].includes("duplicate key") ||
+          ex["message"].includes("violates unique constraint")) &&
+        ex["message"].includes("u_student_orgstudentid")
+      ) {
+        throw Error("Student Id already used!");
       } else {
         throw ex;
       }
+    }
+  }
+
+  async createBatch(dtos: BatchCreateStudentDto[]) {
+    try {
+      return await this.studentRepo.manager.transaction(
+        async (entityManager) => {
+          const success = [];
+          const warning = [];
+          const failed = [];
+          for (const dto of dtos) {
+            try {
+              let hasWarning = false;
+              const school = await entityManager.findOne(Schools, {
+                where: {
+                  orgSchoolCode: dto.orgSchoolCode,
+                  active: true,
+                },
+              });
+              if (!school) {
+                throw Error(SCHOOLS_ERROR_NOT_FOUND);
+              }
+
+              let student = await entityManager.findOne(Students, {
+                where: {
+                  orgStudentId: dto.orgStudentId,
+                  school: {
+                    orgSchoolCode: dto.orgSchoolCode,
+                  },
+                  active: true,
+                },
+              });
+              if (!student) {
+                student = new Students();
+              }
+              student.school = school;
+              student.accessGranted = true;
+              student.firstName = dto.firstName;
+              student.middleInitial = dto.middleInitial;
+              student.lastName = dto.lastName;
+              if (dto.middleInitial && dto.middleInitial !== "") {
+                student.fullName = `${dto.firstName} ${dto.middleInitial} ${dto.lastName}`;
+              } else {
+                student.fullName = `${dto.firstName} ${dto.lastName}`;
+              }
+              student.email = dto.email;
+              student.mobileNumber = dto.mobileNumber;
+              student.address = dto.address;
+              if (dto.cardNumber && dto.cardNumber !== "") {
+                student.cardNumber = dto.cardNumber;
+              }
+              if (dto.orgStudentId && dto.orgStudentId !== "") {
+                student.orgStudentId = dto.orgStudentId;
+              } else {
+                //create temporary id for easy filter
+                student.orgStudentId = `${dto.orgSchoolCode}${dto.firstName
+                  ?.replace(/\s+/g, "")
+                  .toUpperCase()}${dto.lastName
+                  ?.replace(/\s+/g, "")
+                  .toUpperCase()}`;
+              }
+              const timestamp = await entityManager
+                .query(CONST_QUERYCURRENT_TIMESTAMP)
+                .then((res) => {
+                  return res[0]["timestamp"];
+                });
+              student.registrationDate = timestamp;
+
+              const registeredByUser = await entityManager.findOne(Users, {
+                where: {
+                  userId: dto.registeredByUserId,
+                  active: true,
+                },
+              });
+              if (!registeredByUser) {
+                throw Error(USER_ERROR_USER_NOT_FOUND);
+              }
+              student.registeredByUser = registeredByUser;
+
+              if (dto.departmentName && dto.departmentName !== "") {
+                const department: Departments = (await entityManager
+                  .createQueryBuilder("Departments", "d")
+                  .leftJoinAndSelect("d.school", "s")
+                  .where(
+                    "trim(upper(d.departmentName)) = trim(upper(:departmentName)) AND " +
+                      "s.orgSchoolCode = :orgSchoolCode"
+                  )
+                  .setParameters({
+                    departmentName: dto.departmentName,
+                    orgSchoolCode: dto.orgSchoolCode,
+                  })
+                  .getOne()) as any;
+                if (!department) {
+                  if (dto.orgStudentId && dto.orgStudentId !== "") {
+                    warning.push({
+                      orgStudentId: dto.orgStudentId,
+                      refId: dto.refId,
+                      comments: `${DEPARTMENTS_ERROR_NOT_FOUND} ${dto.departmentName}`,
+                    });
+                  } else {
+                    warning.push({
+                      refId: dto.refId,
+                      comments: `${DEPARTMENTS_ERROR_NOT_FOUND} ${dto.departmentName}`,
+                    });
+                  }
+                  hasWarning = true;
+                }
+                student.department = department;
+              } else {
+                if (dto.orgStudentId && dto.orgStudentId !== "") {
+                  warning.push({
+                    orgStudentId: dto.orgStudentId,
+                    refId: dto.refId,
+                    comments: `${DEPARTMENTS_ERROR_NOT_FOUND} ${dto.departmentName}`,
+                  });
+                } else {
+                  warning.push({
+                    refId: dto.refId,
+                    comments: `${DEPARTMENTS_ERROR_NOT_FOUND} ${dto.departmentName}`,
+                  });
+                }
+                hasWarning = true;
+              }
+              let schoolYearLevel: SchoolYearLevels;
+              if (dto.schoolYearLevelName && dto.schoolYearLevelName !== "") {
+                schoolYearLevel = (await entityManager
+                  .createQueryBuilder("SchoolYearLevels", "syl")
+                  .leftJoinAndSelect("syl.school", "s")
+                  .where(
+                    "trim(upper(syl.name)) = trim(upper(:schoolYearLevelName)) AND " +
+                      "s.orgSchoolCode = :orgSchoolCode"
+                  )
+                  .setParameters({
+                    schoolYearLevelName: dto.schoolYearLevelName,
+                    orgSchoolCode: dto.orgSchoolCode,
+                  })
+                  .getOne()) as any;
+                if (!schoolYearLevel) {
+                  if (dto.orgStudentId && dto.orgStudentId !== "") {
+                    warning.push({
+                      orgStudentId: dto.orgStudentId,
+                      refId: dto.refId,
+                      comments: `${SCHOOL_YEAR_LEVELS_ERROR_NOT_FOUND} ${dto.schoolYearLevelName}`,
+                    });
+                  } else {
+                    warning.push({
+                      refId: dto.refId,
+                      comments: `${SCHOOL_YEAR_LEVELS_ERROR_NOT_FOUND} ${dto.schoolYearLevelName}`,
+                    });
+                  }
+                  hasWarning = true;
+                }
+                student.schoolYearLevel = schoolYearLevel;
+              } else {
+                if (dto.orgStudentId && dto.orgStudentId !== "") {
+                  warning.push({
+                    orgStudentId: dto.orgStudentId,
+                    refId: dto.refId,
+                    comments: `${SCHOOL_YEAR_LEVELS_ERROR_NOT_FOUND} ${dto.schoolYearLevelName}`,
+                  });
+                } else {
+                  warning.push({
+                    refId: dto.refId,
+                    comments: `${SCHOOL_YEAR_LEVELS_ERROR_NOT_FOUND} ${dto.schoolYearLevelName}`,
+                  });
+                }
+                hasWarning = true;
+              }
+
+              student = await entityManager.save(Students, student);
+              student.studentCode = generateIndentityCode(student.studentId);
+              student = await entityManager.save(Students, student);
+
+              if (dto.sectionName && dto.sectionName !== "") {
+                const studentSection = new StudentSection();
+                studentSection.student = student;
+                const section: Sections = (await entityManager
+                  .createQueryBuilder("Sections", "sec")
+                  .leftJoinAndSelect("sec.school", "s")
+                  .where(
+                    "trim(upper(sec.sectionName)) = trim(upper(:sectionName)) AND " +
+                      "s.orgSchoolCode = :orgSchoolCode"
+                  )
+                  .setParameters({
+                    sectionName: dto.sectionName,
+                    orgSchoolCode: dto.orgSchoolCode,
+                  })
+                  .getOne()) as any;
+                if (!section) {
+                  if (dto.orgStudentId && dto.orgStudentId !== "") {
+                    warning.push({
+                      orgStudentId: dto.orgStudentId,
+                      refId: dto.refId,
+                      comments: `${SECTIONS_ERROR_NOT_FOUND} ${dto.sectionName}`,
+                    });
+                  } else {
+                    warning.push({
+                      refId: dto.refId,
+                      comments: `${SECTIONS_ERROR_NOT_FOUND} ${dto.sectionName}`,
+                    });
+                  }
+                  hasWarning = true;
+                }
+                studentSection.section = section;
+                await entityManager.save(StudentSection, studentSection);
+              } else {
+                if (dto.orgStudentId && dto.orgStudentId !== "") {
+                  warning.push({
+                    orgStudentId: dto.orgStudentId,
+                    refId: dto.refId,
+                    comments: `${SECTIONS_ERROR_NOT_FOUND} ${dto.sectionName}`,
+                  });
+                } else {
+                  warning.push({
+                    refId: dto.refId,
+                    comments: `${SECTIONS_ERROR_NOT_FOUND} ${dto.sectionName}`,
+                  });
+                }
+                hasWarning = true;
+              }
+
+              if (
+                schoolYearLevel &&
+                schoolYearLevel.educationalStage === EDUCATIONAL_STAGE.COLLEGE
+              ) {
+                if (dto.courseName && dto.courseName !== "") {
+                  const studentCourse = new StudentCourse();
+                  studentCourse.student = student;
+                  const course: Courses = (await entityManager
+                    .createQueryBuilder("Courses", "c")
+                    .leftJoinAndSelect("c.school", "s")
+                    .where(
+                      "trim(upper(c.name)) = trim(upper(:courseName)) AND " +
+                        "s.orgSchoolCode = :orgSchoolCode"
+                    )
+                    .setParameters({
+                      courseName: dto.courseName,
+                      orgSchoolCode: dto.orgSchoolCode,
+                    })
+                    .getOne()) as any;
+                  if (!course) {
+                    if (dto.orgStudentId && dto.orgStudentId !== "") {
+                      warning.push({
+                        orgStudentId: dto.orgStudentId,
+                        refId: dto.refId,
+                        comments: `${COURSES_ERROR_NOT_FOUND} ${dto.courseName}`,
+                      });
+                    } else {
+                      warning.push({
+                        refId: dto.refId,
+                        comments: `${COURSES_ERROR_NOT_FOUND} ${dto.courseName}`,
+                      });
+                    }
+                    hasWarning = true;
+                  }
+                  studentCourse.course = course;
+                  await entityManager.save(StudentCourse, studentCourse);
+                } else {
+                  if (dto.orgStudentId && dto.orgStudentId !== "") {
+                    warning.push({
+                      orgStudentId: dto.orgStudentId,
+                      refId: dto.refId,
+                      comments: `${COURSES_ERROR_NOT_FOUND} ${dto.courseName}`,
+                    });
+                  } else {
+                    warning.push({
+                      refId: dto.refId,
+                      comments: `${COURSES_ERROR_NOT_FOUND} ${dto.courseName}`,
+                    });
+                  }
+                  hasWarning = true;
+                }
+              } else if (
+                schoolYearLevel &&
+                schoolYearLevel.educationalStage === EDUCATIONAL_STAGE.SENIOR
+              ) {
+                if (dto.strandName && dto.strandName !== "") {
+                  const studentStrand = new StudentStrand();
+                  studentStrand.student = student;
+                  const strand: Strands = (await entityManager
+                    .createQueryBuilder("Strands", "st")
+                    .leftJoinAndSelect("st.school", "s")
+                    .where(
+                      "trim(upper(st.name)) = trim(upper(:strandName)) AND " +
+                        "s.orgSchoolCode = :orgSchoolCode"
+                    )
+                    .setParameters({
+                      strandName: dto.strandName,
+                      orgSchoolCode: dto.orgSchoolCode,
+                    })
+                    .getOne()) as any;
+                  if (!strand) {
+                    if (dto.orgStudentId && dto.orgStudentId !== "") {
+                      warning.push({
+                        orgStudentId: dto.orgStudentId,
+                        refId: dto.refId,
+                        comments: `${STRAND_ERROR_NOT_FOUND} ${dto.strandName}`,
+                      });
+                    } else {
+                      warning.push({
+                        refId: dto.refId,
+                        comments: `${STRAND_ERROR_NOT_FOUND} ${dto.strandName}`,
+                      });
+                    }
+                    hasWarning = true;
+                  }
+                  studentStrand.strand = strand;
+                  await entityManager.save(StudentStrand, studentStrand);
+                } else {
+                  if (dto.orgStudentId && dto.orgStudentId !== "") {
+                    warning.push({
+                      orgStudentId: dto.orgStudentId,
+                      refId: dto.refId,
+                      comments: `${STRAND_ERROR_NOT_FOUND} ${dto.strandName}`,
+                    });
+                  } else {
+                    warning.push({
+                      refId: dto.refId,
+                      comments: `${STRAND_ERROR_NOT_FOUND} ${dto.strandName}`,
+                    });
+                  }
+                  hasWarning = true;
+                }
+              }
+
+              student = await entityManager.findOne(Students, {
+                where: {
+                  studentCode: student.studentCode,
+                  active: true,
+                },
+                relations: {
+                  parentStudents: {
+                    parent: true,
+                  },
+                  studentCourse: {
+                    course: true,
+                  },
+                  studentStrand: {
+                    strand: true,
+                  },
+                  department: true,
+                  registeredByUser: true,
+                  updatedByUser: true,
+                  school: true,
+                  schoolYearLevel: true,
+                  studentSection: {
+                    section: true,
+                  },
+                },
+              });
+              delete student.registeredByUser.password;
+              if (!hasWarning) {
+                success.push({
+                  orgStudentId: dto.orgStudentId,
+                  refId: dto.refId,
+                });
+              }
+            } catch (ex) {
+              failed.push({
+                orgStudentId: dto.orgStudentId,
+                refId: dto.refId,
+                comments: ex?.message,
+              });
+            }
+          }
+          return {
+            success,
+            warning,
+            failed,
+          };
+        }
+      );
+    } catch (ex) {
+      throw ex;
     }
   }
 
@@ -523,7 +958,11 @@ export class StudentsService {
       student.firstName = dto.firstName;
       student.middleInitial = dto.middleInitial;
       student.lastName = dto.lastName;
-      student.fullName = `${dto.firstName} ${dto.lastName}`;
+      if (dto.middleInitial && dto.middleInitial !== "") {
+        student.fullName = `${dto.firstName} ${dto.middleInitial} ${dto.lastName}`;
+      } else {
+        student.fullName = `${dto.firstName} ${dto.lastName}`;
+      }
       student.email = dto.email;
       student.mobileNumber = dto.mobileNumber;
       student.cardNumber = dto.cardNumber;

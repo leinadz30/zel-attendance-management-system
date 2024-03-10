@@ -15,14 +15,14 @@
             </div>
           </td>
         </ng-container>
-        <ng-container matColumnDef="schoolCode">
+        <ng-container matColumnDef="orgSchoolCode">
           <th mat-header-cell *matHeaderCellDef [ngStyle]="{ 'width': '30%', 'min-width': '100px'}">
             <span mat-sort-header>School Code</span>
             <mat-form-field floatLabel="never" appearance="outline" >
-                <input matInput placeholder="Search school code" [(ngModel)]="filterSchoolCode" (keyup.enter)="init()" />
+                <input matInput placeholder="Search school code" [(ngModel)]="filterOrgSchoolCode" (keyup.enter)="init()" />
             </mat-form-field>
           </th>
-          <td mat-cell *matCellDef="let element">{{ element.schoolCode }}</td>
+          <td mat-cell *matCellDef="let element">{{ element.orgSchoolCode }}</td>
         </ng-container>
         <ng-container matColumnDef="schoolName">
           <th mat-header-cell *matHeaderCellDef >

@@ -7,11 +7,11 @@ import {
   OneToOne,
 } from "typeorm";
 import { Employees } from "./Employees";
-import { EmployeeRoles } from "./EmployeeRoles";
+import { EmployeeUserAccess } from "./EmployeeUserAccess";
 import { Users } from "./Users";
 
-@Index("u_Employee", ["employeeId"], { unique: true })
 @Index("EmployeeUser_pkey", ["employeeId", "userId"], { unique: true })
+@Index("u_Employee", ["employeeId"], { unique: true })
 @Entity("EmployeeUser", { schema: "dbo" })
 export class EmployeeUser {
   @Column("bigint", { primary: true, name: "EmployeeId" })
@@ -26,18 +26,24 @@ export class EmployeeUser {
   })
   dateRegistered: Date;
 
+  @Column("boolean", { name: "Active", default: () => "true" })
+  active: boolean;
+
   @OneToOne(() => Employees, (employees) => employees.employeeUser)
   @JoinColumn([{ name: "EmployeeId", referencedColumnName: "employeeId" }])
   employee: Employees;
 
   @ManyToOne(
-    () => EmployeeRoles,
-    (employeeRoles) => employeeRoles.employeeUsers
+    () => EmployeeUserAccess,
+    (employeeUserAccess) => employeeUserAccess.employeeUsers
   )
   @JoinColumn([
-    { name: "EmployeeRoleId", referencedColumnName: "employeeRoleId" },
+    {
+      name: "EmployeeUserAccessId",
+      referencedColumnName: "employeeUserAccessId",
+    },
   ])
-  employeeRole: EmployeeRoles;
+  employeeUserAccess: EmployeeUserAccess;
 
   @ManyToOne(() => Users, (users) => users.employeeUsers)
   @JoinColumn([{ name: "UserId", referencedColumnName: "userId" }])

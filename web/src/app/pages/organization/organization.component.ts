@@ -4,6 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { Router, ResolveEnd, ActivatedRouteSnapshot, RouterEvent, NavigationStart, NavigationEnd, NavigationCancel, NavigationError, ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs';
 import { Employees } from 'src/app/model/employees';
+import { EmployeeUser } from 'src/app/model/employee-user';
 import { Operators } from 'src/app/model/operators';
 import { AppConfigService } from 'src/app/services/app-config.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -23,7 +24,9 @@ export class OrgComponent {
   loading = false;
   drawerDefaultOpened = false;
   details = false;
-  profile: Operators | Employees;
+  profile: EmployeeUser;
+  currentGroup;
+  disableGroupAnimation = true;
   constructor(
     private titleService:Title,
     private authService: AuthService,
@@ -45,6 +48,10 @@ export class OrgComponent {
 
   onActivate(event) {
     this.onResize();
+  }
+
+  expand(group = "") {
+    return this.currentGroup?.toLowerCase() === group.toLowerCase();
   }
 
   signOut() {

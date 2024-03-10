@@ -7,7 +7,6 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Machines } from "./Machines";
-import { Students } from "./Students";
 
 @Index("TapLogs_pkey", ["tapLogId"], { unique: true })
 @Entity("TapLogs", { schema: "dbo" })
@@ -27,11 +26,13 @@ export class TapLogs {
   @Column("character varying", { name: "Time" })
   time: string;
 
+  @Column("character varying", { name: "CardNumber", default: () => "''" })
+  cardNumber: string;
+
+  @Column("character varying", { name: "Type", default: () => "''" })
+  type: string;
+
   @ManyToOne(() => Machines, (machines) => machines.tapLogs)
   @JoinColumn([{ name: "MachineId", referencedColumnName: "machineId" }])
   machine: Machines;
-
-  @ManyToOne(() => Students, (students) => students.tapLogs)
-  @JoinColumn([{ name: "StudentId", referencedColumnName: "studentId" }])
-  student: Students;
 }

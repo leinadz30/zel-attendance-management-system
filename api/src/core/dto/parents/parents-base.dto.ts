@@ -16,26 +16,7 @@ import {
 export class DefaultParentUserDto {
   @ApiProperty()
   @IsNotEmpty()
-  firstName: string;
-
-  @ApiProperty()
-  @IsOptional()
-  middleInitial: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  lastName: string;
-  
-  @ApiProperty()
-  @IsOptional()
-  @IsIn(["MALE", "FEMALE", "OTHERS"])
-  @IsUppercase()
-  gender: "MALE" | "FEMALE" | "OTHERS";
-
-  @ApiProperty()
-  @IsOptional()
-  @IsDateString({ strict: true } as any)
-  birthDate: Date;
+  fullName: string;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -44,13 +25,4 @@ export class DefaultParentUserDto {
     return obj[key].toString();
   })
   mobileNumber: string;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsEmail()
-  email: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  address: string;
 }

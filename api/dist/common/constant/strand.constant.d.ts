@@ -1,0 +1,1 @@
+export declare const STRAND_ERROR_NOT_FOUND = "Strand not found!";

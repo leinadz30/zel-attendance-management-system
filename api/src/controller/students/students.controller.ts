@@ -7,7 +7,7 @@ import {
   Post,
   Put,
 } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiTags } from "@nestjs/swagger";
 import {
   DELETE_SUCCESS,
   SAVING_SUCCESS,
@@ -26,6 +26,7 @@ import { PaginationParamsDto } from "src/core/dto/pagination-params.dto";
 import { ApiResponseModel } from "src/core/models/api-response.model";
 import { Students } from "src/db/entities/Students";
 import { StudentsService } from "src/services/students.service";
+import { BatchCreateStudentDto } from "src/core/dto/students/students.batch-create.dto";
 
 @ApiTags("students")
 @Controller("students")
@@ -62,6 +63,21 @@ export class StudentsController {
     }
   }
 
+  @Get("getByCardNumber/:cardNumber")
+  //   @UseGuards(JwtAuthGuard)
+  async getByCardNumber(@Param("cardNumber") cardNumber: string) {
+    const res = {} as ApiResponseModel<Students>;
+    try {
+      res.data = await this.studentsService.getByCardNumber(cardNumber);
+      res.success = true;
+      return res;
+    } catch (e) {
+      res.success = false;
+      res.message = e.message !== undefined ? e.message : e;
+      return res;
+    }
+  }
+
   @Post("/page")
   //   @UseGuards(JwtAuthGuard)
   async getPaginated(@Body() params: PaginationParamsDto) {
@@ -86,6 +102,30 @@ export class StudentsController {
       res.data = await this.studentsService.create(studentsDto);
       res.success = true;
       res.message = `Student ${SAVING_SUCCESS}`;
+      return res;
+    } catch (e) {
+      res.success = false;
+      res.message = e.message !== undefined ? e.message : e;
+      return res;
+    }
+  }
+
+  @ApiBody({
+    isArray: true,
+    type: BatchCreateStudentDto,
+  })
+  @Post("createBatch")
+  //   @UseGuards(JwtAuthGuard)
+  async createBatch(@Body() studentDtos: BatchCreateStudentDto[]) {
+    const res: ApiResponseModel<{
+      success: any[];
+      failed: any[];
+      warning: any[];
+    }> = {} as any;
+    try {
+      res.data = await this.studentsService.createBatch(studentDtos);
+      res.success = true;
+      res.message = `Student Batch Create Complete`;
       return res;
     } catch (e) {
       res.success = false;

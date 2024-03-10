@@ -6,10 +6,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { SpinnerVisibilityService } from 'ng-http-loader';
-import { OpsStrandsTableColumn } from '../utility/table';
+import { CommonStrandsTableColumn } from '../utility/table';
 import { StrandsService } from 'src/app/services/strands.service';
 
-export class SelectStrandDialogTableColumn extends OpsStrandsTableColumn {
+export class SelectStrandDialogTableColumn extends CommonStrandsTableColumn {
   selected?: boolean;
 }
 
@@ -18,7 +18,7 @@ export class SelectStrandDialogTableColumn extends OpsStrandsTableColumn {
   templateUrl: './select-strand-dialog.component.html',
   styleUrls: ['./select-strand-dialog.component.scss']
 })
-export class  SelectStrandDialogComponent {
+export class SelectStrandDialogComponent {
   displayedColumns = ["selected", "name" ]
   dataSource = new MatTableDataSource<SelectStrandDialogTableColumn>();
   selected: SelectStrandDialogTableColumn;
@@ -85,9 +85,13 @@ export class  SelectStrandDialogComponent {
           }
         }));
         this.total = res.data.total;
+        if(this.total === 0) {
+          this.selected = null;
+        }
       });
     }catch(ex) {
-
+      this.selected = null;
+      this.snackBar.open(ex.message, 'close', {panelClass: ['style-error']});
     }
   }
 
@@ -117,14 +121,18 @@ export class  SelectStrandDialogComponent {
 
   async doneSelection() {
     try {
-      this.spinner.show();
-      const res = await this.strandsService.getByCode(this.selected.strandCode).toPromise();
-      this.spinner.hide();
-      if(res.success) {
-        this.dialogRef.close(res.data);
+      if(this.selected && this.selected?.strandCode) {
+        this.spinner.show();
+        const res = await this.strandsService.getByCode(this.selected.strandCode).toPromise();
+        this.spinner.hide();
+        if(res.success) {
+          this.dialogRef.close(res.data);
+        } else {
+          const error = Array.isArray(res.message) ? res.message[0] : res.message;
+          this.snackBar.open(error, 'close', {panelClass: ['style-error']});
+        }
       } else {
-        const error = Array.isArray(res.message) ? res.message[0] : res.message;
-        this.snackBar.open(error, 'close', {panelClass: ['style-error']});
+        this.dialogRef.close(null);
       }
     } catch(ex) {
       const error = Array.isArray(ex.message) ? ex.message[0] : ex.message;

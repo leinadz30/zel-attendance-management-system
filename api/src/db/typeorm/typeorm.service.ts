@@ -1,10 +1,10 @@
-import { StudentStrand } from './../entities/StudentStrand';
+import { Announcements } from "./../entities/Announcements";
+import { StudentStrand } from "./../entities/StudentStrand";
 import { TypeOrmOptionsFactory, TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { ConfigService } from "@nestjs/config";
 import { Injectable, Inject } from "@nestjs/common";
 import { Courses } from "../entities/Courses";
 import { Departments } from "../entities/Departments";
-import { EmployeeRoles } from "../entities/EmployeeRoles";
 import { Employees } from "../entities/Employees";
 import { EmployeeTitles } from "../entities/EmployeeTitles";
 import { Machines } from "../entities/Machines";
@@ -24,10 +24,11 @@ import { StudentSection } from "../entities/StudentSection";
 import { SchoolRequestAccess } from "../entities/SchoolRequestAccess";
 import { EmployeeUser } from "../entities/EmployeeUser";
 import { LinkStudentRequest } from "../entities/LinkStudentRequest";
-import { Strands } from '../entities/Strands';
-import { UserProfilePic } from '../entities/UserProfilePic';
-import { Files } from '../entities/Files';
-import { UserOneSignalSubscription } from '../entities/UserOneSignalSubscription';
+import { Strands } from "../entities/Strands";
+import { UserProfilePic } from "../entities/UserProfilePic";
+import { Files } from "../entities/Files";
+import { UserOneSignalSubscription } from "../entities/UserOneSignalSubscription";
+import { EmployeeUserAccess } from "../entities/EmployeeUserAccess";
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
@@ -46,7 +47,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       entities: [
         Courses,
         Departments,
-        EmployeeRoles,
+        EmployeeUserAccess,
         Employees,
         EmployeeTitles,
         Machines,
@@ -71,6 +72,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         Files,
         UserProfilePic,
         UserOneSignalSubscription,
+        Announcements,
       ],
       synchronize: false, // never use TRUE in production!
       ssl: ssl.toLocaleLowerCase().includes("true"),

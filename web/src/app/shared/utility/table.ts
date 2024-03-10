@@ -34,10 +34,9 @@ export class OpsUsersTableColumn {
   operatorCode?: string;
   name?: string;
   userName?: string;
-  accessGranted?: boolean;
 }
 
-export class OpsSchoolsTableColumn {
+export class CommonSchoolsTableColumn {
   schoolCode?: string;
   orgSchoolCode?: string;
   schoolName?: string;
@@ -47,38 +46,45 @@ export class OpsSchoolsTableColumn {
   url?: string;
 }
 
-export class OpsDepartmentsTableColumn {
+export class CommonDepartmentsTableColumn {
   departmentCode: string;
   departmentName: string;
   url?: string;
 }
 
-export class OpsCoursesTableColumn {
+export class CommonCoursesTableColumn {
   courseCode: string;
   name: string;
   url?: string;
 }
 
-export class OpsStrandsTableColumn {
+export class CommonStrandsTableColumn {
   strandCode: string;
   name: string;
   url?: string;
 }
 
-export class OpsEmployeeTitlesTableColumn {
+export class CommonEmployeeTitlesTableColumn {
   employeeTitleCode: string;
   name: string;
   url?: string;
 }
 
-export class OpsSchoolYearLevelsTableColumn {
+export class CommonEmployeeUserAccessTableColumn {
+  employeeUserAccessCode: string;
+  employeeUserAccessId?: string;
+  name: string;
+  url?: string;
+}
+
+export class CommonSchoolYearLevelsTableColumn {
   schoolYearLevelCode: string;
   name: string;
   educationalStage?: string;
   url?: string;
 }
 
-export class OpsSectionsTableColumn {
+export class CommonSectionsTableColumn {
   sectionCode: string;
   sectionName: string;
   schoolYearLevel?: string;
@@ -87,21 +93,33 @@ export class OpsSectionsTableColumn {
   url?: string;
 }
 
-export class OpsEmployeesTableColumn {
+export class CommonEmployeesTableColumn {
   employeeCode?: string;
+  orgEmployeeId?: string;
   fullName?: string;
   mobileNumber?: string;
   cardNumber?: string;
   department?: string;
 }
 
-export class OpsParentsTableColumn {
+export class CommonEmployeeUserTableColumn {
+  employeeCode?: string;
+  orgEmployeeId?: string;
+  userName?: string;
+  accessGranted?: boolean;
+  fullName?: string;
+  mobileNumber?: string;
+  employeeUserAccess?: string;
+  url?: string;
+}
+
+export class CommonParentsTableColumn {
   parentCode?: string;
   fullName?: string;
   mobileNumber?: string;
 }
 
-export class OpsStudentsTableColumn {
+export class CommonStudentsTableColumn {
   studentCode?: string;
   fullName?: string;
   orgStudentId?: string;
@@ -114,7 +132,7 @@ export class OpsStudentsTableColumn {
   department?: string;
 }
 
-export class OpsLinkStudentRequestTableColumn extends TableColumnBase {
+export class CommonLinkStudentRequestTableColumn extends TableColumnBase {
   linkStudentRequestCode?: string;
   dateRequested?: string;
   status?: string;
@@ -124,7 +142,7 @@ export class OpsLinkStudentRequestTableColumn extends TableColumnBase {
   requestedByParentCode?: string;
 }
 
-export class OpsMachinesTableColumn {
+export class CommonMachinesTableColumn {
   machineCode: string;
   description: string;
   url?: string;

@@ -13,29 +13,17 @@ import {
   ValidateNested,
 } from "class-validator";
 
-export class DefaultEmployeeUserDto {
+export class DefaultEmployeeDto {
   @ApiProperty()
   @IsNotEmpty()
-  firstName: string;
+  fullName: string;
 
   @ApiProperty()
   @IsOptional()
-  middleInitial: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  lastName: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsNumberString()
-  @Transform(({ obj, key }) => {
-    return obj[key].toString();
-  })
   mobileNumber: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   cardNumber: string;
 
   @ApiProperty()
@@ -53,4 +41,8 @@ export class DefaultEmployeeUserDto {
     return obj[key]?.toString();
   })
   employeeTitleId: string;
+
+  @ApiProperty()
+  @IsOptional()
+  orgEmployeeId: string;
 }

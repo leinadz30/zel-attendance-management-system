@@ -1,0 +1,7 @@
+{
+  "name": "ZamsConnect",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

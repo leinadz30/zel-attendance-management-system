@@ -26,7 +26,7 @@
 <mat-sidenav-container class="app-container" >
     <mat-sidenav #sidenav mode="side" className="mat-elevation-z4" [opened]="drawerDefaultOpened" [mode]="!drawerDefaultOpened ? 'over': 'side'" style="position: fixed;">
         <mat-nav-list>
-            <mat-list-item routerLink="dashboard" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+            <mat-list-item routerLink="dashboard" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" [ngClass]="{ 'active-link': title === 'Link Student Request' }">
                 <mat-icon>dashboard</mat-icon><span>Dashboard</span>
             </mat-list-item>
             <mat-expansion-panel
@@ -38,46 +38,52 @@
                   <mat-icon>library_books</mat-icon><span>School Management</span>
               </mat-expansion-panel-header>
               <mat-nav-list>
-                <mat-list-item routerLink="school-management" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+                <mat-list-item routerLink="school-management" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" [ngClass]="{ 'active-link': title === 'Schools' }">
                     <mat-icon>apartment</mat-icon><span>Schools</span>
                 </mat-list-item>
-                <mat-list-item routerLink="departments" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+                <mat-list-item routerLink="departments" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" [ngClass]="{ 'active-link': title === 'Departments' }">
                     <mat-icon>account_tree</mat-icon><span>Departments</span>
                 </mat-list-item>
-                <mat-list-item routerLink="employee-titles" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
-                    <mat-icon>group</mat-icon><span>Employee Titles</span>
+                <mat-list-item routerLink="employee-titles" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" [ngClass]="{ 'active-link': title === 'Employee Titles' }">
+                    <mat-icon>work</mat-icon><span>Employee Titles</span>
                 </mat-list-item>
-                <mat-list-item routerLink="courses" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+                <mat-list-item routerLink="courses" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" [ngClass]="{ 'active-link': title === 'Courses' }">
                     <mat-icon>history_edu</mat-icon><span>Courses</span>
                 </mat-list-item>
-                <mat-list-item routerLink="strands" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+                <mat-list-item routerLink="strands" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" [ngClass]="{ 'active-link': title === 'Strands' }">
                     <mat-icon>checklist</mat-icon><span>Strands</span>
                 </mat-list-item>
-                <mat-list-item routerLink="school-year-levels" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
-                    <mat-icon>insert_chart</mat-icon><span>School year levels</span>
+                <mat-list-item routerLink="school-year-levels" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" [ngClass]="{ 'active-link': title === 'School Year Levels' }">
+                    <mat-icon>insert_chart</mat-icon><span>School Year Levels</span>
                 </mat-list-item>
-                <mat-list-item routerLink="sections" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+                <mat-list-item routerLink="sections" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" [ngClass]="{ 'active-link': title === 'Sections' }">
                     <mat-icon>room_preferences</mat-icon><span>Sections</span>
                 </mat-list-item>
-                <mat-list-item routerLink="employees" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+                <mat-list-item routerLink="employees" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" [ngClass]="{ 'active-link': title === 'Employees' }">
                     <mat-icon>groups</mat-icon><span>Employees</span>
                 </mat-list-item>
-                <mat-list-item routerLink="students" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+                <mat-list-item routerLink="students" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" [ngClass]="{ 'active-link': title === 'Students' }">
                     <mat-icon>school</mat-icon><span>Students</span>
                 </mat-list-item>
-                <mat-list-item routerLink="link-student-request" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+                <mat-list-item routerLink="link-student-request" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" [ngClass]="{ 'active-link': title === 'Link Student Request' }">
                     <mat-icon>pending_actions</mat-icon><span>Link Student Request</span>
                 </mat-list-item>
-                <mat-list-item routerLink="machines" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+                <mat-list-item routerLink="machines" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" [ngClass]="{ 'active-link': title === 'Machines' }">
                     <mat-icon>point_of_sale</mat-icon><span>Machines</span>
+                </mat-list-item>
+                <mat-list-item routerLink="employee-user-access" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" [ngClass]="{ 'active-link': title === 'Employee User Access' }">
+                    <mat-icon>lock_person</mat-icon><span>Employee User Access</span>
+                </mat-list-item>
+                <mat-list-item routerLink="employee-user" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" [ngClass]="{ 'active-link': title === 'Employee User' }">
+                    <mat-icon>manage_accounts</mat-icon><span>Employee User</span>
                 </mat-list-item>
               </mat-nav-list>
             </mat-expansion-panel>
-            <mat-list-item routerLink="parents" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
-                <mat-icon>supervised_user_circle</mat-icon><span>Parents</span>
+            <mat-list-item routerLink="parents" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" [ngClass]="{ 'active-link': title === 'Parents' }">
+                <mat-icon>family_restroom</mat-icon><span>Parents</span>
             </mat-list-item>
-            <mat-list-item routerLink="users" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
-                <mat-icon>account_circle</mat-icon><span>Operator Users</span>
+            <mat-list-item routerLink="users" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" [ngClass]="{ 'active-link': title === 'Operator Users' }">
+                <mat-icon>engineering</mat-icon><span>Operator Users</span>
             </mat-list-item>
         </mat-nav-list>
     </mat-sidenav>

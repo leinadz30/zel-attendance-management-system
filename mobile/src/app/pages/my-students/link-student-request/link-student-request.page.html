@@ -1,0 +1,206 @@
+<ion-header no-border no-shadow>
+  <ion-toolbar mode="md">
+    <div slot="start" style="width: 48px"></div>
+    <ion-title class="ion-text-center"></ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()" >
+        <ion-icon name="close-sharp" style="font-size: 2em!important;" color="primary"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding" mode="md">
+  <div class="request-form">
+    <div class="form-header">
+      <ion-card mode="ios" color="primary">
+        <ion-card-content>
+          <h1>Request to link student?</h1>
+        </ion-card-content>
+      </ion-card>
+      <!-- <ion-fab-button class="close" (click)="close()">
+        <ion-icon name="close-sharp" color="primary"></ion-icon>
+      </ion-fab-button> -->
+    </div>
+    <ion-card mode="ios">
+      <ion-card-content>
+        <ion-item button lines="none" (click)="onShowSearchSchool()" detail="false">
+          <ion-label>
+            <div style="display: flex;flex-direction: column;">
+              <h2 class="title"><strong>School Code</strong></h2>
+              <div class="selected" *ngIf="selectedSchool && selectedSchool?.schoolCode; else noSelectedSchool">
+                <h2><strong>{{selectedSchool.orgSchoolCode}}</strong></h2>
+              </div>
+              <ng-template #noSelectedSchool>
+                <h2 class="placeholder">*Enter school code</h2>
+              </ng-template>
+            </div>
+          </ion-label>
+          <ion-icon aria-hidden="true" name="checkmark-circle" slot="end" *ngIf="selectedSchool && selectedSchool?.schoolCode"></ion-icon>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-modal #searchSchoolCodeModal trigger="search-school-code-modal" class="search-modal" [initialBreakpoint]="1" [breakpoints]="[0, 1]">
+      <ng-template>
+        <div class="search-form">
+          <div class="form-field-group">
+            <mat-form-field appearance="outline">
+              <mat-label>School Code</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Enter School Code"
+                [formControl]="orgSchoolCode"
+              />
+              <mat-error
+                *ngIf="orgSchoolCode.errors !== (null || undefined)"
+                >{{
+                  (orgSchoolCode.errors &&
+                  orgSchoolCode.errors["required"]
+                    ? "Please enter school code"
+                    : "") ||
+                    (orgSchoolCode.errors &&
+                    orgSchoolCode.errors["notFound"]
+                      ? "School not found"
+                      : "")
+                }}</mat-error
+              >
+            </mat-form-field>
+          </div>
+          <ion-button
+            mode="md"
+            expand="full"
+            shape="round"
+            size="large"
+            color="primary"
+            (click)="onSearchSchool()"
+            [disabled]="isSubmitting || orgSchoolCode.invalid">
+          Confirm
+        </ion-button>
+        </div>
+      </ng-template>
+    </ion-modal>
+
+    <ion-card mode="ios" *ngIf="selectedSchool && selectedSchool?.schoolCode">
+      <ion-card-content>
+        <ion-item button lines="none" (click)="onShowSearchStudents()" detail="false">
+          <ion-label>
+            <div style="display: flex;flex-direction: column;">
+              <h2 class="title"><strong>Student ID</strong></h2>
+              <div class="selected" *ngIf="selectedStudent && selectedStudent?.studentId; else noSelectedStudent">
+                <h2>{{selectedStudent.orgStudentId}}</h2>
+              </div>
+              <h2 class="title" *ngIf="selectedStudent && selectedStudent?.studentId;"><strong>Student Name</strong></h2>
+              <div class="selected" *ngIf="selectedStudent && selectedStudent?.studentId;">
+                <h2><strong>{{selectedStudent.fullName | censored}}</strong></h2>
+              </div>
+              <ng-template #noSelectedStudent>
+                <h2 class="placeholder">*Enter student ID</h2>
+              </ng-template>
+            </div>
+          </ion-label>
+          <ion-icon aria-hidden="true" name="checkmark-circle" slot="end" *ngIf="selectedStudent && selectedStudent?.studentId"></ion-icon>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+</div>
+
+
+<ion-modal #searchStudentIdModal class="search-modal" [initialBreakpoint]="1" [breakpoints]="[0, 1]">
+  <ng-template>
+    <div class="search-form">
+      <div class="form-field-group">
+        <mat-form-field appearance="outline">
+          <mat-label>Student Id</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="Enter Student Id"
+            [formControl]="orgStudentId"
+          />
+          <mat-error
+            *ngIf="orgStudentId.errors !== (null || undefined)"
+            >{{
+              (orgStudentId.errors &&
+              orgStudentId.errors["required"]
+                ? "Please enter student id"
+                : "") ||
+                (orgStudentId.errors &&
+                orgStudentId.errors["notFound"]
+                  ? "Student not found"
+                  : "")
+            }}</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <ion-button
+        mode="md"
+        expand="full"
+        shape="round"
+        size="large"
+        color="primary"
+        (click)="onSearchStudent()"
+        [disabled]="isSubmitting || orgStudentId.invalid">
+      Confirm
+    </ion-button>
+    </div>
+  </ng-template>
+</ion-modal>
+
+<ion-modal class="result-modal" [isOpen]="isOpenRequestResultModal">
+  <ng-template>
+    <div class="success-modal-content">
+      <ion-icon name="checkmark-circle-outline" *ngIf="requestResultModal?.type==='success'; else errorIcon" color="primary"></ion-icon>
+      <ng-template #errorIcon>
+        <ion-icon name="checkmark-circle-outline" color="danger"></ion-icon>
+      </ng-template>
+
+      <div class="title">
+        <h1>{{requestResultModal?.title}}</h1>
+      </div>
+      <div class="desc">
+        <h1>{{requestResultModal?.desc}}</h1>
+      </div>
+      <div class="action">
+        <ion-button
+          *ngIf="requestResultModal?.type==='success'; else errorAction"
+          mode="md"
+          expand="outline"
+          shape="round"
+          size="large"
+          color="primary"
+          (click)="requestResultModal.done()">
+        Done
+      </ion-button>
+      <ng-template #errorAction>
+        <ion-button
+          mode="md"
+          expand="outline"
+          shape="round"
+          size="large"
+          color="danger"
+          (click)="requestResultModal.retry()">
+        Retry
+      </ion-button>
+      </ng-template>
+
+    </div>
+    </div>
+  </ng-template>
+</ion-modal>
+</ion-content>
+<ion-footer *ngIf="valid">
+  <ion-toolbar
+  mode="md">
+    <ion-button
+      mode="md"
+      expand="full"
+      shape="round"
+      size="large"
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="isSubmitting">
+    Submit
+  </ion-button>
+  </ion-toolbar>
+</ion-footer>

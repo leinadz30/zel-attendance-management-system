@@ -1,0 +1,78 @@
+<ion-header >
+  <ion-toolbar mode="md" color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="close()" >
+        <ion-icon name="arrow-back-sharp" style="font-size: 2em!important;" ></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Profile</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="onShowDailyTapActivity()" >
+        <ion-icon name="calendar-sharp" style="font-size: 2em!important;" ></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh()" class="refresher-custom">
+    <ion-refresher-content >
+    </ion-refresher-content>
+  </ion-refresher>
+  <div class="ion-content-holder">
+    <div class="header">
+      <ion-item class="profile" lines="full" detail="false">
+        <ion-avatar slot="start" style="width: 70px;height: 70px;">
+          <img alt="{{details.fullName}}'s profile" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+        </ion-avatar>
+        <ion-label>
+          <h1 class="title"><strong>{{details.fullName}}</strong></h1>
+          <h2 class="desc">{{details?.schoolYearLevel?.name}}</h2>
+          <h2 class="course-strand" *ngIf="courseStrand && courseStrand !== ''">{{courseStrand}}</h2>
+        </ion-label>
+      </ion-item>
+      <ion-item button lines="full" detail="false">
+        <ion-icon color="primary" name="business" slot="start" style="font-size: 2em!important;" ></ion-icon>
+        <ion-label>
+          <h2>{{details.school?.schoolName}}</h2>
+        </ion-label>
+      </ion-item>
+    </div>
+    <div class="content">
+      <ion-item lines="full" detail="false">
+        <ion-icon color="primary" name="time" slot="start" style="font-size: 2em!important;" ></ion-icon>
+        <ion-label>
+          <h1>Tap activity for Today</h1>
+          <h2>{{ today | date: 'MMM dd'}}</h2>
+        </ion-label>
+      </ion-item>
+      <br>
+      <div *ngIf="!isLoading; else elseLoading">
+        <ion-list *ngIf="tapLogs.length > 0; else elseNoData" class="notifications" >
+          <ion-item button lines="none" detail="false" *ngFor="let item of tapLogs; index as i">
+            <ion-label [color]="item.status === 'LOG IN' ? 'secondary' : ''">
+              <h1>{{item.time}} - {{item.status ==='LOG IN' ? i > 0 ? 'TAP IN' : 'Arrived' : 'TAP OUT'}}</h1>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </div>
+      <ng-template #elseLoading >
+        <ion-list>
+          <ion-item >
+            <ion-label>
+              <div>
+                <h1 style="width: 50%;" class="title"><ion-skeleton-text [animated]="true"></ion-skeleton-text></h1>
+                <h1 style="width: 50%;" class="title"><ion-skeleton-text [animated]="true"></ion-skeleton-text></h1>
+              </div>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ng-template>
+      <ng-template #elseNoData >
+        <div class="no-records">
+          <ion-icon style="font-size: 3rem!important;opacity: 0.6;" name="time"></ion-icon>
+          <h1 class="text">No tap activity to show</h1>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</ion-content>

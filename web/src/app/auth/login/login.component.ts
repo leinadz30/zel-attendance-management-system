@@ -21,7 +21,7 @@ export class LoginComponent {
   submitted = false;
   error: string;
   isProcessing = false;
-  isOps = false;
+  mode: 'OPERATION' | 'ORGANIZATION';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -31,7 +31,7 @@ export class LoginComponent {
     private storageService: StorageService,
     private snackBar: MatSnackBar,
     private router: Router) {
-      this.isOps = this.route.snapshot.data && route.snapshot.data["ops"];
+      this.mode = this.route.snapshot.data && route.snapshot.data["mode"];
       const user = this.storageService.getLoginProfile();
       if(user) {
         this.authService.redirectToPage(user, false);
@@ -39,14 +39,14 @@ export class LoginComponent {
     }
 
   ngOnInit() {
-    if(this.isOps) {
+    if(this.mode === 'OPERATION') {
       this.logInForm = this.formBuilder.group({
         userName: ['', Validators.required],
         password: ['', Validators.required]
       });
     } else {
       this.logInForm = this.formBuilder.group({
-        schoolCode: ['', Validators.required],
+        // schoolCode: ['', Validators.required],
         userName: ['', Validators.required],
         password: ['', Validators.required]
       });
@@ -60,7 +60,7 @@ export class LoginComponent {
     console.log(this.logInForm.value);
     try{
       const params = this.logInForm.value;
-      if(this.isOps) {
+      if(this.mode === 'OPERATION') {
         this.authService.loginOperator(params)
           .subscribe(async (res) => {
             if (res.success) {

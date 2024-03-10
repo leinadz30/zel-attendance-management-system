@@ -1,7 +1,7 @@
 import { Employees } from "./employees";
 import { Courses } from "./courses";
 import { Departments } from "./departments";
-import { EmployeeRoles } from "./employee-roles";
+import { EmployeeUserAccess } from "./employee-user-access";
 import { EmployeeTitles } from "./employee-titles";
 import { Machines } from "./machines";
 import { SchoolYearLevels } from "./school-year-levels";
@@ -33,7 +33,7 @@ export class Schools {
   courses: Courses[];
   strands: Strands[];
   departments: Departments[];
-  employeeRoles: EmployeeRoles[];
+  employeeUserAccesss: EmployeeUserAccess[];
   employeeTitles: EmployeeTitles[];
   employees: Employees[];
   machines: Machines[];

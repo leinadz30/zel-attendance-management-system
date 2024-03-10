@@ -1,0 +1,51 @@
+
+<h4 mat-dialog-title>Parent Information</h4>
+<div mat-dialog-content>
+  <div fxFlex="100" class="content-inner" fxLayout="column">
+    <form [formGroup]="parentForm" fxLayout="row wrap" class="readonly">
+      <fieldset fxFlex="100" fxLayout="column">
+        <div
+          fxLayout="column"
+          fxFlex="100"
+          style="gap: 16px">
+          <mat-form-field
+            appearance="outline">
+            <mat-label>Username &nbsp;&nbsp;</mat-label>
+            <input
+              matInput
+              placeholder="Username"
+              formControlName="userName"/>
+          </mat-form-field>
+          <mat-form-field
+            appearance="outline">
+            <mat-label>Full Name &nbsp;&nbsp;</mat-label>
+            <input
+              matInput
+              placeholder="Full Name"
+              formControlName="fullName"/>
+          </mat-form-field>
+          <mat-form-field
+            appearance="outline">
+            <mat-label>Mobile number &nbsp;&nbsp;</mat-label>
+            <input
+              matInput
+              placeholder="Mobile number"
+              formControlName="mobileNumber"
+            />
+          </mat-form-field>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <div>
+    <button
+      mat-flat-button
+      cdkFocusInitial
+      (click)="dialogRef.close(false)">
+      Close
+    </button>
+  </div>
+</div>

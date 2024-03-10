@@ -18,7 +18,7 @@ export class RegisterComponent {
     mobileNumber: ['', Validators.required],
     password: ['', Validators.required]
   });
-  ops = false;
+  mode: 'OPERATION' | 'ORGANIZATION';
   loading = false;
   submitted = false;
   error: string;
@@ -33,6 +33,7 @@ export class RegisterComponent {
     private snackBar: MatSnackBar,
     private router: Router) {
       // redirect to home if already logged in
+      this.mode = this.route.snapshot.data && route.snapshot.data["mode"];
 
       const user = localStorage.getItem("user");
       if (user && JSON.parse(user??"") !== null && JSON.parse(user??"") !== undefined) {

@@ -22,29 +22,14 @@ export class Parents {
   @Column("character varying", { name: "ParentCode", nullable: true })
   parentCode: string | null;
 
-  @Column("character varying", { name: "FirstName" })
-  firstName: string;
-
-  @Column("character varying", { name: "MiddleInitial", nullable: true })
-  middleInitial: string | null;
-
-  @Column("character varying", { name: "LastName" })
-  lastName: string;
-
-  @Column("character varying", { name: "Gender" })
-  gender: string;
-
-  @Column("date", { name: "BirthDate", nullable: true })
-  birthDate: string | null;
+  @Column("character varying", { name: "FullName", default: () => "''" })
+  fullName: string;
 
   @Column("character varying", { name: "MobileNumber" })
   mobileNumber: string;
 
   @Column("character varying", { name: "Email", nullable: true })
   email: string | null;
-
-  @Column("character varying", { name: "Address" })
-  address: string;
 
   @Column("timestamp with time zone", {
     name: "RegistrationDate",
@@ -57,9 +42,6 @@ export class Parents {
 
   @Column("boolean", { name: "Active", default: () => "true" })
   active: boolean;
-
-  @Column("character varying", { name: "FullName", default: () => "''" })
-  fullName: string;
 
   @OneToMany(
     () => LinkStudentRequest,

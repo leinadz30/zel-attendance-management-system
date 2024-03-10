@@ -1,8 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { extname } from "path";
-import { DEPARTMENTS_ERROR_NOT_FOUND } from "src/common/constant/departments.constant";
-import { EMPLOYEEROLES_ERROR_NOT_FOUND } from "src/common/constant/employees-roles.constant";
+import { DEPARTMENTS_ERROR_NOT_FOUND } from "src/common/constant/departments.constant";;
 import { PARENTS_ERROR_NOT_FOUND } from "src/common/constant/parents.constant";
 import { SCHOOL_YEAR_LEVELS_ERROR_NOT_FOUND } from "src/common/constant/school-year-levels.constant";
 import { SCHOOLS_ERROR_NOT_FOUND } from "src/common/constant/schools.constant";
@@ -105,6 +104,7 @@ export class ParentsService {
     if (!res) {
       throw Error(USER_ERROR_USER_NOT_FOUND);
     }
+    res.parentStudents = res.parentStudents.filter((x) => x.active);
     delete res.user.password;
     delete res.registeredByUser.password;
     if (res?.updatedByUser?.password) {
@@ -133,9 +133,11 @@ from dbo."Students" s
 left join dbo."ParentStudent" ps ON s."StudentId" = ps."StudentId"
 left join dbo."Parents" p ON ps."ParentId" = p."ParentId"
 WHERE p."ParentCode" = '${parentCode}'
+ANd ps."Active" = true
     `);
     return res;
   }
+
   async updateProfile(parentCode, dto: UpdateParentUserProfileDto) {
     return await this.parentRepo.manager.transaction(async (entityManager) => {
       let parent = await entityManager.findOne(Parents, {
@@ -155,10 +157,7 @@ WHERE p."ParentCode" = '${parentCode}'
         throw Error(PARENTS_ERROR_NOT_FOUND);
       }
 
-      parent.firstName = dto.firstName;
-      parent.middleInitial = dto.middleInitial;
-      parent.lastName = dto.lastName;
-      parent.fullName = `${dto.firstName} ${dto.lastName}`;
+      parent.fullName = dto.fullName;
       parent.mobileNumber = dto.mobileNumber;
       const timestamp = await entityManager
         .query(CONST_QUERYCURRENT_TIMESTAMP)

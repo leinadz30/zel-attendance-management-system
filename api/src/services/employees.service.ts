@@ -3,7 +3,6 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import moment from "moment";
 import { DEPARTMENTS_ERROR_NOT_FOUND } from "src/common/constant/departments.constant";
-import { EMPLOYEEROLES_ERROR_NOT_FOUND } from "src/common/constant/employees-roles.constant";
 import { EMPLOYEES_ERROR_NOT_FOUND } from "src/common/constant/employees.constant";
 import { SCHOOL_YEAR_LEVELS_ERROR_NOT_FOUND } from "src/common/constant/school-year-levels.constant";
 import { SCHOOLS_ERROR_NOT_FOUND } from "src/common/constant/schools.constant";
@@ -16,18 +15,11 @@ import {
   generateIndentityCode,
 } from "src/common/utils/utils";
 import { UpdateUserResetPasswordDto } from "src/core/dto/auth/reset-password.dto";
-import {
-  CreateEmployeeDto,
-  CreateEmployeeUserDto,
-} from "src/core/dto/employees/employees.create.dto";
-import {
-  UpdateEmployeeDto,
-  UpdateEmployeeUserDto,
-  UpdateEmployeeUserProfileDto,
-} from "src/core/dto/employees/employees.update.dto";
+import { BatchCreateEmployeeDto } from "src/core/dto/employees/employees.batch-create.dto";
+import { CreateEmployeeDto } from "src/core/dto/employees/employees.create.dto";
+import { UpdateEmployeeDto } from "src/core/dto/employees/employees.update.dto";
 import { Courses } from "src/db/entities/Courses";
 import { Departments } from "src/db/entities/Departments";
-import { EmployeeRoles } from "src/db/entities/EmployeeRoles";
 import { EmployeeTitles } from "src/db/entities/EmployeeTitles";
 import { EmployeeUser } from "src/db/entities/EmployeeUser";
 import { Employees } from "src/db/entities/Employees";
@@ -99,10 +91,6 @@ export class EmployeesService {
         updatedByUser: true,
         school: true,
         employeePosition: true,
-        employeeUser: {
-          user: true,
-          employeeRole: true,
-        },
       },
     });
 
@@ -133,12 +121,10 @@ export class EmployeesService {
           let employee = new Employees();
           employee.school = school;
           employee.accessGranted = true;
-          employee.firstName = dto.firstName;
-          employee.middleInitial = dto.middleInitial;
-          employee.lastName = dto.lastName;
-          employee.fullName = `${dto.firstName} ${dto.lastName}`;
+          employee.fullName = dto.fullName;
           employee.mobileNumber = dto.mobileNumber;
           employee.cardNumber = dto.cardNumber;
+          employee.orgEmployeeId = dto.orgEmployeeId;
           const timestamp = await entityManager
             .query(CONST_QUERYCURRENT_TIMESTAMP)
             .then((res) => {
@@ -157,33 +143,40 @@ export class EmployeesService {
           }
           employee.createdByUser = registeredByUser;
 
-          const department = await entityManager.findOne(Departments, {
-            where: {
-              departmentId: dto.departmentId,
-              school: {
-                schoolId: dto.schoolId,
+          if (dto.departmentId && dto.departmentId !== "") {
+            const department = await entityManager.findOne(Departments, {
+              where: {
+                departmentId: dto.departmentId,
+                school: {
+                  schoolId: dto.schoolId,
+                },
+                active: true,
               },
-              active: true,
-            },
-          });
-          if (!department) {
-            throw Error(DEPARTMENTS_ERROR_NOT_FOUND);
+            });
+            if (!department) {
+              throw Error(DEPARTMENTS_ERROR_NOT_FOUND);
+            }
+            employee.department = department;
           }
-          employee.department = department;
 
-          const employeePosition = await entityManager.findOne(EmployeeTitles, {
-            where: {
-              employeeTitleId: dto.employeeTitleId,
-              school: {
-                schoolId: dto.schoolId,
-              },
-              active: true,
-            },
-          });
-          if (!employeePosition) {
-            throw Error(SCHOOL_YEAR_LEVELS_ERROR_NOT_FOUND);
+          if (dto.departmentId && dto.departmentId !== "") {
+            const employeePosition = await entityManager.findOne(
+              EmployeeTitles,
+              {
+                where: {
+                  employeeTitleId: dto.employeeTitleId,
+                  school: {
+                    schoolId: dto.schoolId,
+                  },
+                  active: true,
+                },
+              }
+            );
+            if (!employeePosition) {
+              throw Error(EMPLOYEETITLES_ERROR_NOT_FOUND);
+            }
+            employee.employeePosition = employeePosition;
           }
-          employee.employeePosition = employeePosition;
 
           employee = await entityManager.save(Employees, employee);
           employee.employeeCode = generateIndentityCode(employee.employeeId);
@@ -200,10 +193,6 @@ export class EmployeesService {
               updatedByUser: true,
               school: true,
               employeePosition: true,
-              employeeUser: {
-                user: true,
-                employeeRole: true,
-              },
             },
           });
           delete employee.employeeUser?.user?.password;
@@ -233,276 +222,217 @@ export class EmployeesService {
         ex["message"].includes("u_employees_card")
       ) {
         throw Error("Card number already used!");
+      } else if (
+        ex["message"] &&
+        (ex["message"].includes("duplicate key") ||
+          ex["message"].includes("violates unique constraint")) &&
+        ex["message"].toLowerCase().includes("u_employees_orgemployeeid")
+      ) {
+        throw Error("Employee Id already used!");
       } else {
         throw ex;
       }
     }
   }
 
-  async createEmployeeUser(dto: CreateEmployeeUserDto) {
+  async createBatch(dtos: BatchCreateEmployeeDto[]) {
     try {
       return await this.employeeRepo.manager.transaction(
         async (entityManager) => {
-          const school = await entityManager.findOne(Schools, {
-            where: {
-              schoolId: dto.schoolId,
-              active: true,
-            },
-          });
-          if (!school) {
-            throw Error(SCHOOLS_ERROR_NOT_FOUND);
+          const success = [];
+          const warning = [];
+          const failed = [];
+          for (const dto of dtos) {
+            try {
+              let hasWarning = false;
+              const school = await entityManager.findOne(Schools, {
+                where: {
+                  orgSchoolCode: dto.orgSchoolCode,
+                  active: true,
+                },
+              });
+              if (!school) {
+                throw Error(SCHOOLS_ERROR_NOT_FOUND);
+              }
+              let employee = await entityManager.findOne(Employees, {
+                where: {
+                  orgEmployeeId: dto.orgEmployeeId,
+                  school: {
+                    orgSchoolCode: dto.orgSchoolCode,
+                  },
+                  active: true,
+                },
+              });
+              if (!employee) {
+                employee = new Employees();
+              }
+
+              employee.school = school;
+              employee.accessGranted = true;
+              employee.fullName = dto.fullName;
+              employee.mobileNumber = dto.mobileNumber;
+              if (dto.cardNumber && dto.cardNumber !== "") {
+                employee.cardNumber = dto.cardNumber;
+              }
+              if (dto.orgEmployeeId && dto.orgEmployeeId !== "") {
+                employee.orgEmployeeId = dto.orgEmployeeId;
+              } else {
+                //create temporary id for easy filter
+                employee.orgEmployeeId = `${dto.orgSchoolCode}${dto.fullName
+                  ?.replace(/\s+/g, "")
+                  .toUpperCase()}}`;
+              }
+              const timestamp = await entityManager
+                .query(CONST_QUERYCURRENT_TIMESTAMP)
+                .then((res) => {
+                  return res[0]["timestamp"];
+                });
+              employee.createdDate = timestamp;
+
+              const registeredByUser = await entityManager.findOne(Users, {
+                where: {
+                  userId: dto.createdByUserId,
+                  active: true,
+                },
+              });
+              if (!registeredByUser) {
+                throw Error(USER_ERROR_USER_NOT_FOUND);
+              }
+              employee.createdByUser = registeredByUser;
+              if (dto.departmentName && dto.departmentName !== "") {
+                const department: Departments = (await entityManager
+                  .createQueryBuilder("Departments", "d")
+                  .leftJoinAndSelect("d.school", "s")
+                  .where(
+                    "trim(upper(d.departmentName)) = trim(upper(:departmentName)) AND " +
+                      "s.orgSchoolCode = :orgSchoolCode"
+                  )
+                  .setParameters({
+                    departmentName: dto.departmentName,
+                    orgSchoolCode: dto.orgSchoolCode,
+                  })
+                  .getOne()) as any;
+                if (!department) {
+                  if (dto.orgEmployeeId && dto.orgEmployeeId !== "") {
+                    warning.push({
+                      orgEmployeeId: dto.orgEmployeeId,
+                      refId: dto.refId,
+                      comments: `${DEPARTMENTS_ERROR_NOT_FOUND} ${dto.departmentName}`,
+                    });
+                  } else {
+                    warning.push({
+                      refId: dto.refId,
+                      comments: `${DEPARTMENTS_ERROR_NOT_FOUND} ${dto.departmentName}`,
+                    });
+                  }
+                  hasWarning = true;
+                }
+                employee.department = department;
+              } else {
+                if (dto.orgEmployeeId && dto.orgEmployeeId !== "") {
+                  warning.push({
+                    orgEmployeeId: dto.orgEmployeeId,
+                    refId: dto.refId,
+                    comments: `${DEPARTMENTS_ERROR_NOT_FOUND} ${dto.departmentName}`,
+                  });
+                } else {
+                  warning.push({
+                    refId: dto.refId,
+                    comments: `${DEPARTMENTS_ERROR_NOT_FOUND} ${dto.departmentName}`,
+                  });
+                }
+                hasWarning = true;
+              }
+
+              if (dto.employeeTitleName && dto.employeeTitleName !== "") {
+                const employeePosition: EmployeeTitles = (await entityManager
+                  .createQueryBuilder("EmployeeTitles", "et")
+                  .leftJoinAndSelect("et.school", "s")
+                  .where(
+                    "trim(upper(et.name)) = trim(upper(:employeeTitleName)) AND " +
+                      "s.orgSchoolCode = :orgSchoolCode"
+                  )
+                  .setParameters({
+                    employeeTitleName: dto.employeeTitleName,
+                    orgSchoolCode: dto.orgSchoolCode,
+                  })
+                  .getOne()) as any;
+                if (!employeePosition) {
+                  if (dto.orgEmployeeId && dto.orgEmployeeId !== "") {
+                    warning.push({
+                      orgEmployeeId: dto.orgEmployeeId,
+                      refId: dto.refId,
+                      comments: `${EMPLOYEETITLES_ERROR_NOT_FOUND} ${dto.employeeTitleName}`,
+                    });
+                  } else {
+                    warning.push({
+                      refId: dto.refId,
+                      comments: `${EMPLOYEETITLES_ERROR_NOT_FOUND} ${dto.employeeTitleName}`,
+                    });
+                  }
+                  hasWarning = true;
+                }
+                employee.employeePosition = employeePosition;
+              } else {
+                if (dto.orgEmployeeId && dto.orgEmployeeId !== "") {
+                  warning.push({
+                    orgEmployeeId: dto.orgEmployeeId,
+                    refId: dto.refId,
+                    comments: `${EMPLOYEETITLES_ERROR_NOT_FOUND} ${dto.employeeTitleName}`,
+                  });
+                } else {
+                  warning.push({
+                    refId: dto.refId,
+                    comments: `${EMPLOYEETITLES_ERROR_NOT_FOUND} ${dto.employeeTitleName}`,
+                  });
+                }
+                hasWarning = true;
+              }
+
+              employee = await entityManager.save(Employees, employee);
+              employee.employeeCode = generateIndentityCode(
+                employee.employeeId
+              );
+              employee = await entityManager.save(Employees, employee);
+
+              employee = await entityManager.findOne(Employees, {
+                where: {
+                  employeeCode: employee.employeeCode,
+                  active: true,
+                },
+                relations: {
+                  department: true,
+                  createdByUser: true,
+                  updatedByUser: true,
+                  school: true,
+                  employeePosition: true,
+                },
+              });
+              delete employee.employeeUser?.user?.password;
+              delete employee.createdByUser.password;
+              if (!hasWarning) {
+                success.push({
+                  orgEmployeeId: dto.orgEmployeeId,
+                  refId: dto.refId,
+                });
+              }
+            } catch (ex) {
+              failed.push({
+                orgEmployeeId: dto.orgEmployeeId,
+                refId: dto.refId,
+                comments: ex?.message,
+              });
+            }
           }
-
-          let user = new Users();
-          user.userType = USER_TYPE.EMPLOYEE;
-          user.userName = dto.userName;
-          user.password = await hash(dto.password);
-          user = await entityManager.save(Users, user);
-
-          let employee = new Employees();
-          employee.school = school;
-          employee.accessGranted = true;
-          employee.firstName = dto.firstName;
-          employee.middleInitial = dto.middleInitial;
-          employee.lastName = dto.lastName;
-          employee.fullName = `${dto.firstName} ${dto.lastName}`;
-          employee.mobileNumber = dto.mobileNumber;
-          employee.cardNumber = dto.cardNumber;
-          const timestamp = await entityManager
-            .query(CONST_QUERYCURRENT_TIMESTAMP)
-            .then((res) => {
-              return res[0]["timestamp"];
-            });
-          employee.createdDate = timestamp;
-
-          const registeredByUser = await entityManager.findOne(Users, {
-            where: {
-              userId: dto.createdByUserId,
-              active: true,
-            },
-          });
-          if (!registeredByUser) {
-            throw Error(USER_ERROR_USER_NOT_FOUND);
-          }
-          employee.createdByUser = registeredByUser;
-
-          const department = await entityManager.findOne(Departments, {
-            where: {
-              departmentId: dto.departmentId,
-              school: {
-                schoolId: dto.schoolId,
-              },
-              active: true,
-            },
-          });
-          if (!department) {
-            throw Error(DEPARTMENTS_ERROR_NOT_FOUND);
-          }
-          employee.department = department;
-
-          const employeePosition = await entityManager.findOne(EmployeeTitles, {
-            where: {
-              employeeTitleId: dto.employeeTitleId,
-              school: {
-                schoolId: dto.schoolId,
-              },
-              active: true,
-            },
-          });
-          if (!employeePosition) {
-            throw Error(SCHOOL_YEAR_LEVELS_ERROR_NOT_FOUND);
-          }
-          employee.employeePosition = employeePosition;
-
-          employee = await entityManager.save(Employees, employee);
-          employee.employeeCode = generateIndentityCode(employee.employeeId);
-          employee = await entityManager.save(Employees, employee);
-
-          let employeeUser = new EmployeeUser();
-          employeeUser.user = user;
-          employeeUser.employee = employee;
-          employeeUser.dateRegistered = timestamp;
-
-          const employeeRole = await entityManager.findOne(EmployeeRoles, {
-            where: {
-              employeeRoleId: dto.employeeRoleId,
-              school: {
-                schoolId: dto.schoolId,
-              },
-              active: true,
-            },
-          });
-          if (!employeeRole) {
-            throw Error(EMPLOYEEROLES_ERROR_NOT_FOUND);
-          }
-          employeeUser.employeeRole = employeeRole;
-          employeeUser = await entityManager.save(EmployeeUser, employeeUser);
-
-          employee = await entityManager.findOne(Employees, {
-            where: {
-              employeeCode: employee.employeeCode,
-              active: true,
-            },
-            relations: {
-              department: true,
-              createdByUser: true,
-              updatedByUser: true,
-              school: true,
-              employeePosition: true,
-              employeeUser: {
-                user: true,
-                employeeRole: true,
-              },
-            },
-          });
-          delete employee.employeeUser?.user?.password;
-          delete employee.createdByUser.password;
-          return employee;
+          return {
+            success,
+            warning,
+            failed,
+          };
         }
       );
     } catch (ex) {
-      if (
-        ex["message"] &&
-        (ex["message"].includes("duplicate key") ||
-          ex["message"].includes("violates unique constraint")) &&
-        ex["message"].includes("u_user")
-      ) {
-        throw Error("Username already used!");
-      } else if (
-        ex["message"] &&
-        (ex["message"].includes("duplicate key") ||
-          ex["message"].includes("violates unique constraint")) &&
-        ex["message"].includes("u_employees_number")
-      ) {
-        throw Error("Mobile number already used!");
-      } else if (
-        ex["message"] &&
-        (ex["message"].includes("duplicate key") ||
-          ex["message"].includes("violates unique constraint")) &&
-        ex["message"].includes("u_employees_card")
-      ) {
-        throw Error("Card number already used!");
-      } else {
-        throw ex;
-      }
-    }
-  }
-
-  async updateProfile(employeeCode, dto: UpdateEmployeeDto) {
-    try {
-      return await this.employeeRepo.manager.transaction(
-        async (entityManager) => {
-          let employee = await entityManager.findOne(Employees, {
-            where: {
-              employeeCode,
-              active: true,
-            },
-            relations: {
-              department: true,
-              createdByUser: true,
-              updatedByUser: true,
-              school: true,
-              employeePosition: true,
-              employeeUser: {
-                user: true,
-                employeeRole: true,
-              },
-            },
-          });
-
-          if (!employee) {
-            throw Error(EMPLOYEES_ERROR_NOT_FOUND);
-          }
-
-          employee.firstName = dto.firstName;
-          employee.middleInitial = dto.middleInitial;
-          employee.lastName = dto.lastName;
-          employee.fullName = `${dto.firstName} ${dto.lastName}`;
-          employee.mobileNumber = dto.mobileNumber;
-          const timestamp = await entityManager
-            .query(CONST_QUERYCURRENT_TIMESTAMP)
-            .then((res) => {
-              return res[0]["timestamp"];
-            });
-          employee.updatedDate = timestamp;
-          employee.updatedByUser = employee.employeeUser?.user;
-
-          const department = await entityManager.findOne(Departments, {
-            where: {
-              departmentId: dto.departmentId,
-              active: true,
-            },
-          });
-          if (!department) {
-            throw Error(DEPARTMENTS_ERROR_NOT_FOUND);
-          }
-          employee.department = department;
-
-          const employeePosition = await entityManager.findOne(EmployeeTitles, {
-            where: {
-              employeeTitleId: dto.employeeTitleId,
-              school: {
-                schoolId: employee.school.schoolId,
-              },
-              active: true,
-            },
-          });
-          if (!employeePosition) {
-            throw Error(EMPLOYEETITLES_ERROR_NOT_FOUND);
-          }
-          employee.employeePosition = employeePosition;
-          employee = await entityManager.save(Employees, employee);
-
-          employee = await entityManager.findOne(Employees, {
-            where: {
-              employeeCode,
-              active: true,
-            },
-            relations: {
-              department: true,
-              createdByUser: true,
-              updatedByUser: true,
-              school: true,
-              employeePosition: true,
-              employeeUser: {
-                user: true,
-                employeeRole: true,
-              },
-            },
-          });
-          delete employee.employeeUser?.user.password;
-          delete employee.createdByUser.password;
-          if (employee?.updatedByUser?.password) {
-            delete employee.updatedByUser.password;
-          }
-          return employee;
-        }
-      );
-    } catch (ex) {
-      if (
-        ex["message"] &&
-        (ex["message"].includes("duplicate key") ||
-          ex["message"].includes("violates unique constraint")) &&
-        ex["message"].includes("u_user")
-      ) {
-        throw Error("Username already used!");
-      } else if (
-        ex["message"] &&
-        (ex["message"].includes("duplicate key") ||
-          ex["message"].includes("violates unique constraint")) &&
-        ex["message"].includes("u_employees_number")
-      ) {
-        throw Error("Mobile number already used!");
-      } else if (
-        ex["message"] &&
-        (ex["message"].includes("duplicate key") ||
-          ex["message"].includes("violates unique constraint")) &&
-        ex["message"].includes("u_employees_card")
-      ) {
-        throw Error("Card number already used!");
-      } else {
-        throw ex;
-      }
+      throw ex;
     }
   }
 
@@ -521,10 +451,6 @@ export class EmployeesService {
               updatedByUser: true,
               school: true,
               employeePosition: true,
-              employeeUser: {
-                user: true,
-                employeeRole: true,
-              },
             },
           });
 
@@ -532,12 +458,10 @@ export class EmployeesService {
             throw Error(EMPLOYEES_ERROR_NOT_FOUND);
           }
 
-          employee.firstName = dto.firstName;
-          employee.middleInitial = dto.middleInitial;
-          employee.lastName = dto.lastName;
-          employee.fullName = `${dto.firstName} ${dto.lastName}`;
+          employee.fullName = dto.fullName;
           employee.mobileNumber = dto.mobileNumber;
           employee.cardNumber = dto.cardNumber;
+          employee.orgEmployeeId = dto.orgEmployeeId;
           const timestamp = await entityManager
             .query(CONST_QUERYCURRENT_TIMESTAMP)
             .then((res) => {
@@ -593,10 +517,6 @@ export class EmployeesService {
               updatedByUser: true,
               school: true,
               employeePosition: true,
-              employeeUser: {
-                user: true,
-                employeeRole: true,
-              },
             },
           });
           delete employee.employeeUser?.user?.password;
@@ -633,207 +553,6 @@ export class EmployeesService {
         throw ex;
       }
     }
-  }
-
-  async updateEmployeeUser(employeeCode, dto: UpdateEmployeeUserDto) {
-    try {
-      return await this.employeeRepo.manager.transaction(
-        async (entityManager) => {
-          let employee = await entityManager.findOne(Employees, {
-            where: {
-              employeeCode,
-              active: true,
-            },
-            relations: {
-              department: true,
-              createdByUser: true,
-              updatedByUser: true,
-              school: true,
-              employeePosition: true,
-              employeeUser: {
-                user: true,
-                employeeRole: true,
-              },
-            },
-          });
-
-          if (!employee) {
-            throw Error(EMPLOYEES_ERROR_NOT_FOUND);
-          }
-
-          employee.firstName = dto.firstName;
-          employee.middleInitial = dto.middleInitial;
-          employee.lastName = dto.lastName;
-          employee.fullName = `${dto.firstName} ${dto.lastName}`;
-          employee.mobileNumber = dto.mobileNumber;
-          employee.cardNumber = dto.cardNumber;
-          const timestamp = await entityManager
-            .query(CONST_QUERYCURRENT_TIMESTAMP)
-            .then((res) => {
-              return res[0]["timestamp"];
-            });
-          employee.updatedDate = timestamp;
-
-          const updatedByUser = await entityManager.findOne(Users, {
-            where: {
-              userId: dto.updatedByUserId,
-              active: true,
-            },
-          });
-          if (!updatedByUser) {
-            throw Error(USER_ERROR_USER_NOT_FOUND);
-          }
-          employee.updatedByUser = updatedByUser;
-
-          const department = await entityManager.findOne(Departments, {
-            where: {
-              departmentId: dto.departmentId,
-              active: true,
-            },
-          });
-          if (!department) {
-            throw Error(DEPARTMENTS_ERROR_NOT_FOUND);
-          }
-          employee.department = department;
-
-          const employeePosition = await entityManager.findOne(EmployeeTitles, {
-            where: {
-              employeeTitleId: dto.employeeTitleId,
-              school: {
-                schoolId: employee.school.schoolId,
-              },
-              active: true,
-            },
-          });
-          if (!employeePosition) {
-            throw Error(EMPLOYEETITLES_ERROR_NOT_FOUND);
-          }
-          employee.employeePosition = employeePosition;
-          employee = await entityManager.save(Employees, employee);
-
-          let employeeUser = await entityManager.findOne(EmployeeUser, {
-            where: {
-              employee: {
-                employeeId: employee.employeeId,
-              },
-            },
-          });
-
-          const employeeRole = await entityManager.findOne(EmployeeRoles, {
-            where: {
-              employeeRoleId: dto.employeeRoleId,
-              school: {
-                schoolId: employee.school.schoolId,
-              },
-              active: true,
-            },
-          });
-          if (!employeeRole) {
-            throw Error(EMPLOYEEROLES_ERROR_NOT_FOUND);
-          }
-          employeeUser.employeeRole = employeeRole;
-          employeeUser = await entityManager.save(EmployeeUser, employeeUser);
-
-          employee = await entityManager.findOne(Employees, {
-            where: {
-              employeeCode,
-              active: true,
-            },
-            relations: {
-              department: true,
-              createdByUser: true,
-              updatedByUser: true,
-              school: true,
-              employeePosition: true,
-              employeeUser: {
-                user: true,
-                employeeRole: true,
-              },
-            },
-          });
-          delete employee.employeeUser?.user?.password;
-          delete employee.createdByUser.password;
-          if (employee?.updatedByUser?.password) {
-            delete employee.updatedByUser.password;
-          }
-          return employee;
-        }
-      );
-    } catch (ex) {
-      if (
-        ex["message"] &&
-        (ex["message"].includes("duplicate key") ||
-          ex["message"].includes("violates unique constraint")) &&
-        ex["message"].includes("u_user")
-      ) {
-        throw Error("Username already used!");
-      } else if (
-        ex["message"] &&
-        (ex["message"].includes("duplicate key") ||
-          ex["message"].includes("violates unique constraint")) &&
-        ex["message"].includes("u_employees_number")
-      ) {
-        throw Error("Mobile number already used!");
-      } else if (
-        ex["message"] &&
-        (ex["message"].includes("duplicate key") ||
-          ex["message"].includes("violates unique constraint")) &&
-        ex["message"].includes("u_employees_card")
-      ) {
-        throw Error("Card number already used!");
-      } else {
-        throw ex;
-      }
-    }
-  }
-
-  async resetPassword(employeeCode, dto: UpdateUserResetPasswordDto) {
-    return await this.employeeRepo.manager.transaction(
-      async (entityManager) => {
-        let employee = await entityManager.findOne(Employees, {
-          where: {
-            employeeCode,
-            active: true,
-          },
-          relations: {
-            employeeUser: {
-              user: true,
-            },
-          },
-        });
-
-        if (!employee) {
-          throw Error(EMPLOYEES_ERROR_NOT_FOUND);
-        }
-
-        const user = employee.employeeUser?.user;
-        user.password = await hash(dto.password);
-        await entityManager.save(Users, user);
-        employee = await entityManager.findOne(Employees, {
-          where: {
-            employeeCode,
-            active: true,
-          },
-          relations: {
-            department: true,
-            createdByUser: true,
-            updatedByUser: true,
-            school: true,
-            employeePosition: true,
-            employeeUser: {
-              user: true,
-              employeeRole: true,
-            },
-          },
-        });
-        delete employee.employeeUser?.user?.password;
-        delete employee.createdByUser.password;
-        if (employee?.updatedByUser?.password) {
-          delete employee.updatedByUser.password;
-        }
-        return employee;
-      }
-    );
   }
 
   async delete(employeeCode) {
@@ -850,10 +569,6 @@ export class EmployeesService {
             updatedByUser: true,
             school: true,
             employeePosition: true,
-            employeeUser: {
-              user: true,
-              employeeRole: true,
-            },
           },
         });
 
@@ -863,20 +578,22 @@ export class EmployeesService {
 
         employee.active = false;
         await entityManager.save(Employees, employee);
-        const user = await entityManager.findOne(Users, {
-          where: {
-            userId: employee.employeeUser.userId,
-          },
-        });
-        user.active = false;
         const employeeUser = await entityManager.findOne(EmployeeUser, {
           where: {
             employee: {
               employeeId: employee.employeeId,
             },
           },
+          relations: {
+            user: true,
+          },
         });
-        await entityManager.delete(EmployeeUser, employeeUser);
+        if (employeeUser) {
+          const user = employeeUser.user;
+          user.active = false;
+          await entityManager.save(Users, user);
+          await entityManager.delete(EmployeeUser, employeeUser);
+        }
         employee = await entityManager.findOne(Employees, {
           where: {
             employeeCode,
@@ -887,63 +604,6 @@ export class EmployeesService {
             updatedByUser: true,
             school: true,
             employeePosition: true,
-            employeeUser: {
-              user: true,
-              employeeRole: true,
-            },
-          },
-        });
-        delete employee.employeeUser?.user?.password;
-        delete employee.createdByUser.password;
-        if (employee?.updatedByUser?.password) {
-          delete employee.updatedByUser.password;
-        }
-        return employee;
-      }
-    );
-  }
-
-  async approveAccessRequest(employeeCode) {
-    return await this.employeeRepo.manager.transaction(
-      async (entityManager) => {
-        let employee = await entityManager.findOne(Employees, {
-          where: {
-            employeeCode,
-            active: true,
-          },
-          relations: {
-            department: true,
-            createdByUser: true,
-            updatedByUser: true,
-            school: true,
-            employeePosition: true,
-            employeeUser: {
-              user: true,
-              employeeRole: true,
-            },
-          },
-        });
-
-        if (!employee) {
-          throw Error(EMPLOYEES_ERROR_NOT_FOUND);
-        }
-
-        employee.accessGranted = true;
-        await entityManager.save(Employees, employee);
-        employee = await entityManager.findOne(Employees, {
-          where: {
-            employeeCode,
-          },
-          relations: {
-            department: true,
-            createdByUser: true,
-            updatedByUser: true,
-            school: true,
-            employeePosition: true,
-            employeeUser: {
-              user: true,
-              employeeRole: true,
-            },
           },
         });
         delete employee.employeeUser?.user?.password;

@@ -12,6 +12,7 @@ import { ApiResponse } from '../model/api-response.model';
 import { Users } from '../model/users';
 import { Operators } from '../model/operators';
 import { Employees } from '../model/employees';
+import { EmployeeUser } from '../model/employee-user';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +36,7 @@ export class AuthService implements IServices {
     );
   }
 
-  loginEmployeeUser(data: any) : Observable<ApiResponse<Employees>> {
+  loginEmployeeUser(data: any) : Observable<ApiResponse<EmployeeUser>> {
     return this.http.post<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.auth.loginEmployeeUser, data)
     .pipe(
       tap(_ => this.isLoggedIn = true),

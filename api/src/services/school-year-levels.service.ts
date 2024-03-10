@@ -9,7 +9,10 @@ import {
   columnDefToTypeORMCondition,
   generateIndentityCode,
 } from "src/common/utils/utils";
-import { CreateSchoolYearLevelDto } from "src/core/dto/school-year-levels/school-year-levels.create.dto";
+import {
+  BatchCreateSchoolYearLevelDto,
+  CreateSchoolYearLevelDto,
+} from "src/core/dto/school-year-levels/school-year-levels.create.dto";
 import { UpdateSchoolYearLevelDto } from "src/core/dto/school-year-levels/school-year-levels.update.dto";
 import { Departments } from "src/db/entities/Departments";
 import { SchoolYearLevels } from "src/db/entities/SchoolYearLevels";
@@ -157,6 +160,98 @@ export class SchoolYearLevelsService {
       } else {
         throw ex;
       }
+    }
+  }
+
+  async batchCreate(dtos: BatchCreateSchoolYearLevelDto[]) {
+    try {
+      return await this.schoolYearLevelsRepo.manager.transaction(
+        async (entityManager) => {
+          const success = [];
+          const warning = [];
+          const failed = [];
+          for (const dto of dtos) {
+            try {
+              let schoolYearLevel = await entityManager.findOne(
+                SchoolYearLevels,
+                {
+                  where: {
+                    name: dto.name,
+                    school: {
+                      orgSchoolCode: dto.orgSchoolCode,
+                    },
+                    active: true,
+                  },
+                }
+              );
+              if (!schoolYearLevel) {
+                schoolYearLevel = new SchoolYearLevels();
+              }
+
+              schoolYearLevel.name = dto.name;
+              schoolYearLevel.educationalStage =
+                dto.educationalStage.toUpperCase();
+              const timestamp = await entityManager
+                .query(CONST_QUERYCURRENT_TIMESTAMP)
+                .then((res) => {
+                  return res[0]["timestamp"];
+                });
+              schoolYearLevel.createdDate = timestamp;
+
+              const school = await entityManager.findOne(Schools, {
+                where: {
+                  orgSchoolCode: dto.orgSchoolCode,
+                  active: true,
+                },
+              });
+              if (!school) {
+                throw Error(SCHOOLS_ERROR_NOT_FOUND);
+              }
+              schoolYearLevel.school = school;
+
+              const createdByUser = await entityManager.findOne(Users, {
+                where: {
+                  userId: dto.createdByUserId,
+                  active: true,
+                },
+              });
+              if (!createdByUser) {
+                throw Error(USER_ERROR_USER_NOT_FOUND);
+              }
+              schoolYearLevel.createdByUser = createdByUser;
+              schoolYearLevel = await entityManager.save(
+                SchoolYearLevels,
+                schoolYearLevel
+              );
+              schoolYearLevel.schoolYearLevelCode = generateIndentityCode(
+                schoolYearLevel.schoolYearLevelId
+              );
+              schoolYearLevel = await entityManager.save(
+                SchoolYearLevels,
+                schoolYearLevel
+              );
+              delete schoolYearLevel.createdByUser.password;
+              success.push({
+                name: dto.name,
+                refId: dto.refId,
+              });
+            } catch (ex) {
+              failed.push({
+                name: dto.name,
+                refId: dto.refId,
+                comments: ex?.message,
+              });
+            }
+          }
+          return {
+            success,
+            warning,
+            failed,
+          };
+        }
+      );
+    } catch (ex) {
+      throw ex;
     }
   }
 

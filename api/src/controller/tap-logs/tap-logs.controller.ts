@@ -124,15 +124,21 @@ export class TapLogsController {
   @Post("createBatch")
   //   @UseGuards(JwtAuthGuard)
   async createBatch(@Body() tapLogsDtos: CreateTapLogDto[]) {
-    const res: ApiResponseModel<any[]> = {} as any;
+    const res: ApiResponseModel<{
+      success: any[];
+      failed: any[];
+      warning: any[];
+    }> = {} as any;
     try {
       res.data = await this.tapLogsService.createBatch(tapLogsDtos);
       res.success = true;
-      res.message = `Tap Logs ${SAVING_SUCCESS}`;
+      res.message = `Batch Tap Logs Completed`;
+      console.log(JSON.stringify(res));
       return res;
     } catch (e) {
       res.success = false;
       res.message = e.message !== undefined ? e.message : e;
+      console.log(JSON.stringify(res));
       return res;
     }
   }
