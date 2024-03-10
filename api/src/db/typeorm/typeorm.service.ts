@@ -29,6 +29,8 @@ import { UserProfilePic } from "../entities/UserProfilePic";
 import { Files } from "../entities/Files";
 import { UserOneSignalSubscription } from "../entities/UserOneSignalSubscription";
 import { EmployeeUserAccess } from "../entities/EmployeeUserAccess";
+import { AnnouncementRecipient } from "../entities/AnnouncementRecipient";
+import { AppRelease } from "../entities/AppRelease";
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
@@ -73,6 +75,8 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         UserProfilePic,
         UserOneSignalSubscription,
         Announcements,
+        AnnouncementRecipient,
+        AppRelease
       ],
       synchronize: false, // never use TRUE in production!
       ssl: ssl.toLocaleLowerCase().includes("true"),

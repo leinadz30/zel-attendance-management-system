@@ -160,9 +160,9 @@ export class CommonSectionsComponent {
       schoolName: this.selectedSchool?.schoolName,
       selected: true
     }
-    dialogRef.afterClosed().subscribe((res:Schools)=> {
+    dialogRef.afterClosed().subscribe((res:any)=> {
       console.log(res);
-      if(res) {
+      if(res && !res?.cancel) {
         this.selectedSchool = res;
         this.storageService.saveOpsRecentSchool(res.schoolCode);
         this._location.go("/ops/sections/find/" + res?.schoolCode);
@@ -182,11 +182,13 @@ export class CommonSectionsComponent {
       selected: true
     }
     dialogRef.componentInstance.schoolCode = this.selectedSchool?.schoolCode;
-    dialogRef.afterClosed().subscribe((res:SchoolYearLevels)=> {
+    dialogRef.afterClosed().subscribe((res:any)=> {
       console.log(res);
-      this.selectedSchoolYearLevel = res;
-      this._location.go("/ops/sections/find/" + this.selectedSchool?.schoolCode + (this.selectedSchoolYearLevel?.schoolYearLevelCode ? "/sylvl/" + this.selectedSchoolYearLevel?.schoolYearLevelCode : ""));
-      this.getSectionsPaginated();
+      if(res && !res?.cancel) {
+        this.selectedSchoolYearLevel = res;
+        this._location.go("/ops/sections/find/" + this.selectedSchool?.schoolCode + (this.selectedSchoolYearLevel?.schoolYearLevelCode ? "/sylvl/" + this.selectedSchoolYearLevel?.schoolYearLevelCode : ""));
+        this.getSectionsPaginated();
+      }
     })
   }
 

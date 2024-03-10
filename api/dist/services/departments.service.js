@@ -111,6 +111,7 @@ let DepartmentsService = class DepartmentsService {
                     throw Error(user_error_constant_1.USER_ERROR_USER_NOT_FOUND);
                 }
                 departments.createdByUser = createdByUser;
+                departments.type = dto.type;
                 departments = await entityManager.save(departments);
                 departments.departmentCode = (0, utils_1.generateIndentityCode)(departments.departmentId);
                 departments = await entityManager.save(Departments_1.Departments, departments);

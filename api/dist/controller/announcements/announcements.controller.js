@@ -78,6 +78,20 @@ let AnnouncementsController = class AnnouncementsController {
             return res;
         }
     }
+    async cancel(announcementCode) {
+        const res = {};
+        try {
+            res.data = await this.announcementsService.cancel(announcementCode);
+            res.success = true;
+            res.message = `Announcements Cancelled!`;
+            return res;
+        }
+        catch (e) {
+            res.success = false;
+            res.message = e.message !== undefined ? e.message : e;
+            return res;
+        }
+    }
     async delete(announcementCode) {
         const res = {};
         try {
@@ -122,6 +136,13 @@ __decorate([
     __metadata("design:paramtypes", [String, announcements_update_dto_1.UpdateAnnouncementDto]),
     __metadata("design:returntype", Promise)
 ], AnnouncementsController.prototype, "update", null);
+__decorate([
+    (0, common_1.Put)("cancel/:announcementCode"),
+    __param(0, (0, common_1.Param)("announcementCode")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AnnouncementsController.prototype, "cancel", null);
 __decorate([
     (0, common_1.Delete)("/:announcementCode"),
     __param(0, (0, common_1.Param)("announcementCode")),

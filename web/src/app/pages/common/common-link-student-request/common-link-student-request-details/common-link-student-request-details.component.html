@@ -86,5 +86,19 @@
       (click)="dialogRef.close(false)">
       Close
     </button>
+    <button
+      *ngIf="linkStudentRequest?.status === 'PENDING'"
+      mat-flat-button
+      color="primary"
+      (click)="onApproveEvent.emit()">
+      Approve
+    </button>
+    <button
+      *ngIf="linkStudentRequest?.status === 'PENDING'"
+      mat-flat-button
+      color="primary"
+      (click)="onRejectEvent.emit()">
+      Reject
+    </button>
   </div>
 </div>

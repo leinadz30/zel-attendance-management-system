@@ -29,6 +29,7 @@ export class SelectDepartmentDialogComponent {
   order = { departmentName: "ASC" } as any;
   filterDepartmentName = "";
   schoolCode;
+  type: 'STUDENT' | 'EMPLOYEE';
   @ViewChild('paginator', {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -68,6 +69,11 @@ export class SelectDepartmentDialogComponent {
       {
         apiNotation: "departmentName",
         filter: this.filterDepartmentName,
+      },
+      {
+        apiNotation: "type",
+        filter: this.type,
+        type: "precise"
       },
     ];
     try {

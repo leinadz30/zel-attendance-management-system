@@ -48,7 +48,8 @@ export class CommonSchoolsTableColumn {
 
 export class CommonDepartmentsTableColumn {
   departmentCode: string;
-  departmentName: string;
+  departmentName?: string;
+  type?: string;
   url?: string;
 }
 

@@ -40,6 +40,8 @@ const UserProfilePic_1 = require("../entities/UserProfilePic");
 const Files_1 = require("../entities/Files");
 const UserOneSignalSubscription_1 = require("../entities/UserOneSignalSubscription");
 const EmployeeUserAccess_1 = require("../entities/EmployeeUserAccess");
+const AnnouncementRecipient_1 = require("../entities/AnnouncementRecipient");
+const AppRelease_1 = require("../entities/AppRelease");
 let TypeOrmConfigService = class TypeOrmConfigService {
     createTypeOrmOptions() {
         const ssl = this.config.get("SSL");
@@ -79,6 +81,8 @@ let TypeOrmConfigService = class TypeOrmConfigService {
                 UserProfilePic_1.UserProfilePic,
                 UserOneSignalSubscription_1.UserOneSignalSubscription,
                 Announcements_1.Announcements,
+                AnnouncementRecipient_1.AnnouncementRecipient,
+                AppRelease_1.AppRelease
             ],
             synchronize: false,
             ssl: ssl.toLocaleLowerCase().includes("true"),

@@ -107,6 +107,12 @@
         }
       },
       {
+        "name": "type",
+        "label": "Type",
+        "apiNotation": "type",
+        "type": "string"
+      },
+      {
         "name": "menu",
         "type": "",
         "label": "Controls",

@@ -16,7 +16,17 @@ export const routes: Routes = [
     component: CommonLinkStudentRequestComponent,
     pathMatch: 'full',
     data: { title: "Link Student Request" }
-  }
+  },
+  {
+    path: 'find',
+    pathMatch: 'full',
+    redirectTo: ''
+  },
+  {
+    path: 'find/:schoolCode',
+    component: CommonLinkStudentRequestComponent,
+    data: { title: "Link Student Request", find: true }
+  },
 ]
 
 

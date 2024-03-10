@@ -281,18 +281,20 @@ export class CommonEmployeeUserDetailsComponent implements OnInit {
       name: this.selectedEmployeeUserAccess?.name,
       selected: true
     }
-    dialogRef.afterClosed().subscribe(async (res:EmployeeUserAccess)=> {
+    dialogRef.afterClosed().subscribe(async (res:any)=> {
       console.log(res);
-      this.selectedEmployeeUserAccess = res;
-      if(res && res?.employeeUserAccessId) {
-        this.f["employeeUserAccessId"].setValue(this.selectedEmployeeUserAccess?.employeeUserAccessId);
-        const access = await this.employeeUserAccessService.getByCode(this.selectedEmployeeUserAccess?.employeeUserAccessCode).toPromise();
-        if(access.data && access.data.accessPages) {
-          this.employeeUserAccessTable.setDataSource(access.data.accessPages)
+      if(res && !res?.cancel) {
+        this.selectedEmployeeUserAccess = res;
+        if(res && res?.employeeUserAccessId) {
+          this.f["employeeUserAccessId"].setValue(this.selectedEmployeeUserAccess?.employeeUserAccessId);
+          const access = await this.employeeUserAccessService.getByCode(this.selectedEmployeeUserAccess?.employeeUserAccessCode).toPromise();
+          if(access.data && access.data.accessPages) {
+            this.employeeUserAccessTable.setDataSource(access.data.accessPages)
+          }
+        } else {
+          this.f["employeeUserAccessId"].setValue(null);
+          this.employeeUserAccessTable.setDataSource([])
         }
-      } else {
-        this.f["employeeUserAccessId"].setValue(null);
-        this.employeeUserAccessTable.setDataSource([])
       }
     })
   }
@@ -308,16 +310,18 @@ export class CommonEmployeeUserDetailsComponent implements OnInit {
       selected: true
     }
     dialogRef.componentInstance.schoolCode = this.selectedSchool?.schoolCode;
-    dialogRef.afterClosed().subscribe((res:EmployeeTitles)=> {
+    dialogRef.afterClosed().subscribe((res:any)=> {
       console.log(res);
-      this.selectedEmployeeTitle = res;
-      if(res && res?.employeeTitleId) {
-        this.f["employeeTitleId"].setValue(res.employeeTitleId);
-      } else {
-        this.f["employeeTitleId"].setValue(null);
+      if(res && !res?.cancel) {
+        this.selectedEmployeeTitle = res;
+        if(res && res?.employeeTitleId) {
+          this.f["employeeTitleId"].setValue(res.employeeTitleId);
+        } else {
+          this.f["employeeTitleId"].setValue(null);
+        }
+        this.f["employeeTitleId"].markAllAsTouched();
+        this.f["employeeTitleId"].markAsDirty();
       }
-      this.f["employeeTitleId"].markAllAsTouched();
-      this.f["employeeTitleId"].markAsDirty();
     })
   }
 
@@ -332,16 +336,19 @@ export class CommonEmployeeUserDetailsComponent implements OnInit {
       selected: true
     }
     dialogRef.componentInstance.schoolCode = this.selectedSchool?.schoolCode;
-    dialogRef.afterClosed().subscribe((res:Departments)=> {
+    dialogRef.componentInstance.type = "EMPLOYEE";
+    dialogRef.afterClosed().subscribe((res:any)=> {
       console.log(res);
-      this.selectedDepartment = res;
-      if(res && res?.departmentId) {
-        this.f["departmentId"].setValue(res.departmentId);
-      } else {
-        this.f["departmentId"].setValue(null);
+      if(res && !res?.cancel) {
+        this.selectedDepartment = res;
+        if(res && res?.departmentId) {
+          this.f["departmentId"].setValue(res.departmentId);
+        } else {
+          this.f["departmentId"].setValue(null);
+        }
+        this.f["departmentId"].markAllAsTouched();
+        this.f["departmentId"].markAsDirty();
       }
-      this.f["departmentId"].markAllAsTouched();
-      this.f["departmentId"].markAsDirty();
     })
   }
 
@@ -357,9 +364,9 @@ export class CommonEmployeeUserDetailsComponent implements OnInit {
       fullName: this.selectedExisitingEmployee?.fullName,
       selected: true
     }
-    dialogRef.afterClosed().subscribe(async (res:Employees)=> {
+    dialogRef.afterClosed().subscribe(async (res:any)=> {
       console.log(res);
-      if(res) {
+      if(res && !res?.cancel) {
         this.selectedExisitingEmployee = res;
         this.f["orgEmployeeId"].setValue(res?.orgEmployeeId);
         this.f["fullName"].setValue(res?.fullName);

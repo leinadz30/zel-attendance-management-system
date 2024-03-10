@@ -27,6 +27,7 @@ export class CommonDepartmentFormComponent {
   isProcessing = false;
   department: Departments;
   schoolId;
+  selectedType: 'STUDENT' | 'EMPLOYEE';
   currentUserId;
 
   constructor(
@@ -37,11 +38,6 @@ export class CommonDepartmentFormComponent {
     private dialog: MatDialog,
     private spinner: SpinnerVisibilityService,
     public dialogRef: MatDialogRef<CommonDepartmentFormComponent>) {
-      this.departmentForm = this.formBuilder.group(
-        {
-          departmentName: [null, [Validators.required]]
-        }
-      );
   }
   get f() {
     return this.departmentForm.controls;
@@ -56,6 +52,15 @@ export class CommonDepartmentFormComponent {
     return this.departmentForm.value;
   }
 
+  ngOnInit(): void {
+    this.departmentForm = this.formBuilder.group(
+      {
+        departmentName: [null, [Validators.required]],
+        type: [this.selectedType, [Validators.required]],
+      }
+    );
+  }
+
   async initDetails() {
     try {
       forkJoin([
@@ -64,8 +69,10 @@ export class CommonDepartmentFormComponent {
         if (department.success) {
           this.department = department.data;
           this.departmentForm.patchValue({
-            departmentName: department.data.departmentName
+            departmentName: department.data.departmentName,
+            type: department.data.type
           });
+          this.departmentForm.controls["type"].disable();
           this.departmentForm.updateValueAndValidity();
           this.isLoading = false;
         } else {

@@ -13,7 +13,6 @@
           fxFlex="100"
           fxLayout="column"
           fxLayout.gt-sm="row"
-          style="gap: 16px"
         >
           <mat-form-field
             appearance="outline"
@@ -40,6 +39,31 @@
                     : "")
               }}</mat-error
             >
+          </mat-form-field>
+        </div>
+        <div
+          fxFlex="100"
+          fxLayout="column"
+          fxLayout.gt-sm="row"
+          [ngClass]="{ 'readonly': !isNew }"
+        >
+          <mat-form-field
+            appearance="outline"
+            fxFlex="100"
+            class="cell"
+            [ngClass]="{ 'readonly': !isNew }">
+            <mat-label>Type</mat-label>
+            <mat-select
+              formControlName="type" required="true">
+              <mat-option value="STUDENT">Student</mat-option>
+              <mat-option value="EMPLOYEE">Employee</mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="getError('type') !== (null || undefined)">{{
+                (getError("type") &&
+                getError("type").required
+                  ? "Please select type"
+                  : "") }}</mat-error>
           </mat-form-field>
         </div>
       </fieldset>

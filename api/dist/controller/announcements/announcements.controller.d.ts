@@ -14,5 +14,6 @@ export declare class AnnouncementsController {
     }>>;
     create(announcementsDto: CreateAnnouncementDto): Promise<ApiResponseModel<Announcements>>;
     update(announcementCode: string, dto: UpdateAnnouncementDto): Promise<ApiResponseModel<Announcements>>;
+    cancel(announcementCode: string): Promise<ApiResponseModel<Announcements>>;
     delete(announcementCode: string): Promise<ApiResponseModel<Announcements>>;
 }

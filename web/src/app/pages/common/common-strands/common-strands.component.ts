@@ -144,9 +144,9 @@ export class CommonStrandsComponent {
       schoolName: this.selectedSchool?.schoolName,
       selected: true
     }
-    dialogRef.afterClosed().subscribe((res:Schools)=> {
+    dialogRef.afterClosed().subscribe((res:any)=> {
       console.log(res);
-      if(res) {
+      if(!res?.cancel) {
         this.selectedSchool = res;
         this.storageService.saveOpsRecentSchool(res.schoolCode);
         if(this.mode === "OPERATION") {

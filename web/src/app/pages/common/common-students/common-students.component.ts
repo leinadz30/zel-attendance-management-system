@@ -12,7 +12,6 @@ import { StorageService } from 'src/app/services/storage.service';
 import { StudentsService } from 'src/app/services/students.service';
 import { AlertDialogModel } from 'src/app/shared/alert-dialog/alert-dialog-model';
 import { AlertDialogComponent } from 'src/app/shared/alert-dialog/alert-dialog.component';
-import { SelectDepartmentDialogComponent } from 'src/app/shared/select-department-dialog/select-department-dialog.component';
 import { SelectSchoolDialogComponent } from 'src/app/shared/select-school-dialog/select-school-dialog.component';
 import { CommonStudentsTableColumn } from 'src/app/shared/utility/table';
 import { convertNotationToObject } from 'src/app/shared/utility/utility';
@@ -191,9 +190,9 @@ export class CommonStudentsComponent  {
       schoolName: this.selectedSchool?.schoolName,
       selected: true
     }
-    dialogRef.afterClosed().subscribe((res:Schools)=> {
+    dialogRef.afterClosed().subscribe((res:any)=> {
       console.log(res);
-      if(res) {
+      if(!res?.cancel) {
         this.selectedSchool = res;
         this.storageService.saveOpsRecentSchool(res.schoolCode);
         if(this.mode === "OPERATION") {
@@ -217,17 +216,19 @@ export class CommonStudentsComponent  {
       selected: true
     }
     dialogRef.componentInstance.schoolCode = this.selectedSchool?.schoolCode;
-    dialogRef.afterClosed().subscribe((res:SchoolYearLevels)=> {
+    dialogRef.afterClosed().subscribe((res:any)=> {
       console.log(res);
-      this.selectedSchoolYearLevel = res;
-      this.selectedCourse = null;
-      this.selectedStrand = null;
-      if(this.mode === "OPERATION") {
-        this._location.go("/ops/students/find/" + this.selectedSchool?.schoolCode + (this.selectedSchoolYearLevel?.schoolYearLevelCode ? "/sylvl/" + this.selectedSchoolYearLevel?.schoolYearLevelCode : ""));
-      } else {
-        this._location.go("/org/students/find/" + this.selectedSchool?.schoolCode + (this.selectedSchoolYearLevel?.schoolYearLevelCode ? "/sylvl/" + this.selectedSchoolYearLevel?.schoolYearLevelCode : ""));
+      if(!res?.cancel) {
+        this.selectedSchoolYearLevel = res;
+        this.selectedCourse = null;
+        this.selectedStrand = null;
+        if(this.mode === "OPERATION") {
+          this._location.go("/ops/students/find/" + this.selectedSchool?.schoolCode + (this.selectedSchoolYearLevel?.schoolYearLevelCode ? "/sylvl/" + this.selectedSchoolYearLevel?.schoolYearLevelCode : ""));
+        } else {
+          this._location.go("/org/students/find/" + this.selectedSchool?.schoolCode + (this.selectedSchoolYearLevel?.schoolYearLevelCode ? "/sylvl/" + this.selectedSchoolYearLevel?.schoolYearLevelCode : ""));
+        }
+        this.getStudentsPaginated();
       }
-      this.getStudentsPaginated();
     })
   }
 
@@ -242,15 +243,17 @@ export class CommonStudentsComponent  {
       selected: true
     }
     dialogRef.componentInstance.schoolCode = this.selectedSchool?.schoolCode;
-    dialogRef.afterClosed().subscribe((res:Courses)=> {
+    dialogRef.afterClosed().subscribe((res:any)=> {
       console.log(res);
-      this.selectedCourse = res;
-      if(this.mode === "OPERATION") {
-        this._location.go("/ops/students/find/" + this.selectedSchool?.schoolCode + "/sylvl/" + this.selectedSchoolYearLevel?.schoolYearLevelCode + (this.selectedCourse?.courseCode ? "/course/" + this.selectedCourse?.courseCode : ""));
-      } else {
-        this._location.go("/org/students/find/" + this.selectedSchool?.schoolCode + "/sylvl/" + this.selectedSchoolYearLevel?.schoolYearLevelCode + (this.selectedCourse?.courseCode ? "/course/" + this.selectedCourse?.courseCode : ""));
+      if(!res?.cancel) {
+        this.selectedCourse = res;
+        if(this.mode === "OPERATION") {
+          this._location.go("/ops/students/find/" + this.selectedSchool?.schoolCode + "/sylvl/" + this.selectedSchoolYearLevel?.schoolYearLevelCode + (this.selectedCourse?.courseCode ? "/course/" + this.selectedCourse?.courseCode : ""));
+        } else {
+          this._location.go("/org/students/find/" + this.selectedSchool?.schoolCode + "/sylvl/" + this.selectedSchoolYearLevel?.schoolYearLevelCode + (this.selectedCourse?.courseCode ? "/course/" + this.selectedCourse?.courseCode : ""));
+        }
+        this.getStudentsPaginated();
       }
-      this.getStudentsPaginated();
     })
   }
 
@@ -265,15 +268,17 @@ export class CommonStudentsComponent  {
       selected: true
     }
     dialogRef.componentInstance.schoolCode = this.selectedSchool?.schoolCode;
-    dialogRef.afterClosed().subscribe((res:Strands)=> {
+    dialogRef.afterClosed().subscribe((res:any)=> {
       console.log(res);
-      this.selectedStrand = res;
-      if(this.mode === "OPERATION") {
-        this._location.go("/ops/students/find/" + this.selectedSchool?.schoolCode + "/sylvl/" + this.selectedSchoolYearLevel?.schoolYearLevelCode + (this.selectedStrand?.strandCode ? "/strand/" + this.selectedStrand?.strandCode : ""));
-      } else {
-        this._location.go("/org/students/find/" + this.selectedSchool?.schoolCode + "/sylvl/" + this.selectedSchoolYearLevel?.schoolYearLevelCode + (this.selectedStrand?.strandCode ? "/strand/" + this.selectedStrand?.strandCode : ""));
+      if(!res?.cancel) {
+        this.selectedStrand = res;
+        if(this.mode === "OPERATION") {
+          this._location.go("/ops/students/find/" + this.selectedSchool?.schoolCode + "/sylvl/" + this.selectedSchoolYearLevel?.schoolYearLevelCode + (this.selectedStrand?.strandCode ? "/strand/" + this.selectedStrand?.strandCode : ""));
+        } else {
+          this._location.go("/org/students/find/" + this.selectedSchool?.schoolCode + "/sylvl/" + this.selectedSchoolYearLevel?.schoolYearLevelCode + (this.selectedStrand?.strandCode ? "/strand/" + this.selectedStrand?.strandCode : ""));
+        }
+        this.getStudentsPaginated();
       }
-      this.getStudentsPaginated();
     })
   }
 

@@ -1,5 +1,5 @@
 
-<section class="table-container" [ngClass]="{ 'table-container-no-data': dataSource.data.length === 0}">
+<section class="table-container" >
     <table class="table" mat-table matSort [dataSource]="dataSource">
       <ng-container *ngFor="let colDef of columnDefs">
         <ng-container [sticky]="colDef.sticky" [stickyEnd]="colDef.sticky ? false : colDef.stickyEnd" [matColumnDef]="colDef.name">

@@ -1,6 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { ANNOUNCEMENTS_ERROR_NOT_FOUND } from "src/common/constant/announcements.constant";
+import moment from "moment";
+import {
+  ANNOUNCEMENTS_ERROR_NOT_FOUND,
+  ANNOUNCEMENTS_STATUS,
+  ANNOUNCEMENT_RECIPIENTS_TYPE,
+} from "src/common/constant/announcements.constant";
+import { DateConstant } from "src/common/constant/date.constant";
 import { DEPARTMENTS_ERROR_NOT_FOUND } from "src/common/constant/departments.constant";
 import { SCHOOLS_ERROR_NOT_FOUND } from "src/common/constant/schools.constant";
 import { CONST_QUERYCURRENT_TIMESTAMP } from "src/common/constant/timestamp.constant";
@@ -11,10 +17,12 @@ import {
 } from "src/common/utils/utils";
 import { CreateAnnouncementDto } from "src/core/dto/announcements/announcements.create.dto";
 import { UpdateAnnouncementDto } from "src/core/dto/announcements/announcements.update.dto";
+import { AnnouncementRecipient } from "src/db/entities/AnnouncementRecipient";
 import { Announcements } from "src/db/entities/Announcements";
 import { Schools } from "src/db/entities/Schools";
+import { Students } from "src/db/entities/Students";
 import { Users } from "src/db/entities/Users";
-import { Repository } from "typeorm";
+import { Not, Repository } from "typeorm";
 
 @Injectable()
 export class AnnouncementsService {
@@ -71,11 +79,22 @@ export class AnnouncementsService {
       relations: {
         createdByUser: true,
         updatedByUser: true,
+        announcementRecipients: true,
       },
     });
     if (!result) {
       throw Error(ANNOUNCEMENTS_ERROR_NOT_FOUND);
     }
+    // result.announcementRecipients = await this.announcementsRepo.manager.find(
+    //   AnnouncementRecipient,
+    //   {
+    //     where: {
+    //       announcement: {
+    //         announcementId: result.announcementId,
+    //       },
+    //     },
+    //   }
+    // );
     delete result.createdByUser.password;
     if (result?.updatedByUser?.password) {
       delete result.updatedByUser.password;
@@ -87,13 +106,22 @@ export class AnnouncementsService {
     try {
       return await this.announcementsRepo.manager.transaction(
         async (entityManager) => {
+          const targetDate = moment(
+            new Date(dto.targetDate),
+            DateConstant.DATE_LANGUAGE
+          ).format("YYYY-MM-DD");
           let announcements = new Announcements();
           announcements.title = dto.title;
           announcements.description = dto.description;
-          announcements.targetDate = dto.targetDate;
-          announcements.targetType = dto.targetType;
-          announcements.targetIds = dto.targetIds;
-          announcements.scheduled = dto.scheduled;
+          announcements.targetDate = targetDate;
+          announcements.targetTime = dto.targetTime;
+          announcements.isSchedule = dto.isSchedule;
+          announcements.status =
+            dto.actions === "SEND"
+              ? dto.isSchedule
+                ? ANNOUNCEMENTS_STATUS.PENDING
+                : ANNOUNCEMENTS_STATUS.SENDING
+              : announcements.status;
           const timestamp = await entityManager
             .query(CONST_QUERYCURRENT_TIMESTAMP)
             .then((res) => {
@@ -122,11 +150,6 @@ export class AnnouncementsService {
             throw Error(USER_ERROR_USER_NOT_FOUND);
           }
           announcements.createdByUser = createdByUser;
-          if (dto.action === "SEND") {
-            announcements.sent = true;
-          } else {
-            announcements.draft = true;
-          }
           announcements = await entityManager.save(announcements);
           announcements.announcementCode = generateIndentityCode(
             announcements.announcementId
@@ -135,6 +158,24 @@ export class AnnouncementsService {
             Announcements,
             announcements
           );
+          const announcementRecipients = this.createAnnouncementRecipients(
+            dto,
+            announcements
+          );
+          await entityManager.save(
+            AnnouncementRecipient,
+            announcementRecipients
+          );
+
+          announcements = await entityManager.findOne(Announcements, {
+            where: {
+              announcementId: announcements.announcementId,
+            },
+            relations: {
+              createdByUser: true,
+              announcementRecipients: true,
+            },
+          });
           delete announcements.createdByUser.password;
           return announcements;
         }
@@ -157,6 +198,10 @@ export class AnnouncementsService {
     try {
       return await this.announcementsRepo.manager.transaction(
         async (entityManager) => {
+          const targetDate = moment(
+            new Date(dto.targetDate),
+            DateConstant.DATE_LANGUAGE
+          ).format("YYYY-MM-DD");
           let announcements = await entityManager.findOne(Announcements, {
             where: {
               announcementCode,
@@ -164,7 +209,12 @@ export class AnnouncementsService {
             },
           });
           if (!announcements) {
-            throw Error(DEPARTMENTS_ERROR_NOT_FOUND);
+            throw Error(ANNOUNCEMENTS_ERROR_NOT_FOUND);
+          }
+          if (announcements.status !== ANNOUNCEMENTS_STATUS.DRAFT) {
+            throw Error(
+              `Cannot edit ${announcements.status.toLowerCase()} Announcement!`
+            );
           }
           const timestamp = await entityManager
             .query(CONST_QUERYCURRENT_TIMESTAMP)
@@ -185,13 +235,42 @@ export class AnnouncementsService {
           announcements.updatedByUser = updatedByUser;
           announcements.title = dto.title;
           announcements.description = dto.description;
-          announcements.targetDate = dto.targetDate;
-          announcements.targetType = dto.targetType;
-          announcements.targetIds = dto.targetIds;
-          announcements.scheduled = dto.scheduled;
+          announcements.targetDate = targetDate;
+          announcements.targetTime = dto.targetTime;
+          announcements.isSchedule = dto.isSchedule;
+          announcements.status =
+            dto.actions === "SEND"
+              ? dto.isSchedule
+                ? ANNOUNCEMENTS_STATUS.PENDING
+                : ANNOUNCEMENTS_STATUS.SENDING
+              : announcements.status;
           announcements = await entityManager.save(
             Announcements,
             announcements
+          );
+
+          let announcementRecipients = await entityManager.find(
+            AnnouncementRecipient,
+            {
+              where: {
+                announcement: {
+                  announcementId: announcements.announcementId,
+                },
+              },
+            }
+          );
+
+          await entityManager.delete(
+            AnnouncementRecipient,
+            announcementRecipients
+          );
+          announcementRecipients = this.createAnnouncementRecipients(
+            dto,
+            announcements
+          );
+          await entityManager.save(
+            AnnouncementRecipient,
+            announcementRecipients
           );
           if (announcements?.createdByUser?.password) {
             delete announcements.createdByUser.password;
@@ -216,6 +295,38 @@ export class AnnouncementsService {
     }
   }
 
+  async cancel(announcementCode) {
+    return await this.announcementsRepo.manager.transaction(
+      async (entityManager) => {
+        const announcements = await entityManager.findOne(Announcements, {
+          where: {
+            announcementCode,
+            active: true,
+          },
+        });
+        if (!announcements) {
+          throw Error(ANNOUNCEMENTS_ERROR_NOT_FOUND);
+        }
+        if (
+          announcements.status !== ANNOUNCEMENTS_STATUS.DRAFT ||
+          announcements.status !== ANNOUNCEMENTS_STATUS.PENDING
+        ) {
+          throw Error(
+            `Cannot cancel ${announcements.status.toLowerCase()} Announcement!`
+          );
+        }
+        announcements.status = ANNOUNCEMENTS_STATUS.CANCELLED;
+        const timestamp = await entityManager
+          .query(CONST_QUERYCURRENT_TIMESTAMP)
+          .then((res) => {
+            return res[0]["timestamp"];
+          });
+        announcements.updatedDate = timestamp;
+        return await entityManager.save(Announcements, announcements);
+      }
+    );
+  }
+
   async delete(announcementCode) {
     return await this.announcementsRepo.manager.transaction(
       async (entityManager) => {
@@ -226,7 +337,7 @@ export class AnnouncementsService {
           },
         });
         if (!announcements) {
-          throw Error(DEPARTMENTS_ERROR_NOT_FOUND);
+          throw Error(ANNOUNCEMENTS_ERROR_NOT_FOUND);
         }
         announcements.active = false;
         const timestamp = await entityManager
@@ -238,5 +349,119 @@ export class AnnouncementsService {
         return await entityManager.save(Announcements, announcements);
       }
     );
+  }
+
+  createAnnouncementRecipients(
+    dto: CreateAnnouncementDto | UpdateAnnouncementDto,
+    announcements: Announcements
+  ) {
+    const announcementRecipients: AnnouncementRecipient[] = [];
+    if (
+      dto.basicEdStudentRecipients &&
+      dto.basicEdStudentRecipients.length > 0
+    ) {
+      for (const recipient of dto.basicEdStudentRecipients) {
+        if (
+          announcementRecipients.some(
+            (x) =>
+              x.groupReferenceId === recipient.sectionId &&
+              x.type === ANNOUNCEMENT_RECIPIENTS_TYPE.BASIC_ED
+          )
+        ) {
+          const index = announcementRecipients.findIndex(
+            (x) =>
+              x.groupReferenceId === recipient.sectionId &&
+              x.type === ANNOUNCEMENT_RECIPIENTS_TYPE.BASIC_ED
+          );
+          const newExcludedIds = [
+            ...announcementRecipients[index].excludedIds,
+            ...recipient.excludedStudentIds,
+          ];
+          announcementRecipients[index].excludedIds = [
+            ...new Set(newExcludedIds),
+          ];
+        } else {
+          const announcementRecipient = new AnnouncementRecipient();
+          announcementRecipient.type = ANNOUNCEMENT_RECIPIENTS_TYPE.BASIC_ED;
+          announcementRecipient.announcement = announcements;
+          announcementRecipient.groupReferenceId = recipient.sectionId;
+          announcementRecipient.excludedIds = [
+            ...new Set(recipient.excludedStudentIds),
+          ];
+          announcementRecipients.push(announcementRecipient);
+        }
+      }
+    }
+    if (
+      dto.higherEdStudenttudentRecipients &&
+      dto.higherEdStudenttudentRecipients.length > 0
+    ) {
+      for (const recipient of dto.higherEdStudenttudentRecipients) {
+        if (
+          announcementRecipients.some(
+            (x) =>
+              x.groupReferenceId === recipient.sectionId &&
+              x.type === ANNOUNCEMENT_RECIPIENTS_TYPE.HIGHER_ED
+          )
+        ) {
+          const index = announcementRecipients.findIndex(
+            (x) =>
+              x.groupReferenceId === recipient.sectionId &&
+              x.type === ANNOUNCEMENT_RECIPIENTS_TYPE.HIGHER_ED
+          );
+          const newExcludedIds = [
+            ...announcementRecipients[index].excludedIds,
+            ...recipient.excludedStudentIds,
+          ];
+          announcementRecipients[index].excludedIds = [
+            ...new Set(newExcludedIds),
+          ];
+        } else {
+          const announcementRecipient = new AnnouncementRecipient();
+          announcementRecipient.type = ANNOUNCEMENT_RECIPIENTS_TYPE.HIGHER_ED;
+          announcementRecipient.announcement = announcements;
+          announcementRecipient.groupReferenceId = recipient.sectionId;
+          announcementRecipient.excludedIds = [
+            ...new Set(recipient.excludedStudentIds),
+          ];
+          announcementRecipients.push(announcementRecipient);
+        }
+      }
+    }
+    if (dto.employeeRecipients && dto.employeeRecipients.length > 0) {
+      for (const recipient of dto.employeeRecipients) {
+        if (
+          announcementRecipients.some(
+            (x) =>
+              x.groupReferenceId === recipient.employeeTitleId &&
+              x.type === ANNOUNCEMENT_RECIPIENTS_TYPE.EMPLOYEE
+          )
+        ) {
+          const index = announcementRecipients.findIndex(
+            (x) =>
+              x.groupReferenceId === recipient.employeeTitleId &&
+              x.type === ANNOUNCEMENT_RECIPIENTS_TYPE.EMPLOYEE
+          );
+
+          const newExcludedIds = [
+            ...announcementRecipients[index].excludedIds,
+            ...recipient.excludedEmployeeIds,
+          ];
+          announcementRecipients[index].excludedIds = [
+            ...new Set(newExcludedIds),
+          ];
+        } else {
+          const announcementRecipient = new AnnouncementRecipient();
+          announcementRecipient.type = ANNOUNCEMENT_RECIPIENTS_TYPE.EMPLOYEE;
+          announcementRecipient.announcement = announcements;
+          announcementRecipient.groupReferenceId = recipient.employeeTitleId;
+          announcementRecipient.excludedIds = [
+            ...new Set(recipient.excludedEmployeeIds),
+          ];
+          announcementRecipients.push(announcementRecipient);
+        }
+      }
+    }
+    return announcementRecipients;
   }
 }
