@@ -50,14 +50,14 @@ export class OrgComponent {
     await this.oneSignal.init({
       appId: environment.oneSignalAppId,
     });
-    this.oneSignal.Notifications.requestPermission()
+    if(!environment.production) {
+      this.oneSignal.Notifications.requestPermission();
+    }
     console.log("PushSubscription.permission ", this.oneSignal.Notifications?.permission);
     console.log("PushSubscription.token ", this.oneSignal.User?.PushSubscription?.token);
-    console.log("PushSubscription.optedIn ", this.oneSignal.User?.PushSubscription?.optedIn);
-    console.log("PushSubscription.token ", this.oneSignal.User?.PushSubscription?.token);
-    await this.oneSignal.User.PushSubscription.optIn();
     await this.oneSignal.login(this.profile?.employee?.mobileNumber);
     await this.oneSignal.User.addTag("Department", this.profile?.employee?.department?.departmentName);
+    await this.oneSignal.User.addTag("Position", this.profile?.employee?.employeePosition?.name);
   }
 
   onActivate(event) {
