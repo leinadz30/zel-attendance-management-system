@@ -58,7 +58,7 @@
     <button
       mat-flat-button
       cdkFocusInitial
-      mat-dialog-close>
+      (click)="dialogRef.close({ cancel: true})">
       Cancel
     </button>
     <button

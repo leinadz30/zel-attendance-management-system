@@ -1,19 +1,20 @@
+import { AnnouncementRecipient } from "./AnnouncementRecipient";
 import { Users } from "./Users";
 import { Schools } from "./Schools";
 export declare class Announcements {
     announcementId: string;
     announcementCode: string | null;
+    status: string | null;
     title: string;
     description: string;
-    targetDate: Date;
-    targetType: string;
-    targetIds: string[];
-    scheduled: boolean;
+    isSchedule: boolean;
+    targetDate: string;
+    targetTime: string;
+    dateSent: Date;
     createdDate: Date;
     updatedDate: Date | null;
-    draft: boolean;
-    sent: boolean;
     active: boolean;
+    announcementRecipients: AnnouncementRecipient[];
     createdByUser: Users;
     school: Schools;
     updatedByUser: Users;

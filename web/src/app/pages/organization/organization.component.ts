@@ -12,6 +12,8 @@ import { RouteService } from 'src/app/services/route.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { AlertDialogModel } from 'src/app/shared/alert-dialog/alert-dialog-model';
 import { AlertDialogComponent } from 'src/app/shared/alert-dialog/alert-dialog.component';
+import { OneSignal } from 'onesignal-ngx';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-organization',
@@ -28,6 +30,7 @@ export class OrgComponent {
   currentGroup;
   disableGroupAnimation = true;
   constructor(
+    private oneSignal: OneSignal,
     private titleService:Title,
     private authService: AuthService,
     private storageService: StorageService,
@@ -43,7 +46,18 @@ export class OrgComponent {
         this.details = res.details;
       });
   }
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    await this.oneSignal.init({
+      appId: environment.oneSignalAppId,
+    });
+    this.oneSignal.Notifications.requestPermission()
+    console.log("PushSubscription.permission ", this.oneSignal.Notifications?.permission);
+    console.log("PushSubscription.token ", this.oneSignal.User?.PushSubscription?.token);
+    console.log("PushSubscription.optedIn ", this.oneSignal.User?.PushSubscription?.optedIn);
+    console.log("PushSubscription.token ", this.oneSignal.User?.PushSubscription?.token);
+    await this.oneSignal.User.PushSubscription.optIn();
+    await this.oneSignal.login(this.profile?.employee?.mobileNumber);
+    await this.oneSignal.User.addTag("Department", this.profile?.employee?.department?.departmentName);
   }
 
   onActivate(event) {

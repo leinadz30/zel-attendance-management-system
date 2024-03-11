@@ -4,8 +4,10 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { AnnouncementRecipient } from "./AnnouncementRecipient";
 import { Users } from "./Users";
 import { Schools } from "./Schools";
 
@@ -18,26 +20,36 @@ export class Announcements {
   @Column("character varying", { name: "AnnouncementCode", nullable: true })
   announcementCode: string | null;
 
+  @Column("character varying", {
+    name: "Status",
+    nullable: true,
+    default: () => "'DRAFT'",
+  })
+  status: string | null;
+
   @Column("character varying", { name: "Title" })
   title: string;
 
   @Column("character varying", { name: "Description" })
   description: string;
 
-  @Column("timestamp with time zone", {
+  @Column("boolean", { name: "IsSchedule", default: () => "false" })
+  isSchedule: boolean;
+
+  @Column("date", {
     name: "TargetDate",
     default: () => "(now() AT TIME ZONE 'Asia/Manila')",
   })
-  targetDate: Date;
+  targetDate: string;
 
-  @Column("character varying", { name: "TargetType" })
-  targetType: string;
+  @Column("character varying", { name: "TargetTime" })
+  targetTime: string;
 
-  @Column("varchar", { name: "TargetIds", array: true })
-  targetIds: string[];
-
-  @Column("boolean", { name: "Scheduled", default: () => "false" })
-  scheduled: boolean;
+  @Column("timestamp with time zone", {
+    name: "DateSent",
+    default: () => "(now() AT TIME ZONE 'Asia/Manila')",
+  })
+  dateSent: Date;
 
   @Column("timestamp with time zone", {
     name: "CreatedDate",
@@ -48,14 +60,14 @@ export class Announcements {
   @Column("timestamp with time zone", { name: "UpdatedDate", nullable: true })
   updatedDate: Date | null;
 
-  @Column("boolean", { name: "Draft", default: () => "false" })
-  draft: boolean;
-
-  @Column("boolean", { name: "Sent", default: () => "false" })
-  sent: boolean;
-
   @Column("boolean", { name: "Active", default: () => "true" })
   active: boolean;
+
+  @OneToMany(
+    () => AnnouncementRecipient,
+    (announcementRecipient) => announcementRecipient.announcement
+  )
+  announcementRecipients: AnnouncementRecipient[];
 
   @ManyToOne(() => Users, (users) => users.announcements)
   @JoinColumn([{ name: "CreatedByUserId", referencedColumnName: "userId" }])

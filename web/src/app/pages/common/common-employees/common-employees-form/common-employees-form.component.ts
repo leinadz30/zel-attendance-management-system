@@ -187,6 +187,40 @@ export class CommonEmployeeFormComponent {
     });
   }
 
+  showSelectDepartmentDialog() {
+    const dialogRef = this.dialog.open(SelectDepartmentDialogComponent, {
+        disableClose: true,
+        panelClass: "select-department-dialog"
+    });
+    dialogRef.componentInstance.selected = {
+      departmentCode: this.department?.departmentCode,
+      departmentName: this.department?.departmentName,
+      selected: true
+    }
+    dialogRef.componentInstance.type = "EMPLOYEE";
+    dialogRef.componentInstance.schoolCode = this.school?.schoolCode;
+    dialogRef.afterClosed().subscribe((res:any)=> {
+      console.log(res);
+      if(!res?.cancel) {
+        if(res && res?.departmentId) {
+          if(this.department?.departmentId !== res?.departmentId) {
+            this.employeeTitle = null;
+            this.f["employeeTitleId"].setValue(null);
+          }
+          this.f["departmentId"].setValue(res.departmentId);
+          this.department = res;
+        } else {
+          this.f["departmentId"].setValue(null);
+          this.f["employeeTitleId"].setValue(null);
+          this.department = null;
+          this.employeeTitle = null;
+        }
+        this.f["departmentId"].markAllAsTouched();
+        this.f["departmentId"].markAsDirty();
+      }
+    })
+  }
+
   showSelectEmployeeTitleDialog() {
     const dialogRef = this.dialog.open(SelectEmployeeTitleDialogComponent, {
         disableClose: true,
@@ -198,40 +232,20 @@ export class CommonEmployeeFormComponent {
       selected: true
     }
     dialogRef.componentInstance.schoolCode = this.school?.schoolCode;
-    dialogRef.afterClosed().subscribe((res:EmployeeTitles)=> {
+    dialogRef.afterClosed().subscribe((res:any)=> {
       console.log(res);
-      this.employeeTitle = res;
-      if(res && res?.employeeTitleId) {
-        this.f["employeeTitleId"].setValue(res.employeeTitleId);
-      } else {
-        this.f["employeeTitleId"].setValue(null);
-      }
-      this.f["employeeTitleId"].markAllAsTouched();
-      this.f["employeeTitleId"].markAsDirty();
-    })
-  }
 
-  showSelectDepartmentDialog() {
-    const dialogRef = this.dialog.open(SelectDepartmentDialogComponent, {
-        disableClose: true,
-        panelClass: "select-department-dialog"
-    });
-    dialogRef.componentInstance.selected = {
-      departmentCode: this.department?.departmentCode,
-      departmentName: this.department?.departmentName,
-      selected: true
-    }
-    dialogRef.componentInstance.schoolCode = this.school?.schoolCode;
-    dialogRef.afterClosed().subscribe((res:Departments)=> {
-      console.log(res);
-      this.department = res;
-      if(res && res?.departmentId) {
-        this.f["departmentId"].setValue(res.departmentId);
-      } else {
-        this.f["departmentId"].setValue(null);
+      if(res && !res?.cancel) {
+        if(res && res?.employeeTitleId) {
+          this.f["employeeTitleId"].setValue(res.employeeTitleId);
+          this.employeeTitle = res;
+        } else {
+          this.f["employeeTitleId"].setValue(null);
+          this.employeeTitle = null;
+        }
+        this.f["employeeTitleId"].markAllAsTouched();
+        this.f["employeeTitleId"].markAsDirty();
       }
-      this.f["departmentId"].markAllAsTouched();
-      this.f["departmentId"].markAsDirty();
     })
   }
 }

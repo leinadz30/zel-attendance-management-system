@@ -26,6 +26,7 @@ import { UserOneSignalSubscriptionModule } from "./controller/user-one-signal-su
 import { AnnouncementsModule } from "./controller/announcements/announcements.module";
 import { EmployeeUserModule } from "./controller/employee-user/employee-user.module";
 import { EmployeeUserAccessModule } from "./controller/employee-user-access/employee-user-access.module";
+import { AppReleaseModule } from "./controller/app-release/app-release.module";
 const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
 
 @Module({
@@ -59,6 +60,7 @@ const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
     NotificationsModule,
     UserOneSignalSubscriptionModule,
     AnnouncementsModule,
+    AppReleaseModule,
   ],
   providers: [AppService],
   controllers: [],

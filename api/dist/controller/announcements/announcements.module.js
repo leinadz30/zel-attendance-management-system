@@ -12,11 +12,12 @@ const announcements_controller_1 = require("./announcements.controller");
 const Announcements_1 = require("../../db/entities/Announcements");
 const announcements_service_1 = require("../../services/announcements.service");
 const typeorm_1 = require("@nestjs/typeorm");
+const AnnouncementRecipient_1 = require("../../db/entities/AnnouncementRecipient");
 let AnnouncementsModule = class AnnouncementsModule {
 };
 AnnouncementsModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([Announcements_1.Announcements])],
+        imports: [typeorm_1.TypeOrmModule.forFeature([Announcements_1.Announcements, AnnouncementRecipient_1.AnnouncementRecipient])],
         controllers: [announcements_controller_1.AnnouncementsController],
         providers: [announcements_service_1.AnnouncementsService],
         exports: [announcements_service_1.AnnouncementsService],

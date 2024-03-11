@@ -15,6 +15,10 @@ const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 const announcements_base_dto_1 = require("./announcements-base.dto");
 class CreateAnnouncementDto extends announcements_base_dto_1.DefaultAnnouncementDto {
+    constructor() {
+        super(...arguments);
+        this.actions = "DRAFT";
+    }
 }
 __decorate([
     (0, swagger_1.ApiProperty)(),
@@ -36,5 +40,15 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], CreateAnnouncementDto.prototype, "schoolId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        type: String,
+        default: "UPDATE"
+    }),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsIn)(["DRAFT", "SEND"]),
+    (0, class_validator_1.IsUppercase)(),
+    __metadata("design:type", String)
+], CreateAnnouncementDto.prototype, "actions", void 0);
 exports.CreateAnnouncementDto = CreateAnnouncementDto;
 //# sourceMappingURL=announcements.create.dto.js.map

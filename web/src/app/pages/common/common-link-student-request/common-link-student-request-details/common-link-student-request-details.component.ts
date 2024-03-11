@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -26,6 +26,8 @@ export class CommonLinkStudentRequestDetailsComponent {
   mediaWatcher: Subscription;
   isProcessing = false;
   linkStudentRequest: LinkStudentRequest;
+  onApproveEvent = new EventEmitter();
+  onRejectEvent = new EventEmitter();
 
   constructor(
     private formBuilder: FormBuilder,

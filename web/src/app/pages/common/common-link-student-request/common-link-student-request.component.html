@@ -8,7 +8,7 @@
   <div class="inner-content">
     <mat-card [ngClass]="{ 'hidden': isLoading }">
         <mat-card-content fxLayout="column" >
-          <div fxLayout="column" [ngStyle]="{ 'margin-left': '16px'}">
+          <div fxLayout="column" [ngStyle]="{ 'margin-left': '16px'}" *ngIf="mode === 'OPERATION'">
             <div fxFlex="100" fxLayout="row wrap" style="row-gap: 16px">
               <mat-form-field
                 fxFlex="row"

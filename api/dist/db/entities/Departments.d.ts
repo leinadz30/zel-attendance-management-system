@@ -11,6 +11,7 @@ export declare class Departments {
     createdDate: Date;
     updatedDate: Date | null;
     active: boolean;
+    type: string;
     createdByUser: Users;
     school: Schools;
     updatedByUser: Users;

@@ -70,9 +70,13 @@ export class CommonLinkStudentRequestComponent {
         this.mode = this.route.snapshot.data["mode"];
       }
       this.selectedSchool = new Schools();
-      this.selectedSchool.schoolCode = this.route.snapshot.paramMap.get('schoolCode');
-      if(!this.selectedSchool?.schoolCode || this.selectedSchool?.schoolCode === '') {
-        this.selectedSchool.schoolCode = this.storageService.getOpsRecentSchool();
+      if(this.mode === "OPERATION") {
+        this.selectedSchool.schoolCode = this.route.snapshot.paramMap.get('schoolCode');
+        if(!this.selectedSchool?.schoolCode || this.selectedSchool?.schoolCode === '') {
+          this.selectedSchool.schoolCode = this.storageService.getOpsRecentSchool();
+        }
+      } else {
+        this.selectedSchool.schoolCode = currentProfile?.employee?.school?.schoolCode;
       }
       this.appConfig.config.tableColumns.linkStudentRequest.forEach(x=> {
         this.columnDefs.push(x)
@@ -130,15 +134,15 @@ export class CommonLinkStudentRequestComponent {
       schoolName: this.selectedSchool?.schoolName,
       selected: true
     }
-    dialogRef.afterClosed().subscribe((res:Schools)=> {
+    dialogRef.afterClosed().subscribe((res:any)=> {
       console.log(res);
-      if(res) {
+      if(res && !res?.cancel) {
         this.selectedSchool = res;
         this.storageService.saveOpsRecentSchool(res.schoolCode);
         if(this.mode === "OPERATION") {
-          this._location.go("/ops/linkStudentRequest/find/" + res?.schoolCode);
+          this._location.go("/ops/link-student-request/find/" + res?.schoolCode);
         } else {
-          this._location.go("/org/linkStudentRequest/find/" + res?.schoolCode);
+          this._location.go("/org/link-student-request/find/" + res?.schoolCode);
         }
         this.getLinkStudentRequestPaginated();
       }
@@ -247,6 +251,12 @@ export class CommonLinkStudentRequestComponent {
       });
       dialogRef.componentInstance.linkStudentRequestCode = data.linkStudentRequestCode;
       dialogRef.componentInstance.initDetails();
+      dialogRef.componentInstance.onApproveEvent.subscribe(res=> {
+        this.updateStatus(data.linkStudentRequestCode, "APPROVED");
+      })
+      dialogRef.componentInstance.onRejectEvent.subscribe(res=> {
+        this.updateStatus(data.linkStudentRequestCode, "REJECTED");
+      })
     }
     else if(type === "student") {
       const dialogRef = this.dialog.open(CommonStudentFormComponent, {

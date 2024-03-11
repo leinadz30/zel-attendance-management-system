@@ -185,28 +185,6 @@ export class CommonSectionFormComponent {
     });
   }
 
-  showSelectSchoolYearLevelDialog() {
-    const dialogRef = this.dialog.open(SelectSchoolYearLevelDialogComponent, {
-        disableClose: true,
-        panelClass: "select-school-year-level-dialog"
-    });
-    dialogRef.componentInstance.selected = {
-      schoolYearLevelCode: this.schoolYearLevel?.schoolYearLevelCode,
-      name: this.schoolYearLevel?.name,
-      selected: true
-    }
-    dialogRef.componentInstance.schoolCode = this.school?.schoolCode;
-    dialogRef.afterClosed().subscribe((res:SchoolYearLevels)=> {
-      console.log(res);
-      if(res) {
-        this.schoolYearLevel = res;
-        this.f["schoolYearLevelId"].setValue(res.schoolYearLevelId);
-      }
-      this.f["schoolYearLevelId"].markAllAsTouched();
-      this.f["schoolYearLevelId"].markAsDirty();
-    })
-  }
-
   showSelectDepartmentDialog() {
     const dialogRef = this.dialog.open(SelectDepartmentDialogComponent, {
         disableClose: true,
@@ -218,16 +196,66 @@ export class CommonSectionFormComponent {
       selected: true
     }
     dialogRef.componentInstance.schoolCode = this.school?.schoolCode;
-    dialogRef.afterClosed().subscribe((res:Departments)=> {
+    dialogRef.componentInstance.type = "EMPLOYEE";
+    dialogRef.afterClosed().subscribe((res:any)=> {
       console.log(res);
-      this.department = res;
-      if(res && res?.departmentId) {
-        this.f["departmentId"].setValue(res.departmentId);
-      } else {
-        this.f["departmentId"].setValue(res.departmentId);
+      if(!res?.cancel) {
+        if(res && res?.departmentId) {
+          this.schoolYearLevel = this.department?.departmentId !== res?.departmentId ? null : this.schoolYearLevel;
+          if(this.department?.departmentId !== res?.departmentId) {
+            this.schoolYearLevel = null;
+            this.f["schoolYearLevelId"].setValue(null);
+          }
+          if(!this.schoolYearLevel || this.schoolYearLevel?.schoolYearLevelId === null) {
+            this.adviserEmployee = null;
+            this.f["adviserEmployeeId"].setValue(null);
+          }
+          this.department = res;
+          this.f["departmentId"].setValue(res.departmentId);
+        } else {
+          this.f["departmentId"].setValue(null);
+          this.f["schoolYearLevelId"].setValue(null);
+          this.f["adviserEmployeeId"].setValue(null);
+          this.department = null;
+          this.schoolYearLevel = null;
+          this.adviserEmployee = null;
+        }
+        this.f["departmentId"].markAllAsTouched();
+        this.f["departmentId"].markAsDirty();
       }
-      this.f["departmentId"].markAllAsTouched();
-      this.f["departmentId"].markAsDirty();
+    })
+  }
+
+  showSelectSchoolYearLevelDialog() {
+    const dialogRef = this.dialog.open(SelectSchoolYearLevelDialogComponent, {
+        disableClose: true,
+        panelClass: "select-school-year-level-dialog"
+    });
+    dialogRef.componentInstance.selected = {
+      schoolYearLevelCode: this.schoolYearLevel?.schoolYearLevelCode,
+      name: this.schoolYearLevel?.name,
+      selected: true
+    }
+    dialogRef.componentInstance.schoolCode = this.school?.schoolCode;
+    dialogRef.afterClosed().subscribe((res:any)=> {
+      console.log(res);
+      if(!res?.cancel) {
+        if(res && res?.schoolYearLevelId) {
+          if(this.schoolYearLevel?.schoolYearLevelId !== res?.schoolYearLevelId) {
+            this.adviserEmployee = null;
+            this.f["adviserEmployeeId"].setValue(null);
+          }
+          this.schoolYearLevel = res;
+          this.f["schoolYearLevelId"].setValue(res.schoolYearLevelId);
+        } else {
+          this.f["schoolYearLevelId"].setValue(null);
+          this.f["adviserEmployeeId"].setValue(null);
+          this.schoolYearLevel = null;
+          this.adviserEmployee = null;
+        }
+        this.f["schoolYearLevelId"].markAllAsTouched();
+        this.f["schoolYearLevelId"].markAsDirty();
+      }
     })
   }
 
@@ -244,16 +272,18 @@ export class CommonSectionFormComponent {
     }
     dialogRef.componentInstance.schoolCode = this.school?.schoolCode;
     dialogRef.componentInstance.departmentCode = this.department?.departmentCode;
-    dialogRef.afterClosed().subscribe((res:Employees)=> {
+    dialogRef.afterClosed().subscribe((res:any)=> {
       console.log(res);
-      this.adviserEmployee = res;
-      if(res && res?.employeeId) {
-        this.f["adviserEmployeeId"].setValue(res.employeeId);
-      } else {
-        this.f["adviserEmployeeId"].setValue(null);
+      if(!res?.cancel) {
+        this.adviserEmployee = res;
+        if(res && res?.employeeId) {
+          this.f["adviserEmployeeId"].setValue(res.employeeId);
+        } else {
+          this.f["adviserEmployeeId"].setValue(null);
+        }
+        this.f["adviserEmployeeId"].markAllAsTouched();
+        this.f["adviserEmployeeId"].markAsDirty();
       }
-      this.f["adviserEmployeeId"].markAllAsTouched();
-      this.f["adviserEmployeeId"].markAsDirty();
     })
   }
 }

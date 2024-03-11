@@ -1,6 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
-import { IsNotEmpty, IsNumberString } from "class-validator";
+import {
+  IsIn,
+  IsNotEmpty,
+  IsNumberString,
+  IsOptional,
+  IsUppercase,
+} from "class-validator";
 import { DefaultAnnouncementDto } from "./announcements-base.dto";
 
 export class UpdateAnnouncementDto extends DefaultAnnouncementDto {
@@ -11,4 +17,13 @@ export class UpdateAnnouncementDto extends DefaultAnnouncementDto {
     return obj[key]?.toString();
   })
   updatedByUserId: string;
+
+  @ApiProperty({
+    type: String,
+    default: "UPDATE"
+  })
+  @IsNotEmpty()
+  @IsIn(["UPDATE", "SEND"])
+  @IsUppercase()
+  actions: "UPDATE" | "SEND" = "UPDATE";
 }

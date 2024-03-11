@@ -93,6 +93,22 @@ export class AnnouncementsController {
     }
   }
 
+  @Put("cancel/:announcementCode")
+  //   @UseGuards(JwtAuthGuard)
+  async cancel(@Param("announcementCode") announcementCode: string) {
+    const res: ApiResponseModel<Announcements> = {} as any;
+    try {
+      res.data = await this.announcementsService.cancel(announcementCode);
+      res.success = true;
+      res.message = `Announcements Cancelled!`;
+      return res;
+    } catch (e) {
+      res.success = false;
+      res.message = e.message !== undefined ? e.message : e;
+      return res;
+    }
+  }
+
   @Delete("/:announcementCode")
   //   @UseGuards(JwtAuthGuard)
   async delete(@Param("announcementCode") announcementCode: string) {

@@ -13,7 +13,7 @@ import { Employees } from "./Employees";
 import { Sections } from "./Sections";
 import { Students } from "./Students";
 
-@Index("u_department", ["active", "departmentName", "schoolId"], {
+@Index("u_department", ["active", "departmentName", "schoolId", "type"], {
   unique: true,
 })
 @Index("Departments_pkey", ["departmentId"], { unique: true })
@@ -42,6 +42,9 @@ export class Departments {
 
   @Column("boolean", { name: "Active", default: () => "true" })
   active: boolean;
+
+  @Column("character varying", { name: "Type" })
+  type: string;
 
   @ManyToOne(() => Users, (users) => users.departments)
   @JoinColumn([{ name: "CreatedByUserId", referencedColumnName: "userId" }])

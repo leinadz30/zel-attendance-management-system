@@ -1,9 +1,18 @@
+export declare class StudentRecipientDto {
+    sectionId: string;
+    excludedStudentIds: string[];
+}
+export declare class EmployeeRecipientDto {
+    employeeTitleId: string;
+    excludedEmployeeIds: string[];
+}
 export declare class DefaultAnnouncementDto {
     title: string;
     description: string;
     targetDate: Date;
-    targetType: "SEND" | "SEND";
-    targetIds: string[];
-    scheduled: boolean;
-    action: "SEND" | "SEND";
+    targetTime: string;
+    isSchedule: boolean;
+    basicEdStudentRecipients: StudentRecipientDto[];
+    higherEdStudenttudentRecipients: StudentRecipientDto[];
+    employeeRecipients: EmployeeRecipientDto[];
 }

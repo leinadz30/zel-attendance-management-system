@@ -219,42 +219,6 @@ export class CommonStudentFormComponent {
     });
   }
 
-  showSelectSchoolYearLevelDialog() {
-    const dialogRef = this.dialog.open(SelectSchoolYearLevelDialogComponent, {
-        disableClose: true,
-        panelClass: "select-school-year-level-dialog"
-    });
-    dialogRef.componentInstance.selected = {
-      schoolYearLevelCode: this.schoolYearLevel?.schoolYearLevelCode,
-      name: this.schoolYearLevel?.name,
-      selected: true
-    }
-    dialogRef.componentInstance.schoolCode = this.school?.schoolCode;
-    dialogRef.afterClosed().subscribe((res:SchoolYearLevels)=> {
-      console.log(res);
-      if(res) {
-        this.schoolYearLevel = res;
-        this.course = null;
-        this.strand = null;
-        this.schoolYearLevel = res;
-        this.f["schoolYearLevelId"].setValue(res.schoolYearLevelId);
-        if(res.educationalStage === "COLLEGE") {
-          this.studentForm.controls["courseId"] = new FormControl(null, [Validators.required]);
-          this.studentForm.controls["strandId"] = new FormControl(null);
-        } else if(res.educationalStage === "SENIOR") {
-          this.studentForm.controls["courseId"] = new FormControl(null);
-          this.studentForm.controls["strandId"] = new FormControl(null, [Validators.required]);
-        } else {
-          this.studentForm.controls["courseId"] = new FormControl(null);
-          this.studentForm.controls["strandId"] = new FormControl(null);
-        }
-        this.studentForm.updateValueAndValidity();
-      }
-      this.f["schoolYearLevelId"].markAllAsTouched();
-      this.f["schoolYearLevelId"].markAsDirty();
-    })
-  }
-
   showSelectDepartmentDialog() {
     const dialogRef = this.dialog.open(SelectDepartmentDialogComponent, {
         disableClose: true,
@@ -266,16 +230,87 @@ export class CommonStudentFormComponent {
       selected: true
     }
     dialogRef.componentInstance.schoolCode = this.school?.schoolCode;
-    dialogRef.afterClosed().subscribe((res:Departments)=> {
+    dialogRef.componentInstance.type = "STUDENT";
+    dialogRef.afterClosed().subscribe((res:any)=> {
       console.log(res);
-      this.department = res;
-      if(res && res?.departmentId) {
-        this.f["departmentId"].setValue(res.departmentId);
-      } else {
-        this.f["departmentId"].setValue(null);
+      if(!res?.cancel) {
+        if(res && res?.departmentId) {
+          this.schoolYearLevel = this.department?.departmentId !== res?.departmentId ? null : this.schoolYearLevel;
+          if(this.department?.departmentId !== res?.departmentId) {
+            this.schoolYearLevel = null;
+            this.course = null;
+            this.strand = null;
+            this.section = null;
+            this.f["schoolYearLevelId"].setValue(null);
+            this.studentForm.controls["courseId"] = new FormControl(null);
+            this.studentForm.controls["strandId"] = new FormControl(null);
+            this.f["sectionId"].setValue(null);
+          }
+          this.department = res;
+          this.f["departmentId"].setValue(res.departmentId);
+        } else {
+          this.department = null;
+          this.schoolYearLevel = null;
+          this.course = null;
+          this.strand = null;
+          this.section = null;
+          this.f["departmentId"].setValue(null);
+          this.f["schoolYearLevelId"].setValue(null);
+          this.studentForm.controls["courseId"] = new FormControl(null);
+          this.studentForm.controls["strandId"] = new FormControl(null);
+          this.f["sectionId"].setValue(null);
+        }
+        this.f["departmentId"].markAllAsTouched();
+        this.f["departmentId"].markAsDirty();
       }
-      this.f["departmentId"].markAllAsTouched();
-      this.f["departmentId"].markAsDirty();
+    })
+  }
+
+  showSelectSchoolYearLevelDialog() {
+    const dialogRef = this.dialog.open(SelectSchoolYearLevelDialogComponent, {
+        disableClose: true,
+        panelClass: "select-school-year-level-dialog"
+    });
+    dialogRef.componentInstance.selected = {
+      schoolYearLevelCode: this.schoolYearLevel?.schoolYearLevelCode,
+      name: this.schoolYearLevel?.name,
+      selected: true
+    }
+    dialogRef.componentInstance.schoolCode = this.school?.schoolCode;
+    dialogRef.afterClosed().subscribe((res:any)=> {
+      console.log(res);
+      if(!res?.cancel) {
+        if(res && res?.schoolYearLevelId) {
+          this.f["schoolYearLevelId"].setValue(res.schoolYearLevelId);
+          this.schoolYearLevel = res;
+          this.course = null;
+          this.strand = null;
+          this.section = null;
+          this.f["sectionId"].setValue(null);
+          if(res.educationalStage === "COLLEGE") {
+            this.studentForm.controls["courseId"] = new FormControl(null, [Validators.required]);
+            this.studentForm.controls["strandId"] = new FormControl(null);
+          } else if(res.educationalStage === "SENIOR") {
+            this.studentForm.controls["courseId"] = new FormControl(null);
+            this.studentForm.controls["strandId"] = new FormControl(null, [Validators.required]);
+          } else {
+            this.studentForm.controls["courseId"] = new FormControl(null);
+            this.studentForm.controls["strandId"] = new FormControl(null);
+          }
+        } else {
+          this.schoolYearLevel = null;
+          this.course = null;
+          this.strand = null;
+          this.section = null;
+          this.f["schoolYearLevelId"].setValue(null);
+          this.studentForm.controls["courseId"] = new FormControl(null);
+          this.studentForm.controls["strandId"] = new FormControl(null);
+          this.f["sectionId"].setValue(null);
+        }
+        this.studentForm.updateValueAndValidity();
+        this.f["schoolYearLevelId"].markAllAsTouched();
+        this.f["schoolYearLevelId"].markAsDirty();
+      }
     })
   }
 
@@ -292,20 +327,29 @@ export class CommonStudentFormComponent {
       selected: true
     }
     dialogRef.componentInstance.schoolCode = this.school?.schoolCode;
-    dialogRef.afterClosed().subscribe((res:Courses)=> {
+    dialogRef.afterClosed().subscribe((res:any)=> {
       console.log(res);
-      this.course = res;
-      if(res && res?.courseId) {
-        this.studentForm.controls["courseId"] = new FormControl(res.courseId, [Validators.required]);
-        this.studentForm.controls["strandId"] = new FormControl(null);
-        this.studentForm.updateValueAndValidity();
-      } else {
-        this.studentForm.controls["courseId"] = new FormControl(null, [Validators.required]);
-        this.studentForm.controls["strandId"] = new FormControl(null);
-        this.studentForm.updateValueAndValidity();
+      if(!res?.cancel) {
+        if(res && res?.courseId) {
+          this.course = res;
+          this.strand = null;
+          this.section = null;
+          this.studentForm.controls["courseId"] = new FormControl(res.courseId, [Validators.required]);
+          this.studentForm.controls["strandId"] = new FormControl(null);
+          this.f["sectionId"].setValue(null);
+          this.studentForm.updateValueAndValidity();
+        } else {
+          this.course = null;
+          this.strand = null;
+          this.section = null;
+          this.studentForm.controls["courseId"] = new FormControl(null, [Validators.required]);
+          this.studentForm.controls["strandId"] = new FormControl(null);
+          this.f["sectionId"].setValue(null);
+          this.studentForm.updateValueAndValidity();
+        }
+        this.f["courseId"].markAllAsTouched();
+        this.f["courseId"].markAsDirty();
       }
-      this.f["courseId"].markAllAsTouched();
-      this.f["courseId"].markAsDirty();
     })
   }
 
@@ -322,20 +366,29 @@ export class CommonStudentFormComponent {
       selected: true
     }
     dialogRef.componentInstance.schoolCode = this.school?.schoolCode;
-    dialogRef.afterClosed().subscribe((res:Strands)=> {
+    dialogRef.afterClosed().subscribe((res:any)=> {
       console.log(res);
-      this.strand = res;
-      if(res && res?.strandId) {
-        this.studentForm.controls["strandId"] = new FormControl(res.strandId, [Validators.required]);
-        this.studentForm.controls["courseId"] = new FormControl(null);
-        this.studentForm.updateValueAndValidity();
-      } else {
-        this.studentForm.controls["strandId"] = new FormControl(null, [Validators.required]);
-        this.studentForm.controls["courseId"] = new FormControl(null);
-        this.studentForm.updateValueAndValidity();
+      if(!res?.cancel) {
+        if(res && res?.strandId) {
+          this.strand = res;
+          this.course = null;
+          this.section = null;
+          this.studentForm.controls["strandId"] = new FormControl(res.strandId, [Validators.required]);
+          this.studentForm.controls["courseId"] = new FormControl(null);
+          this.f["sectionId"].setValue(null);
+          this.studentForm.updateValueAndValidity();
+        } else {
+          this.course = null;
+          this.strand = null;
+          this.section = null;
+          this.studentForm.controls["strandId"] = new FormControl(null, [Validators.required]);
+          this.studentForm.controls["courseId"] = new FormControl(null);
+          this.f["sectionId"].setValue(null);
+          this.studentForm.updateValueAndValidity();
+        }
+        this.f["strandId"].markAllAsTouched();
+        this.f["strandId"].markAsDirty();
       }
-      this.f["strandId"].markAllAsTouched();
-      this.f["strandId"].markAsDirty();
     })
   }
 
@@ -351,16 +404,18 @@ export class CommonStudentFormComponent {
     }
     dialogRef.componentInstance.schoolCode = this.school?.schoolCode;
     dialogRef.componentInstance.schoolYearLevelCode = this.schoolYearLevel?.schoolYearLevelCode;
-    dialogRef.afterClosed().subscribe((res:Sections)=> {
+    dialogRef.afterClosed().subscribe((res:any)=> {
       console.log(res);
       this.section = res;
-      if(res && res?.sectionId) {
-        this.f["sectionId"].setValue(res.sectionId);
-      } else {
-        this.f["sectionId"].setValue(null);
+      if(!res?.cancel) {
+        if(res && res?.sectionId) {
+          this.f["sectionId"].setValue(res.sectionId);
+        } else {
+          this.f["sectionId"].setValue(null);
+        }
+        this.f["sectionId"].markAllAsTouched();
+        this.f["sectionId"].markAsDirty();
       }
-      this.f["sectionId"].markAllAsTouched();
-      this.f["sectionId"].markAsDirty();
     })
   }
 }

@@ -26,7 +26,7 @@ const routes: Routes = [
     redirectTo: 'profile/edit-profile',
     title: 'Profile',
   },
-
+  //ops
   {
     path: 'ops',
     component: OpsComponent,
@@ -134,7 +134,7 @@ const routes: Routes = [
       {
         path: 'machines',
         canActivate: [OpsAuthGuard],
-        data: { mode: CONST_USER_MODE.OPERATION, title: 'Link Student Request' },
+        data: { mode: CONST_USER_MODE.OPERATION, title: 'Machines' },
         loadChildren: () =>
           import('./pages/common/common-machines/common-machines.module').then(
             (m) => m.CommonMachinesModule
@@ -178,7 +178,7 @@ const routes: Routes = [
       },
     ],
   },
-
+  //org
   {
     path: 'org',
     component: OrgComponent,
@@ -286,7 +286,7 @@ const routes: Routes = [
       {
         path: 'machines',
         canActivate: [OrgAuthGuard],
-        data: { mode: CONST_USER_MODE.ORGANIZATION, title: 'Link Student Request' },
+        data: { mode: CONST_USER_MODE.ORGANIZATION, title: 'Machines' },
         loadChildren: () =>
           import('./pages/common/common-machines/common-machines.module').then(
             (m) => m.CommonMachinesModule
@@ -321,6 +321,7 @@ const routes: Routes = [
       }
     ],
   },
+  //profile
   {
     path: 'profile',
     component: ProfileComponent,
@@ -341,6 +342,7 @@ const routes: Routes = [
       },
     ],
   },
+  //auth ops
   {
     path: 'auth/ops',
     component: AuthComponent,
@@ -362,6 +364,7 @@ const routes: Routes = [
       },
     ],
   },
+  //auth org
   {
     path: 'auth/org',
     component: AuthComponent,
@@ -383,10 +386,12 @@ const routes: Routes = [
       },
     ],
   },
+  //ops/no-access
   {
     path: 'ops/no-access',
     component: NoAccessComponent,
   },
+  //org/no-access
   {
     path: 'org/no-access',
     component: NoAccessComponent,

@@ -58,6 +58,7 @@ const user_one_signal_subscription_module_1 = require("./controller/user-one-sig
 const announcements_module_1 = require("./controller/announcements/announcements.module");
 const employee_user_module_1 = require("./controller/employee-user/employee-user.module");
 const employee_user_access_module_1 = require("./controller/employee-user-access/employee-user-access.module");
+const app_release_module_1 = require("./controller/app-release/app-release.module");
 const envFilePath = (0, utils_1.getEnvPath)(`${__dirname}/common/envs`);
 let AppModule = class AppModule {
 };
@@ -93,6 +94,7 @@ AppModule = __decorate([
             notifications_module_1.NotificationsModule,
             user_one_signal_subscription_module_1.UserOneSignalSubscriptionModule,
             announcements_module_1.AnnouncementsModule,
+            app_release_module_1.AppReleaseModule,
         ],
         providers: [app_service_1.AppService],
         controllers: [],

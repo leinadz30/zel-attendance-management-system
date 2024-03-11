@@ -1,5 +1,5 @@
 <mat-toolbar color="#fff" class="mat-elevation-z4">
-  <span id="title">Departments</span>
+  <span id="title">Departments({{selectedType === "EMPLOYEE" ? "Employee" : "Student"}})</span>
   <span class="toolbar-item-spacer"></span>
   <div class="toolbar-action">
   </div>
@@ -13,8 +13,8 @@
   <div class="inner-content">
     <mat-card [ngClass]="{ 'hidden': isLoading }">
         <mat-card-content fxLayout="column" >
-          <div fxLayout="column" [ngStyle]="{ 'margin-left': '16px'}" *ngIf="mode === 'OPERATION'">
-            <div fxFlex="100" fxLayout="row wrap" style="row-gap: 16px">
+          <div fxLayout="column" [ngStyle]="{ 'margin-left': '16px'}" >
+            <div fxFlex="100" fxLayout="row wrap" *ngIf="mode === 'OPERATION'">
               <mat-form-field
                 fxFlex="row"
                 fxFlex.gt-xs="33.33%"
@@ -35,6 +35,19 @@
                     (click)="showSelectSchoolDialog()">
                     search
                   </mat-icon>
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxLayout="row wrap" *ngIf="selectedSchool?.schoolCode && selectedSchool?.schoolCode !== ''">
+              <mat-form-field
+                fxFlex="row"
+                fxFlex.gt-xs="33.33%"
+                fxFlex.gt-xs="column"
+                appearance="outline">
+                <mat-label>Type</mat-label>
+                <mat-select [(value)]="selectedType" (selectionChange)="onTypeChange()">
+                  <mat-option value="STUDENT">Student</mat-option>
+                  <mat-option value="EMPLOYEE">Employee</mat-option>
+                </mat-select>
               </mat-form-field>
             </div>
           </div>

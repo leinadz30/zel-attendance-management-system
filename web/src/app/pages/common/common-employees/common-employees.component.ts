@@ -162,9 +162,9 @@ export class CommonEmployeesComponent {
       schoolName: this.selectedSchool?.schoolName,
       selected: true
     }
-    dialogRef.afterClosed().subscribe((res:Schools)=> {
+    dialogRef.afterClosed().subscribe((res:any)=> {
       console.log(res);
-      if(res) {
+      if(res && !res?.cancel) {
         this.selectedSchool = res;
         this.storageService.saveOpsRecentSchool(res.schoolCode);
         if(this.mode === "OPERATION") {
@@ -187,16 +187,20 @@ export class CommonEmployeesComponent {
       departmentName: this.selectedDepartment?.departmentName,
       selected: true
     }
+    dialogRef.componentInstance.type = "EMPLOYEE";
     dialogRef.componentInstance.schoolCode = this.selectedSchool?.schoolCode;
-    dialogRef.afterClosed().subscribe((res:Departments)=> {
+    dialogRef.afterClosed().subscribe((res:any)=> {
       console.log(res);
-      this.selectedDepartment = res;
-      if(this.mode === "OPERATION") {
-        this._location.go("/ops/employees/find/" + this.selectedSchool?.schoolCode + (this.selectedDepartment?.departmentCode ? "/dept/" + this.selectedDepartment?.departmentCode : ""));
-      } else {
-        this._location.go("/org/employees/find/" + this.selectedSchool?.schoolCode + (this.selectedDepartment?.departmentCode ? "/dept/" + this.selectedDepartment?.departmentCode : ""));
+
+      if(res && !res?.cancel) {
+        this.selectedDepartment = res;
+        if(this.mode === "OPERATION") {
+          this._location.go("/ops/employees/find/" + this.selectedSchool?.schoolCode + (this.selectedDepartment?.departmentCode ? "/dept/" + this.selectedDepartment?.departmentCode : ""));
+        } else {
+          this._location.go("/org/employees/find/" + this.selectedSchool?.schoolCode + (this.selectedDepartment?.departmentCode ? "/dept/" + this.selectedDepartment?.departmentCode : ""));
+        }
+        this.getEmployeesPaginated();
       }
-      this.getEmployeesPaginated();
     })
   }
 

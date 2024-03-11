@@ -39,6 +39,7 @@ export class CommonDepartmentsComponent {
   pageSize = 10;
   total = 0;
   order: any = { departmentCode: "DESC" };
+  selectedType: 'STUDENT' | 'EMPLOYEE';
 
   filter: {
     apiNotation: string;
@@ -77,6 +78,8 @@ export class CommonDepartmentsComponent {
       } else {
         this.selectedSchool.schoolCode = currentProfile?.employee?.school?.schoolCode;
       }
+      const type: any = this.route.snapshot.paramMap.get('type');
+      this.selectedType = type;
       this.appConfig.config.tableColumns.departments.forEach(x=> {
         if(x.name === "menu") {
           const menu = [{
@@ -120,6 +123,15 @@ export class CommonDepartmentsComponent {
     this.getDepartmentsPaginated();
   }
 
+  async onTypeChange() {
+    if(this.mode === "OPERATION") {
+      this._location.go("/ops/departments/find/" + this.selectedSchool?.schoolCode + "/type/" + this.selectedType);
+    } else {
+      this._location.go("/org/departments/find/" + this.selectedSchool?.schoolCode + "/type/" + this.selectedType);
+    }
+    await this.getDepartmentsPaginated();
+  }
+
   async pageChange(event: { pageIndex: number, pageSize: number }) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
@@ -143,9 +155,9 @@ export class CommonDepartmentsComponent {
       schoolName: this.selectedSchool?.schoolName,
       selected: true
     }
-    dialogRef.afterClosed().subscribe((res:Schools)=> {
+    dialogRef.afterClosed().subscribe((res:any)=> {
       console.log(res);
-      if(res) {
+      if(res && !res?.cancel) {
         this.selectedSchool = res;
         this.storageService.saveOpsRecentSchool(res.schoolCode);
         if(this.mode === "OPERATION") {
@@ -161,7 +173,7 @@ export class CommonDepartmentsComponent {
   getDepartmentsPaginated(){
     try{
       if(this.selectedSchool?.schoolCode) {
-        const findIndex = this.filter.findIndex(x=>x.apiNotation === "school.schoolCode");
+        let findIndex = this.filter.findIndex(x=>x.apiNotation === "school.schoolCode");
         if(findIndex >= 0) {
           this.filter[findIndex] = {
             apiNotation: "school.schoolCode",
@@ -172,6 +184,20 @@ export class CommonDepartmentsComponent {
           this.filter.push({
             apiNotation: "school.schoolCode",
             filter: this.selectedSchool?.schoolCode,
+            type: "precise"
+          });
+        }
+        findIndex = this.filter.findIndex(x=>x.apiNotation === "type");
+        if(findIndex >= 0) {
+          this.filter[findIndex] = {
+            apiNotation: "type",
+            filter: this.selectedType,
+            type: "precise"
+          };
+        } else {
+          this.filter.push({
+            apiNotation: "type",
+            filter: this.selectedType,
             type: "precise"
           });
         }
@@ -188,6 +214,7 @@ export class CommonDepartmentsComponent {
               return {
                 departmentCode: d.departmentCode,
                 departmentName: d.departmentName,
+                type: d.type === "EMPLOYEE" ? "Employee" : "Student",
               } as CommonDepartmentsTableColumn
             });
             this.total = res.data.total;
@@ -247,6 +274,7 @@ export class CommonDepartmentsComponent {
       panelClass: "form-dialog"
     });
     dialogRef.componentInstance.isNew = true;
+    dialogRef.componentInstance.selectedType = this.selectedType;
     dialogRef.componentInstance.schoolId = this.selectedSchool?.schoolId;
     dialogRef.componentInstance.currentUserId = this.currentUserId;
     dialogRef.afterClosed().subscribe(res=> {

@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Announcements = void 0;
 const typeorm_1 = require("typeorm");
+const AnnouncementRecipient_1 = require("./AnnouncementRecipient");
 const Users_1 = require("./Users");
 const Schools_1 = require("./Schools");
 let Announcements = class Announcements {
@@ -24,6 +25,14 @@ __decorate([
     __metadata("design:type", String)
 ], Announcements.prototype, "announcementCode", void 0);
 __decorate([
+    (0, typeorm_1.Column)("character varying", {
+        name: "Status",
+        nullable: true,
+        default: () => "'DRAFT'",
+    }),
+    __metadata("design:type", String)
+], Announcements.prototype, "status", void 0);
+__decorate([
     (0, typeorm_1.Column)("character varying", { name: "Title" }),
     __metadata("design:type", String)
 ], Announcements.prototype, "title", void 0);
@@ -32,24 +41,27 @@ __decorate([
     __metadata("design:type", String)
 ], Announcements.prototype, "description", void 0);
 __decorate([
-    (0, typeorm_1.Column)("timestamp with time zone", {
+    (0, typeorm_1.Column)("boolean", { name: "IsSchedule", default: () => "false" }),
+    __metadata("design:type", Boolean)
+], Announcements.prototype, "isSchedule", void 0);
+__decorate([
+    (0, typeorm_1.Column)("date", {
         name: "TargetDate",
         default: () => "(now() AT TIME ZONE 'Asia/Manila')",
     }),
-    __metadata("design:type", Date)
+    __metadata("design:type", String)
 ], Announcements.prototype, "targetDate", void 0);
 __decorate([
-    (0, typeorm_1.Column)("character varying", { name: "TargetType" }),
+    (0, typeorm_1.Column)("character varying", { name: "TargetTime" }),
     __metadata("design:type", String)
-], Announcements.prototype, "targetType", void 0);
+], Announcements.prototype, "targetTime", void 0);
 __decorate([
-    (0, typeorm_1.Column)("varchar", { name: "TargetIds", array: true }),
-    __metadata("design:type", Array)
-], Announcements.prototype, "targetIds", void 0);
-__decorate([
-    (0, typeorm_1.Column)("boolean", { name: "Scheduled", default: () => "false" }),
-    __metadata("design:type", Boolean)
-], Announcements.prototype, "scheduled", void 0);
+    (0, typeorm_1.Column)("timestamp with time zone", {
+        name: "DateSent",
+        default: () => "(now() AT TIME ZONE 'Asia/Manila')",
+    }),
+    __metadata("design:type", Date)
+], Announcements.prototype, "dateSent", void 0);
 __decorate([
     (0, typeorm_1.Column)("timestamp with time zone", {
         name: "CreatedDate",
@@ -62,17 +74,13 @@ __decorate([
     __metadata("design:type", Date)
 ], Announcements.prototype, "updatedDate", void 0);
 __decorate([
-    (0, typeorm_1.Column)("boolean", { name: "Draft", default: () => "false" }),
-    __metadata("design:type", Boolean)
-], Announcements.prototype, "draft", void 0);
-__decorate([
-    (0, typeorm_1.Column)("boolean", { name: "Sent", default: () => "false" }),
-    __metadata("design:type", Boolean)
-], Announcements.prototype, "sent", void 0);
-__decorate([
     (0, typeorm_1.Column)("boolean", { name: "Active", default: () => "true" }),
     __metadata("design:type", Boolean)
 ], Announcements.prototype, "active", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => AnnouncementRecipient_1.AnnouncementRecipient, (announcementRecipient) => announcementRecipient.announcement),
+    __metadata("design:type", Array)
+], Announcements.prototype, "announcementRecipients", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Users_1.Users, (users) => users.announcements),
     (0, typeorm_1.JoinColumn)([{ name: "CreatedByUserId", referencedColumnName: "userId" }]),

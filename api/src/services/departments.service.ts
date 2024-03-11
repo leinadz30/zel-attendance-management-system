@@ -119,6 +119,7 @@ export class DepartmentsService {
             throw Error(USER_ERROR_USER_NOT_FOUND);
           }
           departments.createdByUser = createdByUser;
+          departments.type = dto.type;
           departments = await entityManager.save(departments);
           departments.departmentCode = generateIndentityCode(
             departments.departmentId

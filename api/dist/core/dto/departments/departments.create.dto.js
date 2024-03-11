@@ -36,6 +36,13 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], CreateDepartmentDto.prototype, "schoolId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsIn)(["STUDENT", "EMPLOYEE"]),
+    (0, class_validator_1.IsUppercase)(),
+    __metadata("design:type", String)
+], CreateDepartmentDto.prototype, "type", void 0);
 exports.CreateDepartmentDto = CreateDepartmentDto;
 class BatchCreateDepartmentDto extends departments_base_dto_1.DefaultDepartmentDto {
 }

@@ -8,6 +8,8 @@ import { AppConfigService } from './services/app-config.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StorageService } from './services/storage.service';
 import { PusherService } from './services/pusher.service';
+import { OneSignal } from 'onesignal-ngx';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -18,6 +20,7 @@ export class AppComponent {
   title;
   grantNotif = false;
   constructor(
+    private oneSignal: OneSignal,
     private titleService:Title,
     private spinner: SpinnerVisibilityService,
     private router: Router,

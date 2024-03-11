@@ -5,6 +5,7 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SpinnerVisibilityService } from 'ng-http-loader';
+import { OneSignal } from 'onesignal-ngx';
 import { Users } from 'src/app/model/users';
 import { AuthService } from 'src/app/services/auth.service';
 import { StorageService } from 'src/app/services/storage.service';
@@ -24,6 +25,7 @@ export class LoginComponent {
   mode: 'OPERATION' | 'ORGANIZATION';
 
   constructor(
+    private oneSignal: OneSignal,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private http: HttpClient,
@@ -79,6 +81,8 @@ export class LoginComponent {
         this.authService.loginEmployeeUser(params)
           .subscribe(async res => {
             if (res.success) {
+              await this.oneSignal.login(res.data.employee.mobileNumber);
+              await this.oneSignal.User.addTag("Department", res.data.employee?.department?.departmentName);
               this.storageService.saveLoginProfile(res.data);
               this.authService.redirectToPage(res.data, false);
               this.router.navigate(['/org'], { replaceUrl: true,  onSameUrlNavigation: "reload" });

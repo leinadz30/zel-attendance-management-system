@@ -23,10 +23,20 @@ export const routes: Routes = [
     redirectTo: ''
   },
   {
+    path: 'find/:schoolCode/type',
+    component: CommonDepartmentsComponent,
+    data: { title: "Departments", find: true }
+  },
+  {
     path: 'find/:schoolCode',
     component: CommonDepartmentsComponent,
     data: { title: "Departments", find: true }
-  }
+  },
+  {
+    path: 'find/:schoolCode/type/:type',
+    component: CommonDepartmentsComponent,
+    data: { title: "Departments", find: true }
+  },
 ]
 
 @NgModule({

@@ -1,6 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
-import { IsNotEmpty, IsNumberString } from "class-validator";
+import {
+  IsIn,
+  IsNotEmpty,
+  IsNumberString,
+  IsOptional,
+  IsUppercase,
+} from "class-validator";
 import { DefaultDepartmentDto } from "./departments-base.dto";
 
 export class CreateDepartmentDto extends DefaultDepartmentDto {
@@ -19,6 +25,12 @@ export class CreateDepartmentDto extends DefaultDepartmentDto {
     return obj[key]?.toString();
   })
   schoolId: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsIn(["STUDENT", "EMPLOYEE"])
+  @IsUppercase()
+  type: "STUDENT" | "EMPLOYEE";
 }
 
 export class BatchCreateDepartmentDto extends DefaultDepartmentDto {

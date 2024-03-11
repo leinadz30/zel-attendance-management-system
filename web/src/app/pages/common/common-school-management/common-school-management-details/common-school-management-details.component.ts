@@ -65,7 +65,7 @@ export class CommonSchoolManagementDetailsComponent {
       {
         orgSchoolCode: new FormControl(null, [Validators.required]),
         schoolName: new FormControl(null, [Validators.required]),
-        schoolAddress: new FormControl(),
+        schoolAddress: new FormControl(null, [Validators.required]),
         schoolContactNumber: new FormControl(),
         schoolEmail: new FormControl(),
         restrictGuardianTime: new FormControl(false),

@@ -50,6 +50,10 @@ __decorate([
     __metadata("design:type", Boolean)
 ], Departments.prototype, "active", void 0);
 __decorate([
+    (0, typeorm_1.Column)("character varying", { name: "Type" }),
+    __metadata("design:type", String)
+], Departments.prototype, "type", void 0);
+__decorate([
     (0, typeorm_1.ManyToOne)(() => Users_1.Users, (users) => users.departments),
     (0, typeorm_1.JoinColumn)([{ name: "CreatedByUserId", referencedColumnName: "userId" }]),
     __metadata("design:type", Users_1.Users)
@@ -77,7 +81,7 @@ __decorate([
     __metadata("design:type", Array)
 ], Departments.prototype, "students", void 0);
 Departments = __decorate([
-    (0, typeorm_1.Index)("u_department", ["active", "departmentName", "schoolId"], {
+    (0, typeorm_1.Index)("u_department", ["active", "departmentName", "schoolId", "type"], {
         unique: true,
     }),
     (0, typeorm_1.Index)("Departments_pkey", ["departmentId"], { unique: true }),

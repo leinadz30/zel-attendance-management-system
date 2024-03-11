@@ -9,9 +9,62 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DefaultAnnouncementDto = void 0;
+exports.DefaultAnnouncementDto = exports.EmployeeRecipientDto = exports.StudentRecipientDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
+const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
+class StudentRecipientDto {
+    constructor() {
+        this.excludedStudentIds = [];
+    }
+}
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsNumberString)(),
+    (0, class_transformer_1.Transform)(({ obj, key }) => {
+        var _a;
+        return (_a = obj[key]) === null || _a === void 0 ? void 0 : _a.toString();
+    }),
+    __metadata("design:type", String)
+], StudentRecipientDto.prototype, "sectionId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        isArray: true,
+        type: String
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_transformer_1.Type)(() => String),
+    __metadata("design:type", Array)
+], StudentRecipientDto.prototype, "excludedStudentIds", void 0);
+exports.StudentRecipientDto = StudentRecipientDto;
+class EmployeeRecipientDto {
+    constructor() {
+        this.excludedEmployeeIds = [];
+    }
+}
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsNumberString)(),
+    (0, class_transformer_1.Transform)(({ obj, key }) => {
+        var _a;
+        return (_a = obj[key]) === null || _a === void 0 ? void 0 : _a.toString();
+    }),
+    __metadata("design:type", String)
+], EmployeeRecipientDto.prototype, "employeeTitleId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        isArray: true,
+        type: String
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_transformer_1.Type)(() => String),
+    __metadata("design:type", Array)
+], EmployeeRecipientDto.prototype, "excludedEmployeeIds", void 0);
+exports.EmployeeRecipientDto = EmployeeRecipientDto;
 class DefaultAnnouncementDto {
 }
 __decorate([
@@ -32,26 +85,56 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsIn)(["DRAFT", "SEND"]),
-    (0, class_validator_1.IsUppercase)(),
+    (0, class_transformer_1.Transform)(({ obj, key }) => {
+        var _a;
+        return (_a = obj[key]) === null || _a === void 0 ? void 0 : _a.toString().toUpperCase();
+    }),
+    (0, class_validator_1.Matches)(/\b((1[0-2]|0?[1-9]):([0-5][0-9]) ([AaPp][Mm]))/g, {
+        message: "Invalid time format",
+    }),
     __metadata("design:type", String)
-], DefaultAnnouncementDto.prototype, "targetType", void 0);
+], DefaultAnnouncementDto.prototype, "targetTime", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", Array)
-], DefaultAnnouncementDto.prototype, "targetIds", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_transformer_1.Transform)(({ obj, key }) => {
+        return obj[key].toString();
+    }),
+    (0, class_validator_1.IsBooleanString)(),
     __metadata("design:type", Boolean)
-], DefaultAnnouncementDto.prototype, "scheduled", void 0);
+], DefaultAnnouncementDto.prototype, "isSchedule", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsIn)(["DRAFT", "SEND"]),
-    (0, class_validator_1.IsUppercase)(),
-    __metadata("design:type", String)
-], DefaultAnnouncementDto.prototype, "action", void 0);
+    (0, swagger_1.ApiProperty)({
+        isArray: true,
+        type: StudentRecipientDto,
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_transformer_1.Type)(() => StudentRecipientDto),
+    (0, class_validator_1.ValidateNested)(),
+    __metadata("design:type", Array)
+], DefaultAnnouncementDto.prototype, "basicEdStudentRecipients", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        isArray: true,
+        type: StudentRecipientDto,
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_transformer_1.Type)(() => StudentRecipientDto),
+    (0, class_validator_1.ValidateNested)(),
+    __metadata("design:type", Array)
+], DefaultAnnouncementDto.prototype, "higherEdStudenttudentRecipients", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        isArray: true,
+        type: EmployeeRecipientDto,
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_transformer_1.Type)(() => EmployeeRecipientDto),
+    (0, class_validator_1.ValidateNested)(),
+    __metadata("design:type", Array)
+], DefaultAnnouncementDto.prototype, "employeeRecipients", void 0);
 exports.DefaultAnnouncementDto = DefaultAnnouncementDto;
 //# sourceMappingURL=announcements-base.dto.js.map
