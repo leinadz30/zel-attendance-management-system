@@ -15,7 +15,11 @@ const routes: Routes = [
   {
     path: 'password-and-security',
     loadChildren: () => import('./password-and-security/password-and-security.module').then( m => m.PasswordAndSecurityPageModule)
+  },  {
+    path: 'account-deletion',
+    loadChildren: () => import('./account-deletion/account-deletion.module').then( m => m.AccountDeletionPageModule)
   }
+
 
 ];
 

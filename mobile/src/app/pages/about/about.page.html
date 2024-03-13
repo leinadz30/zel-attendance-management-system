@@ -1,0 +1,22 @@
+<ion-header no-border no-shadow mode="md">
+  <ion-toolbar mode="md">
+    <ion-buttons slot="start">
+      <ion-button (click)="close()" >
+        <ion-icon name="arrow-back-sharp" style="font-size: 2em!important;" color="primary"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center"><h1 style="margin: 0!important;">About ZamsConnect</h1></ion-title>
+    <div slot="end" style="width: 48px"></div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content mode="md">
+  <div class="container">
+    <div class="image-holder">
+      <img src="../../../assets/img/app_banner_bg.png">
+    </div>
+    <div class="description">
+      <h2>Current version {{version}}</h2>
+    </div>
+  </div>
+</ion-content>

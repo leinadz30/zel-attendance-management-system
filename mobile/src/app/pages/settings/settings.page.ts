@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import {
   ActionSheetController,
   AlertController,
+  AlertOptions,
   ModalController,
   NavController,
 } from '@ionic/angular';
@@ -21,6 +22,9 @@ import {
 } from '@capacitor/camera';
 import { Parents } from 'src/app/core/model/parents';
 import { ParentsService } from 'src/app/core/services/parents.service';
+import { AboutPage } from '../about/about.page';
+import { PageLoaderService } from 'src/app/core/ui-service/page-loader.service';
+import { AccountDeletionPage } from './account-deletion/account-deletion.page';
 
 @Component({
   selector: 'app-settings',
@@ -33,6 +37,7 @@ export class SettingsPage implements OnInit {
   modal: HTMLIonModalElement;
   routerOutlet: any;
   isSubmitting = false;
+  version;
   constructor(
     private actionSheetController: ActionSheetController,
     private platform: Platform,
@@ -41,9 +46,11 @@ export class SettingsPage implements OnInit {
     private authService: AuthService,
     private modalCtrl: ModalController,
     private storageService: StorageService,
-    private alertController: AlertController
+    private pageLoaderService: PageLoaderService,
+    private alertController: AlertController,
   ) {
     this.currentUser = this.storageService.getLoginUser();
+    this.version = `${environment.version}(${environment.build})`;
   }
 
   ngOnInit() {}
@@ -71,6 +78,17 @@ export class SettingsPage implements OnInit {
       case 'password-and-security':
         modal = await this.modalCtrl.create({
           component: PasswordAndSecurityPage,
+          cssClass: 'modal-fullscreen',
+          backdropDismiss: false,
+          canDismiss: true,
+          mode: 'ios',
+          componentProps: { modal },
+        });
+        modal.present();
+        break;
+      case 'about':
+        modal = await this.modalCtrl.create({
+          component: AboutPage,
           cssClass: 'modal-fullscreen',
           backdropDismiss: false,
           canDismiss: true,
@@ -285,7 +303,39 @@ export class SettingsPage implements OnInit {
     }
   }
 
-  async presentAlert(options: any) {
+  async deleteAccount() {
+    let modal = null;
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Are you sure you want to delete your account?',
+      cssClass: 'app-action-sheet',
+      buttons: [
+        {
+          text: 'Yes, I want to delet my account',
+          cssClass: 'danger',
+          handler: async () => {
+            modal = await this.modalCtrl.create({
+              component: AccountDeletionPage,
+              cssClass: 'modal-fullscreen',
+              backdropDismiss: false,
+              canDismiss: true,
+              mode: 'ios',
+              componentProps: { modal },
+            });
+            modal.present();
+          },
+        },
+        {
+          text: 'Cancel',
+          handler: async () => {
+            actionSheet.dismiss();
+          },
+        },
+      ],
+    });
+    actionSheet.present();
+  }
+
+  async presentAlert(options: AlertOptions) {
     const alert = await this.alertController.create(options);
     return await alert.present();
   }

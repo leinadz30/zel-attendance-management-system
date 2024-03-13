@@ -338,20 +338,19 @@ ion-item {
   }
 }
 
-// .app-action-sheet {
-//   .action-sheet-wrapper {
-//     .action-sheet-container {
-//       .action-sheet-group {
-//         button {
-//           height: 60px!important;
-//           .action-sheet-button-inner {
-//             font-size: 1.3rem!important;
-//           }
-//         }
-//       }
-//     }
-//   }
-// }
+.app-action-sheet {
+  .action-sheet-wrapper {
+    .action-sheet-container {
+      .action-sheet-group {
+        button {
+          &.danger {
+            color: var(--ion-color-danger);
+          }
+        }
+      }
+    }
+  }
+}
 
 ion-alert {
   .alert-radio-label {

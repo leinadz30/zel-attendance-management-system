@@ -7,7 +7,7 @@
 import { Plugins } from '@capacitor/core';
 import { Component, OnInit, Optional } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActionSheetController, AlertController, IonRouterOutlet, ModalController, Platform } from '@ionic/angular';
+import { ActionSheetController, AlertController, AlertOptions, IonRouterOutlet, ModalController, Platform } from '@ionic/angular';
 import { AuthService } from './core/services/auth.service';
 import { StorageService } from './core/storage/storage.service';
 import { Capacitor } from '@capacitor/core';
@@ -19,6 +19,9 @@ import { FcmService } from './core/services/fcm.service';
 import { App } from '@capacitor/app';
 import { OneSignalNotificationService } from './core/services/one-signal-notification.service';
 import { LocalNotificationsService } from './core/services/local-notifications.service';
+import { AppReleaseService } from './core/services/app-release.service';
+import { environment } from 'src/environments/environment';
+import { AppRelease } from './core/model/app-release.model';
 
 @Component({
   selector: 'app-root',
@@ -39,6 +42,7 @@ export class AppComponent implements OnInit {
     private fcmService: FcmService,
     private oneSignalNotificationService: OneSignalNotificationService,
     private androidPermissions: AndroidPermissions,
+    private appReleaseService: AppReleaseService,
     private localNotificationsService: LocalNotificationsService,
     @Optional() private routerOutlet?: IonRouterOutlet
   ) {
@@ -98,13 +102,35 @@ export class AppComponent implements OnInit {
 
   async ngOnInit() {
     this.platform.ready().then(async () => {
-      if (Capacitor.platform !== 'web') {
+      const platform = Capacitor.getPlatform();
+      if (platform !== 'web') {
         await this.localNotificationsService.init();
         await this.oneSignalNotificationService.registerOneSignal();
+        let latestRelease: AppRelease;
+        if(platform.toLowerCase() === 'android') {
+          const result = await this.appReleaseService.getLatestVersion('A').toPromise();
+          latestRelease = result?.data;
+        } else if(platform.toLowerCase() === 'ios') {
+          const result = await this.appReleaseService.getLatestVersion('I').toPromise();
+          latestRelease = result?.data;
+        }
+        if(latestRelease && (latestRelease.appVersion !== environment.version.toString() || latestRelease.appBuild !== environment.build.toString())) {
+          await this.presentAlert({
+            header: 'New Version Update!',
+            message: 'New Version is available on play store. Please update your ZamsConnect App to get the latest features.',
+            buttons: [{
+              text: 'Update now',
+              handler: () => {
+                window.open(environment.market[platform.toLowerCase()]);
+              }
+            }],
+            backdropDismiss: false
+          });
+        }
       }
     });
   }
-  async presentAlert(options: any) {
+  async presentAlert(options: AlertOptions) {
     const alert = await this.alertController.create(options);
     await alert.present();
   }

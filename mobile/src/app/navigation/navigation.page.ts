@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/member-ordering */
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController, Platform } from '@ionic/angular';
+import { AlertController, AlertOptions, Platform } from '@ionic/angular';
 import { Capacitor } from '@capacitor/core';
 import { StorageService } from '../core/storage/storage.service';
 import { OneSignalNotificationService } from '../core/services/one-signal-notification.service';
@@ -55,7 +55,7 @@ export class NavigationPage implements OnInit, OnDestroy {
   @HostListener('click', ['$event.target']) onClick(e) {
   }
 
-  async presentAlert(options: any) {
+  async presentAlert(options: AlertOptions) {
     const alert = await this.alertController.create(options);
     await alert.present();
   }

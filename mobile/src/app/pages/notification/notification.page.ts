@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalController, AlertController, ActionSheetController, IonModal, IonRefresher } from '@ionic/angular';
+import { ModalController, AlertController, ActionSheetController, IonModal, IonRefresher, AlertOptions } from '@ionic/angular';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { StorageService } from 'src/app/core/storage/storage.service';
 import { PageLoaderService } from 'src/app/core/ui-service/page-loader.service';
@@ -231,7 +231,7 @@ export class NotificationPage implements OnInit, AfterViewInit {
     }
  }
 
-  async presentAlert(options: any) {
+  async presentAlert(options: AlertOptions) {
     const alert = await this.alertController.create(options);
     await alert.present();
   }

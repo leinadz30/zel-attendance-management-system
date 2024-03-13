@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { StorageService } from 'src/app/core/storage/storage.service';
 import * as moment from 'moment';
 import { FormGroup, FormBuilder, Validators, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
-import { ActionSheetController, AlertController } from '@ionic/angular';
+import { ActionSheetController, AlertController, AlertOptions } from '@ionic/angular';
 import { PageLoaderService } from 'src/app/core/ui-service/page-loader.service';
 import { MyErrorStateMatcher } from 'src/app/core/form-validation/error-state.matcher';
 import { Parents } from 'src/app/core/model/parents';
@@ -194,7 +194,7 @@ export class PasswordAndSecurityPage implements OnInit {
     this.modal.dismiss(null, 'cancel');
   }
 
-  async presentAlert(options: any) {
+  async presentAlert(options: AlertOptions) {
     const alert = await this.alertController.create(options);
     return await alert.present();
   }

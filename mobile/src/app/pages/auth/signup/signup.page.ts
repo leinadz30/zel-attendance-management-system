@@ -3,7 +3,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { NavigationExtras, Router } from '@angular/router';
-import { AlertController, ModalController } from '@ionic/angular';
+import { AlertController, AlertOptions, ModalController } from '@ionic/angular';
 import { MyErrorStateMatcher } from 'src/app/core/form-validation/error-state.matcher';
 import { AppConfigService } from 'src/app/core/services/app-config.service';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -156,7 +156,7 @@ export class SignupPage implements OnInit, AfterViewInit {
     }
   }
 
-  async presentAlert(options: any) {
+  async presentAlert(options: AlertOptions) {
     const alert = await this.alertController.create(options);
     return await alert.present();
   }

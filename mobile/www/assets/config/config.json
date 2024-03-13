@@ -74,6 +74,9 @@
       "userOneSignalSubscription": {
         "getByDevice": "/user-one-signal-subscription/getBySubscriptionId/",
         "create": "/user-one-signal-subscription/"
+      },
+      "appRelease": {
+        "getLatestVersion": "/app-release/getLatestVersion/"
       }
     }
 }

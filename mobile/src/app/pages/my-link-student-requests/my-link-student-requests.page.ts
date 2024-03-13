@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/member-ordering */
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActionSheetController, AlertController, IonModal, IonRefresher, ModalController } from '@ionic/angular';
+import { ActionSheetController, AlertController, AlertOptions, IonModal, IonRefresher, ModalController } from '@ionic/angular';
 import { LinkStudentRequest } from 'src/app/core/model/link-student-request';
 import { AnimationService } from 'src/app/core/services/animation.service';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -179,7 +179,7 @@ export class MyLinkStudentRequestsPage implements OnInit {
     this.modal.dismiss(null, 'cancel');
   }
 
-  async presentAlert(options: any) {
+  async presentAlert(options: AlertOptions) {
     const alert = await this.alertController.create(options);
     await alert.present();
   }

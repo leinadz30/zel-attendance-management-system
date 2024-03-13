@@ -8,7 +8,7 @@
 /* eslint-disable @typescript-eslint/prefer-for-of */
 import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { AlertController, IonModal, IonRefresher, ModalController, Platform } from '@ionic/angular';
+import { AlertController, AlertOptions, IonModal, IonRefresher, ModalController, Platform } from '@ionic/angular';
 import * as moment from 'moment';
 import { forkJoin } from 'rxjs';
 import { DateConstant } from 'src/app/core/constant/date.constant';
@@ -163,7 +163,7 @@ export class TimelinePage implements OnInit {
     this.modalCtrl.dismiss(null, 'cancel');
   }
 
-  async presentAlert(options: any) {
+  async presentAlert(options: AlertOptions) {
     const alert = await this.alertController.create(options);
     await alert.present();
   }
