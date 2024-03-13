@@ -15,7 +15,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "353CEAD32B84E9860083E79D"
+               BlueprintIdentifier = "35AA274A2BA04CD400F9AB61"
                BuildableName = "OneSignalNotificationServiceExtension.appex"
                BlueprintName = "OneSignalNotificationServiceExtension"
                ReferencedContainer = "container:App.xcodeproj">
