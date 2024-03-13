@@ -52,11 +52,8 @@ export class AccountDeletionPage implements OnInit {
   onTouchMove(event: any) {
     if (this.swipeInProgress) {
       const deltaX = event.touches[0].clientX;
-      console.log('deltax: ', deltaX);
       this.colWidth = this.swipeButton.nativeElement.parentElement.clientWidth;
-      console.log('colWidth: ', this.colWidth);
       this.translateX = Math.min(deltaX, this.colWidth);
-      console.log('translatex: ', this.translateX);
       this.swipeButton.nativeElement.style.transform = `translateX(${this.translateX}px)`;
     }
   }
@@ -64,7 +61,6 @@ export class AccountDeletionPage implements OnInit {
   async onTouchEnd(event: any) {
     console.log(event);
     if(this.translateX === this.colWidth) {
-      console.log('swiped');
       this.text = 'Swiped';
       this.color = 'success';
       await this.delay(100);

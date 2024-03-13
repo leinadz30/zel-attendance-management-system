@@ -1,6 +1,14 @@
 export const environment = {
-  version: 4,
-  build: 4,
+  versions: {
+    android: {
+      version: 4,
+      build: 4,
+    },
+    ios: {
+      version: 4,
+      build: 4,
+    },
+  },
   market: {
     ios: 'itms-apps://appstore.com/zamsconnect',
     android: 'https://play.google.com/store/apps/details?id=com.zel.zamsconnect',

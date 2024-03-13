@@ -24,6 +24,7 @@
       "parents": {
         "getByCode": "/parents/",
         "update": "/parents/",
+        "delete": "/parents/",
         "resetPassword": "/parents/resetPassword/",
         "updateProfile": "/parents/updateProfile/",
         "updateProfilePicture": "/parents/updateProfilePicture/"

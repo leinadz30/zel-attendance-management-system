@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Capacitor } from '@capacitor/core';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -11,10 +12,15 @@ export class AboutPage implements OnInit {
   modal: HTMLIonModalElement;
   version;
   constructor() {
-    this.version = `${environment.version}(${environment.build})`;
    }
 
   ngOnInit() {
+    let platform = Capacitor.getPlatform();
+    platform = platform.toLowerCase();
+    this.version = `${environment.versions[platform]?.version}(${environment.versions[platform]?.build})`;
+    if(!environment.versions[platform]?.version || !environment.versions[platform]?.build) {
+      this.version = 'Web';
+    }
   }
 
   close() {

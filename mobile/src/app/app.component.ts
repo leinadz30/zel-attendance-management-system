@@ -102,26 +102,27 @@ export class AppComponent implements OnInit {
 
   async ngOnInit() {
     this.platform.ready().then(async () => {
-      const platform = Capacitor.getPlatform();
+      let platform = Capacitor.getPlatform();
+      platform = platform.toLowerCase();
       if (platform !== 'web') {
         await this.localNotificationsService.init();
         await this.oneSignalNotificationService.registerOneSignal();
         let latestRelease: AppRelease;
-        if(platform.toLowerCase() === 'android') {
+        if(platform === 'android') {
           const result = await this.appReleaseService.getLatestVersion('A').toPromise();
           latestRelease = result?.data;
-        } else if(platform.toLowerCase() === 'ios') {
+        } else if(platform === 'ios') {
           const result = await this.appReleaseService.getLatestVersion('I').toPromise();
           latestRelease = result?.data;
         }
-        if(latestRelease && (latestRelease.appVersion !== environment.version.toString() || latestRelease.appBuild !== environment.build.toString())) {
+        if(latestRelease && (latestRelease.appVersion !== environment.versions[platform]?.version?.toString() || latestRelease.appBuild !== environment.versions[platform].build?.toString())) {
           await this.presentAlert({
             header: 'New Version Update!',
             message: 'New Version is available on play store. Please update your ZamsConnect App to get the latest features.',
             buttons: [{
               text: 'Update now',
               handler: () => {
-                window.open(environment.market[platform.toLowerCase()]);
+                window.open(environment.market[platform]);
               }
             }],
             backdropDismiss: false

@@ -25,6 +25,7 @@ import { ParentsService } from 'src/app/core/services/parents.service';
 import { AboutPage } from '../about/about.page';
 import { PageLoaderService } from 'src/app/core/ui-service/page-loader.service';
 import { AccountDeletionPage } from './account-deletion/account-deletion.page';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-settings',
@@ -50,10 +51,16 @@ export class SettingsPage implements OnInit {
     private alertController: AlertController,
   ) {
     this.currentUser = this.storageService.getLoginUser();
-    this.version = `${environment.version}(${environment.build})`;
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    let platform = Capacitor.getPlatform();
+    platform = platform.toLowerCase();
+    this.version = `${environment.versions[platform]?.version}(${environment.versions[platform]?.build})`;
+    if(!environment.versions[platform]?.version || !environment.versions[platform]?.build) {
+      this.version = 'Web';
+    }
+  }
 
   async onSettingsMenuClick(item: string) {
     // this.navCtrl.navigateForward([item]);
