@@ -43,16 +43,17 @@ export class FcmService {
 
   init() {
     if (Capacitor.platform !== 'web') {
-      this.delete();
-      PushNotifications.createChannel({
-       id: 'fcm_default_channel',
-       name: 'ZamsConnect',
-       importance: 5,
-       visibility: 1,
-       lights: true,
-       vibration: true,
-       sound: 'notif_alert'
-     });
+      //disable FCM Service but use Register push notif for Permission
+      // this.delete();
+    //   PushNotifications.createChannel({
+    //    id: 'fcm_default_channel',
+    //    name: 'ZamsConnect',
+    //    importance: 5,
+    //    visibility: 1,
+    //    lights: true,
+    //    vibration: true,
+    //    sound: 'notif_alert'
+    //  });
      this.registerPushNotif();
     }
   }
@@ -70,48 +71,48 @@ export class FcmService {
     });
 
 
-    // now you can subscribe to a specific topic
-    FCM.subscribeTo({ topic: this.topic })
-      .then((r) => console.log(`subscribed to topic`))
-      .catch((err) => {console.log('error subscribing to topic');console.log(err);});
+    // // now you can subscribe to a specific topic
+    // FCM.subscribeTo({ topic: this.topic })
+    //   .then((r) => console.log(`subscribed to topic`))
+    //   .catch((err) => {console.log('error subscribing to topic');console.log(err);});
 
-    PushNotifications.addListener(
-      'registration',
-      (token: PushNotificationToken) => {
-        this.storageService.saveFirebaseToken(token.value);
-        if(this.isAuthenticated) {
-          this.userFirebaseTokenService.create({
-            userId: this.currentUser?.user?.userId,
-            firebaseToken: token.value,
-            device: this.currentDeviceModel
-          }).subscribe((res)=> {
-            console.log('firebase token saved');
-          }, (err)=>{console.log('error saving firebase token');console.log(err);});
-        }
-      }
-    );
+    // PushNotifications.addListener(
+    //   'registration',
+    //   (token: PushNotificationToken) => {
+    //     this.storageService.saveFirebaseToken(token.value);
+    //     if(this.isAuthenticated) {
+    //       this.userFirebaseTokenService.create({
+    //         userId: this.currentUser?.user?.userId,
+    //         firebaseToken: token.value,
+    //         device: this.currentDeviceModel
+    //       }).subscribe((res)=> {
+    //         console.log('firebase token saved');
+    //       }, (err)=>{console.log('error saving firebase token');console.log(err);});
+    //     }
+    //   }
+    // );
 
-    PushNotifications.addListener('registrationError', (error: any) => {
-      console.log('Error: ' + JSON.stringify(error));
-    });
+    // PushNotifications.addListener('registrationError', (error: any) => {
+    //   console.log('Error: ' + JSON.stringify(error));
+    // });
 
-    PushNotifications.addListener(
-      'pushNotificationReceived',
-      async (notification: PushNotification) => {
-        console.log('Push received: ' + JSON.stringify(notification));
-      }
-    );
+    // PushNotifications.addListener(
+    //   'pushNotificationReceived',
+    //   async (notification: PushNotification) => {
+    //     console.log('Push received: ' + JSON.stringify(notification));
+    //   }
+    // );
 
-    PushNotifications.addListener(
-      'pushNotificationActionPerformed',
-      async (notification: PushNotificationActionPerformed) => {
-        const data = notification.notification.data;
-        console.log('Action performed: ' + JSON.stringify(notification.notification));
-        if (data.detailsId) {
-          // this.router.navigateByUrl(`/home/${data.detailsId}`);
-        }
-      }
-    );
+    // PushNotifications.addListener(
+    //   'pushNotificationActionPerformed',
+    //   async (notification: PushNotificationActionPerformed) => {
+    //     const data = notification.notification.data;
+    //     console.log('Action performed: ' + JSON.stringify(notification.notification));
+    //     if (data.detailsId) {
+    //       // this.router.navigateByUrl(`/home/${data.detailsId}`);
+    //     }
+    //   }
+    // );
   }
 
 

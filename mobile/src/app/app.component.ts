@@ -105,6 +105,7 @@ export class AppComponent implements OnInit {
       let platform = Capacitor.getPlatform();
       platform = platform.toLowerCase();
       if (platform !== 'web') {
+        await this.fcmService.registerPushNotif();
         await this.localNotificationsService.init();
         await this.oneSignalNotificationService.registerOneSignal();
         let latestRelease: AppRelease;
