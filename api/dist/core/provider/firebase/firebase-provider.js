@@ -45,7 +45,7 @@ let FirebaseProvider = class FirebaseProvider {
         this.config = config;
         this.app = admin.initializeApp({
             credential: admin.credential.cert(firebase_config_1.default),
-            storageBucket: "zams-portal.appspot.com",
+            storageBucket: this.config.get("FIREBASE_BUCKET"),
         });
     }
 };
