@@ -146,7 +146,9 @@ export class AuthService {
       where: {
         user: {
           userName,
-        }
+          active: true,
+        },
+        active: true,
       },
       relations: {
         parentStudents: true,

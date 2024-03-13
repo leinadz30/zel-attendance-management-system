@@ -24,6 +24,7 @@
       "parents": {
         "getByCode": "/parents/",
         "update": "/parents/",
+        "delete": "/parents/",
         "resetPassword": "/parents/resetPassword/",
         "updateProfile": "/parents/updateProfile/",
         "updateProfilePicture": "/parents/updateProfilePicture/"
@@ -74,6 +75,9 @@
       "userOneSignalSubscription": {
         "getByDevice": "/user-one-signal-subscription/getBySubscriptionId/",
         "create": "/user-one-signal-subscription/"
+      },
+      "appRelease": {
+        "getLatestVersion": "/app-release/getLatestVersion/"
       }
     }
 }

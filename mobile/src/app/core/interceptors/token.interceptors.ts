@@ -11,7 +11,7 @@ import {
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { map, catchError, filter, switchMap, take } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { AlertController, ToastController } from '@ionic/angular';
+import { AlertController, AlertOptions, ToastController } from '@ionic/angular';
 import { StorageService } from '../storage/storage.service';
 import { AuthService } from '../services/auth.service';
 import { environment } from 'src/environments/environment.prod';
@@ -126,7 +126,7 @@ export class TokenInterceptor implements HttpInterceptor {
     this.authService.logout();
   }
 
-  private async presentAlert(options: any) {
+  private async presentAlert(options: AlertOptions) {
     const alert = await this.alertController.create(options);
     await alert.present();
   }

@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { AlertController, ModalController } from '@ionic/angular';
+import { AlertController, AlertOptions, ModalController } from '@ionic/angular';
 import { StorageService } from '../../../core/storage/storage.service';
 import { LoaderService } from 'src/app/core/ui-service/loader.service';
 import { PageLoaderService } from 'src/app/core/ui-service/page-loader.service';
@@ -175,7 +175,7 @@ export class LoginPage implements OnInit {
     }
   }
 
-  async presentAlert(options: any) {
+  async presentAlert(options: AlertOptions) {
     const alert = await this.alertController.create(options);
     await alert.present();
   }

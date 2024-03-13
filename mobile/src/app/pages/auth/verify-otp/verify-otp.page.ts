@@ -106,7 +106,7 @@ export class VerifyOtpPage implements OnInit {
     }
   }
 
-  async presentAlert(options: any) {
+  async presentAlert(options: AlertOptions) {
     const alert = await this.alertController.create(options);
     await alert.present();
   }

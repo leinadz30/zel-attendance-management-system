@@ -65,7 +65,8 @@ const routes: Routes = [
   {
     path: 'timeline',
     loadChildren: () => import('./pages/timeline/timeline.module').then( m => m.TimelinePageModule)
-  },  {
+  },
+  {
     path: 'my-link-student-requests',
     loadChildren: () => import('./pages/my-link-student-requests/my-link-student-requests.module').then( m => m.MyLinkStudentRequestsPageModule)
   },
@@ -76,6 +77,10 @@ const routes: Routes = [
   {
     path: 'request-info',
     loadChildren: () => import('./component/request-info/request-info.module').then( m => m.RequestInfoPageModule)
+  },
+  {
+    path: 'about',
+    loadChildren: () => import('./pages/about/about.module').then( m => m.AboutPageModule)
   },
 
 

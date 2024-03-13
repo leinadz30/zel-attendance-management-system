@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/member-ordering */
 import { AfterContentInit, AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { AlertController, ModalController } from '@ionic/angular';
+import { AlertController, AlertOptions, ModalController } from '@ionic/angular';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Parents } from 'src/app/core/model/parents';
 import { Schools } from 'src/app/core/model/schools';
@@ -124,7 +124,7 @@ export class SearchSchoolPage implements OnInit {
     this.modal.dismiss(null, 'cancel');
   }
 
-  async presentAlert(options: any) {
+  async presentAlert(options: AlertOptions) {
     const alert = await this.alertController.create(options);
     return await alert.present();
   }

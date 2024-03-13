@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { AlertController, ModalController } from '@ionic/angular';
+import { AlertController, AlertOptions, ModalController } from '@ionic/angular';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Parents } from 'src/app/core/model/parents';
 import { Students } from 'src/app/core/model/students';
@@ -125,7 +125,7 @@ export class SearchStudentsBySchoolPage implements OnInit {
     this.modal.dismiss(null, 'cancel');
   }
 
-  async presentAlert(options: any) {
+  async presentAlert(options: AlertOptions) {
     const alert = await this.alertController.create(options);
     return await alert.present();
   }

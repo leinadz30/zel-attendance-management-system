@@ -3,6 +3,12 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
+  version: 4,
+  build: 4,
+  market: {
+    ios: 'itms-apps://appstore.com/zamsconnect',
+    android: 'https://play.google.com/store/apps/details?id=com.zel.zamsconnect',
+  },
   production: false,
   pusher: {
     key: '1ad4b93854243ae307e6',
@@ -15,7 +21,7 @@ export const environment = {
     appUpdate: 'app-update'
   },
   apiBaseUrl: 'http://192.168.254.140:3000/api/v1',
-  oneSignalAppId: 'e72b9652-3594-4bd1-8f58-d01fc50d0b11'
+  oneSignalAppId: '81441ee0-49ed-4d78-a6e8-71d691176697'
   // // apiBaseUrl: 'http://192.168.195.221:3000/api/v1'
   // apiBaseUrl: 'http://localhost:3000/api/v1'
   // apiBaseUrl: 'https://zams-stage-api.vercel.app/api/v1'

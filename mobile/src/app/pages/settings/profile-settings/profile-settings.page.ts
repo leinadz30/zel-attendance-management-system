@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActionSheetController, AlertController, ModalController } from '@ionic/angular';
+import { ActionSheetController, AlertController, AlertOptions, ModalController } from '@ionic/angular';
 import * as moment from 'moment';
 import { forkJoin } from 'rxjs';
 import { Parents } from 'src/app/core/model/parents';
@@ -148,7 +148,7 @@ export class ProfileSettingsPage implements OnInit {
     this.modal.dismiss(null, 'cancel');
   }
 
-  async presentAlert(options: any) {
+  async presentAlert(options: AlertOptions) {
     const alert = await this.alertController.create(options);
     return await alert.present();
   }

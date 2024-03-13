@@ -14,7 +14,7 @@
 import { App } from '@capacitor/app';
 import { AfterViewInit, Component, EventEmitter, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-import { ActionSheetController, ModalController, AlertController, AnimationController, IonModal, Platform, IonRefresher } from '@ionic/angular';
+import { ActionSheetController, ModalController, AlertController, AnimationController, IonModal, Platform, IonRefresher, AlertOptions } from '@ionic/angular';
 import { forkJoin } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { DashboardService } from 'src/app/core/services/dashboard.service';
@@ -190,7 +190,7 @@ export class HomePage implements OnInit {
     }
   }
 
-  async presentAlert(options: any) {
+  async presentAlert(options: AlertOptions) {
     const alert = await this.alertController.create(options);
     await alert.present();
   }

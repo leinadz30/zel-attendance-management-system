@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Capacitor } from '@capacitor/core';
 import { Component, ViewChild } from '@angular/core';
-import { AlertController, IonRefresher, ModalController } from '@ionic/angular';
+import { AlertController, AlertOptions, IonRefresher, ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { LinkStudentRequest } from 'src/app/core/model/link-student-request';
 import { ParentStudent } from 'src/app/core/model/parent-students';
@@ -128,7 +128,7 @@ export class MyStudentsPage {
     }
   }
 
-  async presentAlert(options: any) {
+  async presentAlert(options: AlertOptions) {
     const alert = await this.alertController.create(options);
     await alert.present();
   }
