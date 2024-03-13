@@ -27,10 +27,7 @@ export class AppReleaseService {
         order,
       }),
       this.appReleaseRepo.count({
-        where: {
-          ...condition,
-          active: true,
-        },
+        where: condition,
       }),
     ]);
     return {
