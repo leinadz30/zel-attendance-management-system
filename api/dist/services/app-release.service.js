@@ -37,7 +37,7 @@ let AppReleaseService = class AppReleaseService {
                 order,
             }),
             this.appReleaseRepo.count({
-                where: Object.assign(Object.assign({}, condition), { active: true }),
+                where: condition,
             }),
         ]);
         return {
